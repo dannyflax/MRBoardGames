@@ -8,6 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SampleCommunicationViewController : UIViewController <NSStreamDelegate>
+@interface SampleCommunicationViewController : UIViewController <NSStreamDelegate> {
+    CFReadStreamRef readStream;
+    CFWriteStreamRef writeStream;
+    
+    NSInputStream   *inputStream;
+    NSOutputStream  *outputStream;
+    
+    NSMutableArray  *messages;
+}
+
+@property (weak, nonatomic) IBOutlet UITextField *dataToSendText;
+@property (weak, nonatomic) IBOutlet UITextView *dataRecievedTextView;
+@property (weak, nonatomic) IBOutlet UILabel *connectedLabel;
 
 @end
