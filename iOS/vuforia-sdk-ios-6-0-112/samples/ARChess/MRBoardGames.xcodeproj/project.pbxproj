@@ -10,6 +10,8 @@
 		18EB634C1ACC70F200EF1C28 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18EB634B1ACC70F200EF1C28 /* Localizable.strings */; };
 		8F467BCD1D18AC3F00682E4C /* SampleAppRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8F467BCC1D18AC3F00682E4C /* SampleAppRenderer.mm */; };
 		B54D0ADE1DE0D610000C7014 /* BaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B54D0ADD1DE0D610000C7014 /* BaseObject.m */; };
+		B54D0AE21DE0EDD9000C7014 /* MainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B54D0AE11DE0EDD9000C7014 /* MainMenuViewController.m */; };
+		B54D0AE51DE0F4CE000C7014 /* SampleCommunicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B54D0AE41DE0F4CE000C7014 /* SampleCommunicationViewController.m */; };
 		D21B07EC1A1B4AA20041ECF3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D21B07EB1A1B4AA20041ECF3 /* main.m */; };
 		D21B07EF1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D21B07EE1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m */; };
 		D21B07F71A1B4AA20041ECF3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D21B07F61A1B4AA20041ECF3 /* Images.xcassets */; };
@@ -71,6 +73,10 @@
 		8F467BCC1D18AC3F00682E4C /* SampleAppRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SampleAppRenderer.mm; path = Classes/Features/ImageTargets/SampleAppRenderer.mm; sourceTree = "<group>"; };
 		B54D0ADC1DE0D610000C7014 /* BaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseObject.h; path = ObjectClasses/BaseObject.h; sourceTree = "<group>"; };
 		B54D0ADD1DE0D610000C7014 /* BaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseObject.m; path = ObjectClasses/BaseObject.m; sourceTree = "<group>"; };
+		B54D0AE01DE0EDD9000C7014 /* MainMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainMenuViewController.h; path = ViewControllers/MainMenuViewController.h; sourceTree = "<group>"; };
+		B54D0AE11DE0EDD9000C7014 /* MainMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainMenuViewController.m; path = ViewControllers/MainMenuViewController.m; sourceTree = "<group>"; };
+		B54D0AE31DE0F4CE000C7014 /* SampleCommunicationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SampleCommunicationViewController.h; path = ViewControllers/SampleCommunicationViewController.h; sourceTree = "<group>"; };
+		B54D0AE41DE0F4CE000C7014 /* SampleCommunicationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SampleCommunicationViewController.m; path = ViewControllers/SampleCommunicationViewController.m; sourceTree = "<group>"; };
 		D21B07E61A1B4AA20041ECF3 /* Vuforia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vuforia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D21B07EB1A1B4AA20041ECF3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D21B07ED1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VuforiaSamplesAppDelegate.h; sourceTree = "<group>"; };
@@ -180,9 +186,21 @@
 			name = ObjectClasses;
 			sourceTree = "<group>";
 		};
+		B54D0ADF1DE0ED6B000C7014 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				B54D0AE01DE0EDD9000C7014 /* MainMenuViewController.h */,
+				B54D0AE11DE0EDD9000C7014 /* MainMenuViewController.m */,
+				B54D0AE31DE0F4CE000C7014 /* SampleCommunicationViewController.h */,
+				B54D0AE41DE0F4CE000C7014 /* SampleCommunicationViewController.m */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
 		D21B07DD1A1B4AA10041ECF3 = {
 			isa = PBXGroup;
 			children = (
+				B54D0ADF1DE0ED6B000C7014 /* ViewControllers */,
 				B54D0ADB1DE0D411000C7014 /* ObjectClasses */,
 				D21B087B1A1B6C710041ECF3 /* Frameworks */,
 				D21B07E81A1B4AA20041ECF3 /* VuforiaSamples */,
@@ -461,10 +479,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				8F467BCD1D18AC3F00682E4C /* SampleAppRenderer.mm in Sources */,
+				B54D0AE51DE0F4CE000C7014 /* SampleCommunicationViewController.m in Sources */,
 				EF9808C01DE09DD80088FE4E /* SampleApplication3DModel.m in Sources */,
 				EF6862D11DCFE336003F5488 /* ARTouchableView.m in Sources */,
 				EF9808C11DE09DD80088FE4E /* SampleApplicationSession.mm in Sources */,
 				D21B07EF1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m in Sources */,
+				B54D0AE21DE0EDD9000C7014 /* MainMenuViewController.m in Sources */,
 				EF98089B1DDEC6F80088FE4E /* Point3D.m in Sources */,
 				FB7A43501A8E38AB0068CF5E /* ImageTargetsEAGLView.mm in Sources */,
 				B54D0ADE1DE0D610000C7014 /* BaseObject.m in Sources */,
