@@ -1,0 +1,12 @@
+# Blender MTL File: 'chess.blend'
+# Material Count: 1
+
+newmtl Black_Steel
+Ns 499.999993
+Ka 0.204169 0.204169 0.204169
+Kd 0.000120 0.000120 0.000120
+Ks 0.359617 0.359617 0.359617
+Ke 0.000000 0.000000 0.000000
+Ni 2.000000
+d 0.800000
+illum 5

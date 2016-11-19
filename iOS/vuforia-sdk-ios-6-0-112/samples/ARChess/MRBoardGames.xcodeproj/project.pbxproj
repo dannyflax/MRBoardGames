@@ -29,7 +29,6 @@
 		EF9808951DDE0B680088FE4E /* libVuforia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D21B08791A1B6AEA0041ECF3 /* libVuforia.a */; };
 		EF9808981DDEC1FC0088FE4E /* ARInputHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF9808971DDEC1FC0088FE4E /* ARInputHandler.mm */; };
 		EF98089B1DDEC6F80088FE4E /* Point3D.m in Sources */ = {isa = PBXBuildFile; fileRef = EF98089A1DDEC6F80088FE4E /* Point3D.m */; };
-		EF9808A81DE09D850088FE4E /* SampleApplication in Resources */ = {isa = PBXBuildFile; fileRef = EF9808A71DE09D850088FE4E /* SampleApplication */; };
 		EF9808BF1DE09DD80088FE4E /* PresentMenuSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = EF9808AD1DE09DD80088FE4E /* PresentMenuSegue.m */; };
 		EF9808C01DE09DD80088FE4E /* SampleApplication3DModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EF9808B01DE09DD80088FE4E /* SampleApplication3DModel.m */; };
 		EF9808C11DE09DD80088FE4E /* SampleApplicationSession.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF9808B21DE09DD80088FE4E /* SampleApplicationSession.mm */; };
@@ -93,7 +92,6 @@
 		EF9808971DDEC1FC0088FE4E /* ARInputHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ARInputHandler.mm; path = Classes/Features/ImageTargets/ARInputHandler.mm; sourceTree = "<group>"; };
 		EF9808991DDEC6F80088FE4E /* Point3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point3D.h; path = Classes/Features/ImageTargets/Point3D.h; sourceTree = "<group>"; };
 		EF98089A1DDEC6F80088FE4E /* Point3D.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Point3D.m; path = Classes/Features/ImageTargets/Point3D.m; sourceTree = "<group>"; };
-		EF9808A71DE09D850088FE4E /* SampleApplication */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SampleApplication; path = "/Users/dannyflax/Documents/Hackathons/Hack OHIO (2016)/MRBoardGames/iOS/vuforia-sdk-ios-6-0-112/samples/ARChess/VuforiaSamples/Classes/SampleApplication"; sourceTree = "<absolute>"; };
 		EF9808AC1DE09DD80088FE4E /* PresentMenuSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PresentMenuSegue.h; path = Classes/SampleApplication/PresentMenuSegue.h; sourceTree = "<group>"; };
 		EF9808AD1DE09DD80088FE4E /* PresentMenuSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PresentMenuSegue.m; path = Classes/SampleApplication/PresentMenuSegue.m; sourceTree = "<group>"; };
 		EF9808AE1DE09DD80088FE4E /* Quad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Quad.h; path = Classes/SampleApplication/Quad.h; sourceTree = "<group>"; };
@@ -372,7 +370,7 @@
 				TargetAttributes = {
 					D21B07E51A1B4AA20041ECF3 = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = QE4Q39QVNE;
+						DevelopmentTeam = 6KMG279R88;
 					};
 				};
 			};
@@ -416,7 +414,6 @@
 				FB7A433A1A8E376B0068CF5E /* TextureTeapotBrass.png in Resources */,
 				FB7A433D1A8E376B0068CF5E /* TextureTeapotYellow.png in Resources */,
 				FB7A431F1A8E376B0068CF5E /* buildings.txt in Resources */,
-				EF9808A81DE09D850088FE4E /* SampleApplication in Resources */,
 				EF9808D31DE09DE30088FE4E /* Simple.vertsh in Resources */,
 				D21B07F71A1B4AA20041ECF3 /* Images.xcassets in Resources */,
 				EF9808D41DE09DE30088FE4E /* SimpleWithColor.fragsh in Resources */,
@@ -561,13 +558,13 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = QE4Q39QVNE;
+				DEVELOPMENT_TEAM = 6KMG279R88;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = ../../build/include;
 				INFOPLIST_FILE = "VuforiaSamples/ARChess-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = ../../build/lib/arm;
-				PRODUCT_BUNDLE_IDENTIFIER = com.flaxapps.mrboardgames;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sfotm.mrboardgames;
 				PRODUCT_NAME = Vuforia;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -584,14 +581,14 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 21;
-				DEVELOPMENT_TEAM = QE4Q39QVNE;
+				DEVELOPMENT_TEAM = 6KMG279R88;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = ../../build/include;
 				INFOPLIST_FILE = "VuforiaSamples/ARChess-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = ../../build/lib/arm;
 				"LIBRARY_SEARCH_PATHS[arch=*]" = ../../build/lib/arm;
-				PRODUCT_BUNDLE_IDENTIFIER = com.flaxapps.mrboardgames;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sfotm.mrboardgames;
 				PRODUCT_NAME = Vuforia;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
