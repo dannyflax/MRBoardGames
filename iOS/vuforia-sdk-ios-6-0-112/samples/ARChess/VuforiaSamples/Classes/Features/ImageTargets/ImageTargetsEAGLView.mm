@@ -90,8 +90,7 @@ namespace {
   
   if (self) {
     NSString *filePathName = [[NSBundle mainBundle] pathForResource:@"monkey" ofType:@"obj"];
-    modelSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
-    
+    monkeySource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
     
     CGRect scaledBounds = self.bounds;
     scaledBounds.size.width = scaledBounds.size.width / [UIScreen mainScreen].nativeScale;
@@ -99,7 +98,7 @@ namespace {
     
     occlusionView = [[UIImageView alloc] initWithFrame:scaledBounds];
     [occlusionView setBackgroundColor:[UIColor clearColor]];
-    [occlusionView setAlpha:0.3];
+    [occlusionView setAlpha:0.7];
     
     [self addSubview:occlusionView];
     
@@ -125,6 +124,8 @@ namespace {
       augmentationTexture[i] = [[Texture alloc] initWithImageFile:[NSString stringWithCString:textureFilenames[i] encoding:NSASCIIStringEncoding]];
     }
     
+    
+    
     // Create the OpenGL ES context
     context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     
@@ -145,6 +146,17 @@ namespace {
       glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, [augmentationTexture[i] width], [augmentationTexture[i] height], 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)[augmentationTexture[i] pngData]);
     }
+    
+    Texture *chessboardTexture = [[Texture alloc] initWithImageFile:[NSString stringWithCString:"chessboard.jpg" encoding:NSASCIIStringEncoding]];
+    
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+    chessboardTextureID = textureID;
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, [chessboardTexture width], [chessboardTexture height], 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)[chessboardTexture pngData]);
+    
     
     offTargetTrackingEnabled = NO;
     sampleAppRenderer = [[SampleAppRenderer alloc]initWithSampleAppRendererControl:self deviceMode:Vuforia::Device::MODE_AR stereo:false];
@@ -361,55 +373,27 @@ namespace {
   }
   
   if ([inputHandler backgroundInSight]) {
-    GLuint viewTexture = [self makeViewOpenGLTexture:projectedView];
+    float boardSize = 100;
+    float padding = 50.0;
     
-    float labelWidth = projectedView.bounds.size.width;
-    float labelHeight = projectedView.bounds.size.height;
+    const float boardVertices[3*4]{
+      -boardSize / 2.0f, -boardSize / 2.0f, 0.0,
+       boardSize / 2.0f, -boardSize / 2.0f, 0.0,
+       boardSize / 2.0f,  boardSize / 2.0f, 0.0,
+      -boardSize / 2.0f,  boardSize / 2.0f, 0.0
+    };
     
     float objModelViewProjection[16];
     
     Vuforia::Matrix44F bgModelView = [inputHandler backgroundModelView];
     
-    SampleApplicationUtils::rotatePoseMatrix(90.0f, 0.0, 0.0, 1.0, &bgModelView.data[0]);
+    float scale = 2.0;
     
-    SampleApplicationUtils::translatePoseMatrix(-(labelWidth + viewPadding), -labelHeight/2.0, 0.0, &bgModelView.data[0]);
+    SampleApplicationUtils::translatePoseMatrix(0.0, -(scale*boardSize/2 + padding), 0.0, &bgModelView.data[0]);
     
     SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], &bgModelView.data[0], objModelViewProjection);
     
-    glUseProgram(shaderProgramID);
-    
-    
-    static const float viewVertices[kNumQuadVertices * 3] =
-    {
-      0,  0,  0.0f,
-      labelWidth,  0,  0.0f,
-      labelWidth,   labelHeight,  0.0f,
-      0,   labelHeight,  0.0f,
-    };
-    
-    
-    glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)viewVertices);
-    glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)quadNormals);
-    glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)quadTexCoords);
-    
-    glEnableVertexAttribArray(vertexHandle);
-    glEnableVertexAttribArray(normalHandle);
-    glEnableVertexAttribArray(textureCoordHandle);
-    
-    glActiveTexture(GL_TEXTURE0);
-    
-    glBindTexture(GL_TEXTURE_2D, viewTexture);
-    
-    glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE, (const GLfloat*)objModelViewProjection);
-    glUniform1i(texSampler2DHandle, 0 /*GL_TEXTURE0*/);
-    glUniform1f(modelScaleHandle, 1.0);
-    glUniform1f(texAlphaHandle, 1.0);
-    
-    glDrawElements(GL_TRIANGLES, kNumQuadIndices, GL_UNSIGNED_SHORT, (const GLvoid*)quadIndices);
-    
-    glDisableVertexAttribArray(vertexHandle);
-    glDisableVertexAttribArray(normalHandle);
-    glDisableVertexAttribArray(textureCoordHandle);
+    [self drawModelWithMvp:objModelViewProjection vertexCoords:(GLvoid *)boardVertices elements:(GLvoid *)quadIndices numElements:kNumQuadIndices normalCoords:(GLvoid *)quadNormals texCoords:(GLvoid *)quadTexCoords hasTexture:YES modelScale:scale textureID:chessboardTextureID color:nil];
   }
   
   
@@ -445,7 +429,7 @@ namespace {
     
     [sampleAppRenderer setImageViewToBackground:occlusionView withCroppingPath:path];
     
-    float cursorOffset[3] = {-30.0, -20.0, -50.0};
+    float cursorOffset[3] = {-30.0, 20.0, -50.0};
     
     float objModelViewProjection[16];
     
@@ -453,9 +437,9 @@ namespace {
     
     SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], &cursorModelView.data[0], objModelViewProjection);
     
-    glUseProgram(shaderProgramID);
+    float monkeyColor[3] = {1.0 , 0.0, 0.0};
     
-    [self drawModelWithMvp:objModelViewProjection modelSource:modelSource modelScale:2.0 textureID:-1];
+    [self drawModelWithMvp:objModelViewProjection modelSource:monkeySource modelScale:2.0 textureID:-1 color:monkeyColor];
     
   } else {
     if(occlusionView.image)
@@ -471,13 +455,15 @@ namespace {
   [self presentFramebuffer];
 }
 
-- (void)drawModelWithMvp:(GLvoid *)mvp modelSource:(demoModel *)source modelScale:(float)modelScale textureID:(GLuint)textureID
+- (void)drawModelWithMvp:(GLvoid *)mvp modelSource:(demoModel *)source modelScale:(float)modelScale textureID:(GLuint)textureID color:(float *)color
 {
-  [self drawModelWithMvp:mvp vertexCoords:source->positions elements:source->elements numElements:source->numElements normalCoords:source->normals texCoords:source->texcoords hasTexture:(source->texcoordArraySize > 0) modelScale:modelScale textureID:textureID];
+  [self drawModelWithMvp:mvp vertexCoords:source->positions elements:source->elements numElements:source->numElements normalCoords:source->normals texCoords:source->texcoords hasTexture:(source->texcoordArraySize > 0) modelScale:modelScale textureID:textureID color:color];
 }
 
-- (void)drawModelWithMvp:(GLvoid *)mvp vertexCoords:(GLvoid *)vertexCoords elements:(GLvoid *)elements numElements:(int)numElements normalCoords:(GLvoid *)normalCoords texCoords:(GLvoid *)texCoords hasTexture:(bool)hasTexCoords modelScale:(float)modelScale textureID:(GLuint)textureID
+- (void)drawModelWithMvp:(GLvoid *)mvp vertexCoords:(GLvoid *)vertexCoords elements:(GLvoid *)elements numElements:(int)numElements normalCoords:(GLvoid *)normalCoords texCoords:(GLvoid *)texCoords hasTexture:(bool)hasTexCoords modelScale:(float)modelScale textureID:(GLuint)textureID color:(float *)color
 {
+  glUseProgram(shaderProgramID);
+  
   glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)vertexCoords);
   glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)normalCoords);
   
@@ -495,17 +481,18 @@ namespace {
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, [augmentationTexture[0] textureID]);
   
+  glUniform1i(textureUsedHandle, hasTexCoords);
+  
   if (hasTexCoords) {
     glBindTexture(GL_TEXTURE_2D, textureID);
     glUniform1i(texSampler2DHandle, 0 /*GL_TEXTURE0*/);
+  } else {
+    glUniform3f(colorHandle, color[0], color[1], color[2]);
   }
   
   glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE, (const GLfloat*)mvp);
   glUniform1f(modelScaleHandle, modelScale);
-  
-  if (hasTexCoords) {
-    glUniform1f(texAlphaHandle, 1.0);
-  }
+  glUniform1f(texAlphaHandle, 1.0);
   
   glDrawElements(GL_TRIANGLES, numElements, GL_UNSIGNED_SHORT, (const GLvoid*)elements);
   
@@ -515,6 +502,8 @@ namespace {
   if (hasTexCoords) {
     glDisableVertexAttribArray(textureCoordHandle);
   }
+  
+  glUseProgram(0);
 }
 
 //------------------------------------------------------------------------------
@@ -533,6 +522,8 @@ namespace {
     texSampler2DHandle  = glGetUniformLocation(shaderProgramID,"texSampler2D");
     modelScaleHandle  = glGetUniformLocation(shaderProgramID,"modelScale");
     texAlphaHandle  = glGetUniformLocation(shaderProgramID,"texAlpha");
+    colorHandle  = glGetUniformLocation(shaderProgramID,"color");
+    textureUsedHandle  = glGetUniformLocation(shaderProgramID,"textureUsed");
   }
   else {
     NSLog(@"Could not initialise augmentation shader");

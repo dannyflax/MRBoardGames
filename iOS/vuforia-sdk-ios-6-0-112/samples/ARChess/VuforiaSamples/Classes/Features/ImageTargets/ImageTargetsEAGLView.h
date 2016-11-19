@@ -50,10 +50,15 @@ countries.
     GLint texSampler2DHandle;
     GLint modelScaleHandle;
     GLint texAlphaHandle;
+    GLint colorHandle;
+    GLboolean textureUsedHandle;
+  
   
     // Texture used when rendering augmentation
     Texture* augmentationTexture[kNumAugmentationTextures];
-    
+  
+    GLuint chessboardTextureID;
+  
     BOOL offTargetTrackingEnabled;
     SampleApplication3DModel * buildingModel;
     
@@ -70,7 +75,9 @@ countries.
   
     UIImageView *occlusionView;
   
-    demoModel *modelSource;
+    demoModel *monkeySource;
+  
+    demoModel *boardSource;
 }
 
 @property (nonatomic, weak) SampleApplicationSession * vapp;

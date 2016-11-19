@@ -5,13 +5,26 @@
 
 precision mediump float;
 varying vec2 texCoord;
+varying vec4 normal;
 
 uniform sampler2D texSampler2D;
 uniform float texAlpha;
 
+uniform bool textureUsed;
+
+uniform vec3 color;
+
 void main()
 {
-    vec4 colorSample = texture2D(texSampler2D, texCoord);
+    vec3 light = vec3(1.0, 1.0, 1.0);
+    vec4 colorSample = vec4(color.r, color.g, color.b, 1.0);
+    if (textureUsed) {
+      colorSample = texture2D(texSampler2D, texCoord);
+    }
+  
     colorSample.a = texAlpha;
+  
+    colorSample = colorSample * dot(light, vec3(normal.x, normal.y, normal.z));
+  
     gl_FragColor = colorSample;
 }
