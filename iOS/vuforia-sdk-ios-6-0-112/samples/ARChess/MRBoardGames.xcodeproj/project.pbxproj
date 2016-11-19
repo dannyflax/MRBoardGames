@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		18EB634C1ACC70F200EF1C28 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18EB634B1ACC70F200EF1C28 /* Localizable.strings */; };
 		8F467BCD1D18AC3F00682E4C /* SampleAppRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8F467BCC1D18AC3F00682E4C /* SampleAppRenderer.mm */; };
+		B54D0ADE1DE0D610000C7014 /* BaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B54D0ADD1DE0D610000C7014 /* BaseObject.m */; };
 		D21B07EC1A1B4AA20041ECF3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D21B07EB1A1B4AA20041ECF3 /* main.m */; };
 		D21B07EF1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D21B07EE1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m */; };
 		D21B07F71A1B4AA20041ECF3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D21B07F61A1B4AA20041ECF3 /* Images.xcassets */; };
@@ -68,6 +69,8 @@
 		18EB634B1ACC70F200EF1C28 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		8F467BCB1D18AC3F00682E4C /* SampleAppRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SampleAppRenderer.h; path = Classes/Features/ImageTargets/SampleAppRenderer.h; sourceTree = "<group>"; };
 		8F467BCC1D18AC3F00682E4C /* SampleAppRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SampleAppRenderer.mm; path = Classes/Features/ImageTargets/SampleAppRenderer.mm; sourceTree = "<group>"; };
+		B54D0ADC1DE0D610000C7014 /* BaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseObject.h; path = ObjectClasses/BaseObject.h; sourceTree = "<group>"; };
+		B54D0ADD1DE0D610000C7014 /* BaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseObject.m; path = ObjectClasses/BaseObject.m; sourceTree = "<group>"; };
 		D21B07E61A1B4AA20041ECF3 /* Vuforia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vuforia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D21B07EB1A1B4AA20041ECF3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D21B07ED1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VuforiaSamplesAppDelegate.h; sourceTree = "<group>"; };
@@ -168,9 +171,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B54D0ADB1DE0D411000C7014 /* ObjectClasses */ = {
+			isa = PBXGroup;
+			children = (
+				B54D0ADC1DE0D610000C7014 /* BaseObject.h */,
+				B54D0ADD1DE0D610000C7014 /* BaseObject.m */,
+			);
+			name = ObjectClasses;
+			sourceTree = "<group>";
+		};
 		D21B07DD1A1B4AA10041ECF3 = {
 			isa = PBXGroup;
 			children = (
+				B54D0ADB1DE0D411000C7014 /* ObjectClasses */,
 				D21B087B1A1B6C710041ECF3 /* Frameworks */,
 				D21B07E81A1B4AA20041ECF3 /* VuforiaSamples */,
 				D21B07E71A1B4AA20041ECF3 /* Products */,
@@ -386,7 +399,7 @@
 				TargetAttributes = {
 					D21B07E51A1B4AA20041ECF3 = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = QE4Q39QVNE;
+						DevelopmentTeam = 6KMG279R88;
 					};
 				};
 			};
@@ -454,6 +467,7 @@
 				D21B07EF1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m in Sources */,
 				EF98089B1DDEC6F80088FE4E /* Point3D.m in Sources */,
 				FB7A43501A8E38AB0068CF5E /* ImageTargetsEAGLView.mm in Sources */,
+				B54D0ADE1DE0D610000C7014 /* BaseObject.m in Sources */,
 				EF9808C21DE09DD80088FE4E /* SampleApplicationShaderUtils.m in Sources */,
 				EF9808981DDEC1FC0088FE4E /* ARInputHandler.mm in Sources */,
 				D21B07EC1A1B4AA20041ECF3 /* main.m in Sources */,
@@ -576,13 +590,13 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = QE4Q39QVNE;
+				DEVELOPMENT_TEAM = 6KMG279R88;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = ../../build/include;
 				INFOPLIST_FILE = "VuforiaSamples/ARChess-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = ../../build/lib/arm;
-				PRODUCT_BUNDLE_IDENTIFIER = com.flaxapps.mrboardgames;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sfotm.mrboardgames;
 				PRODUCT_NAME = Vuforia;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -599,14 +613,14 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 21;
-				DEVELOPMENT_TEAM = QE4Q39QVNE;
+				DEVELOPMENT_TEAM = 6KMG279R88;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = ../../build/include;
 				INFOPLIST_FILE = "VuforiaSamples/ARChess-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = ../../build/lib/arm;
 				"LIBRARY_SEARCH_PATHS[arch=*]" = ../../build/lib/arm;
-				PRODUCT_BUNDLE_IDENTIFIER = com.flaxapps.mrboardgames;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sfotm.mrboardgames;
 				PRODUCT_NAME = Vuforia;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
