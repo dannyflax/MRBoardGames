@@ -99,7 +99,7 @@ namespace {
     
     occlusionView = [[UIImageView alloc] initWithFrame:scaledBounds];
     [occlusionView setBackgroundColor:[UIColor clearColor]];
-    [occlusionView setAlpha:0.5];
+    [occlusionView setAlpha:0.3];
     
     [self addSubview:occlusionView];
     
@@ -418,6 +418,7 @@ namespace {
   if ([inputHandler cursorInSight]) {
     Vuforia::Matrix44F cursorModelView = [inputHandler cursorModelView];
     
+    
     int vpWidth = static_cast<int>(vapp.viewport.sizeX/[UIScreen mainScreen].nativeScale);
     
     int viewPort[4] = { vapp.viewport.posX, vapp.viewport.posY, static_cast<int>(vapp.viewport.sizeX/[UIScreen mainScreen].nativeScale), static_cast<int>(vapp.viewport.sizeY/[UIScreen mainScreen].nativeScale) };
@@ -444,26 +445,17 @@ namespace {
     
     [sampleAppRenderer setImageViewToBackground:occlusionView withCroppingPath:path];
     
-    float cursorWidth = 5.0;
-    float cursorHeight = 5.0;
-    
     float cursorOffset[3] = {-30.0, -20.0, -50.0};
     
     float objModelViewProjection[16];
+    
+    SampleApplicationUtils::translatePoseMatrix(cursorOffset[0],cursorOffset[1],cursorOffset[2],&cursorModelView.data[0]);
     
     SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], &cursorModelView.data[0], objModelViewProjection);
     
     glUseProgram(shaderProgramID);
     
-    static const float viewVertices[kNumQuadVertices * 3] =
-    {
-      cursorOffset[0] + -cursorWidth/2.0f, cursorOffset[1] + -cursorHeight/2.0f,  cursorOffset[2],
-      cursorOffset[0] + cursorWidth/2.0f,  cursorOffset[1] +-cursorHeight/2.0f,   cursorOffset[2],
-      cursorOffset[0] + cursorWidth/2.0f,  cursorOffset[1] + cursorHeight/2.0f,   cursorOffset[2],
-      cursorOffset[0] + -cursorWidth/2.0f, cursorOffset[1] + cursorHeight/2.0f,   cursorOffset[2],
-    };
-    
-    [self drawModelWithMvp:objModelViewProjection modelSource:modelSource modelScale:5.0];
+    [self drawModelWithMvp:objModelViewProjection modelSource:modelSource modelScale:2.0 textureID:-1];
     
   } else {
     if(occlusionView.image)
@@ -479,12 +471,12 @@ namespace {
   [self presentFramebuffer];
 }
 
-- (void)drawModelWithMvp:(GLvoid *)mvp modelSource:(demoModel *)source modelScale:(float)modelScale
+- (void)drawModelWithMvp:(GLvoid *)mvp modelSource:(demoModel *)source modelScale:(float)modelScale textureID:(GLuint)textureID
 {
-  [self drawModelWithMvp:mvp vertexCoords:source->positions elements:source->elements numElements:source->numElements normalCoords:source->normals texCoords:source->texcoords hasTexture:(source->texcoordArraySize > 0) modelScale:modelScale];
+  [self drawModelWithMvp:mvp vertexCoords:source->positions elements:source->elements numElements:source->numElements normalCoords:source->normals texCoords:source->texcoords hasTexture:(source->texcoordArraySize > 0) modelScale:modelScale textureID:textureID];
 }
 
-- (void)drawModelWithMvp:(GLvoid *)mvp vertexCoords:(GLvoid *)vertexCoords elements:(GLvoid *)elements numElements:(int)numElements normalCoords:(GLvoid *)normalCoords texCoords:(GLvoid *)texCoords hasTexture:(bool)hasTexCoords modelScale:(float)modelScale
+- (void)drawModelWithMvp:(GLvoid *)mvp vertexCoords:(GLvoid *)vertexCoords elements:(GLvoid *)elements numElements:(int)numElements normalCoords:(GLvoid *)normalCoords texCoords:(GLvoid *)texCoords hasTexture:(bool)hasTexCoords modelScale:(float)modelScale textureID:(GLuint)textureID
 {
   glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)vertexCoords);
   glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)normalCoords);
@@ -496,16 +488,19 @@ namespace {
   
   glEnableVertexAttribArray(vertexHandle);
   glEnableVertexAttribArray(normalHandle);
-  if (modelSource->texcoordArraySize > 0) {
+  if (hasTexCoords) {
     glEnableVertexAttribArray(textureCoordHandle);
   }
   
   glActiveTexture(GL_TEXTURE0);
-  
   glBindTexture(GL_TEXTURE_2D, [augmentationTexture[0] textureID]);
   
+  if (hasTexCoords) {
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glUniform1i(texSampler2DHandle, 0 /*GL_TEXTURE0*/);
+  }
+  
   glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE, (const GLfloat*)mvp);
-  glUniform1i(texSampler2DHandle, 0 /*GL_TEXTURE0*/);
   glUniform1f(modelScaleHandle, modelScale);
   
   if (hasTexCoords) {
