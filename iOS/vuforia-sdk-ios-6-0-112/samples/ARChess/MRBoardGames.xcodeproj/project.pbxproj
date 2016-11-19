@@ -26,10 +26,11 @@
 		D28C51241A8B5B8C000B6C9A /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D28C51231A8B5B8C000B6C9A /* MediaPlayer.framework */; };
 		D28C51261A8B5BC9000B6C9A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D28C51251A8B5BC9000B6C9A /* AudioToolbox.framework */; };
 		EF6862D11DCFE336003F5488 /* ARTouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6862D01DCFE335003F5488 /* ARTouchableView.m */; };
+		EF83B5C31DE0CC02002C14AE /* monkey.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B5C21DE0CC02002C14AE /* monkey.obj */; };
+		EF83B5C71DE0CC70002C14AE /* modelUtil.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF83B5C51DE0CC70002C14AE /* modelUtil.mm */; };
 		EF9808951DDE0B680088FE4E /* libVuforia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D21B08791A1B6AEA0041ECF3 /* libVuforia.a */; };
 		EF9808981DDEC1FC0088FE4E /* ARInputHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF9808971DDEC1FC0088FE4E /* ARInputHandler.mm */; };
 		EF98089B1DDEC6F80088FE4E /* Point3D.m in Sources */ = {isa = PBXBuildFile; fileRef = EF98089A1DDEC6F80088FE4E /* Point3D.m */; };
-		EF9808A81DE09D850088FE4E /* SampleApplication in Resources */ = {isa = PBXBuildFile; fileRef = EF9808A71DE09D850088FE4E /* SampleApplication */; };
 		EF9808BF1DE09DD80088FE4E /* PresentMenuSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = EF9808AD1DE09DD80088FE4E /* PresentMenuSegue.m */; };
 		EF9808C01DE09DD80088FE4E /* SampleApplication3DModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EF9808B01DE09DD80088FE4E /* SampleApplication3DModel.m */; };
 		EF9808C11DE09DD80088FE4E /* SampleApplicationSession.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF9808B21DE09DD80088FE4E /* SampleApplicationSession.mm */; };
@@ -89,11 +90,13 @@
 		D28C51251A8B5BC9000B6C9A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		EF6862CF1DCFE335003F5488 /* ARTouchableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARTouchableView.h; path = Classes/Features/ImageTargets/ARTouchableView.h; sourceTree = "<group>"; };
 		EF6862D01DCFE335003F5488 /* ARTouchableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARTouchableView.m; path = Classes/Features/ImageTargets/ARTouchableView.m; sourceTree = "<group>"; };
+		EF83B5C21DE0CC02002C14AE /* monkey.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = monkey.obj; sourceTree = "<group>"; };
+		EF83B5C51DE0CC70002C14AE /* modelUtil.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = modelUtil.mm; sourceTree = "<group>"; };
+		EF83B5C61DE0CC70002C14AE /* modelUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modelUtil.h; sourceTree = "<group>"; };
 		EF9808961DDEC1FC0088FE4E /* ARInputHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARInputHandler.h; path = Classes/Features/ImageTargets/ARInputHandler.h; sourceTree = "<group>"; };
 		EF9808971DDEC1FC0088FE4E /* ARInputHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ARInputHandler.mm; path = Classes/Features/ImageTargets/ARInputHandler.mm; sourceTree = "<group>"; };
 		EF9808991DDEC6F80088FE4E /* Point3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point3D.h; path = Classes/Features/ImageTargets/Point3D.h; sourceTree = "<group>"; };
 		EF98089A1DDEC6F80088FE4E /* Point3D.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Point3D.m; path = Classes/Features/ImageTargets/Point3D.m; sourceTree = "<group>"; };
-		EF9808A71DE09D850088FE4E /* SampleApplication */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SampleApplication; path = "/Users/dannyflax/Documents/Hackathons/Hack OHIO (2016)/MRBoardGames/iOS/vuforia-sdk-ios-6-0-112/samples/ARChess/VuforiaSamples/Classes/SampleApplication"; sourceTree = "<absolute>"; };
 		EF9808AC1DE09DD80088FE4E /* PresentMenuSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PresentMenuSegue.h; path = Classes/SampleApplication/PresentMenuSegue.h; sourceTree = "<group>"; };
 		EF9808AD1DE09DD80088FE4E /* PresentMenuSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PresentMenuSegue.m; path = Classes/SampleApplication/PresentMenuSegue.m; sourceTree = "<group>"; };
 		EF9808AE1DE09DD80088FE4E /* Quad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Quad.h; path = Classes/SampleApplication/Quad.h; sourceTree = "<group>"; };
@@ -215,6 +218,7 @@
 		D21B08111A1B4C500041ECF3 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				EF83B5C41DE0CC67002C14AE /* Utilities */,
 				EF9808AA1DE09DBD0088FE4E /* SampleApplication */,
 				D21B07ED1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.h */,
 				D21B07EE1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m */,
@@ -234,6 +238,7 @@
 		D21B08161A1B4D320041ECF3 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				EF83B5C21DE0CC02002C14AE /* monkey.obj */,
 				FB7A42E71A8E376B0068CF5E /* building_texture.jpeg */,
 				FB7A42E81A8E376B0068CF5E /* buildings.txt */,
 				FB7A43091A8E376B0068CF5E /* TextureTeapotBlue.png */,
@@ -265,6 +270,15 @@
 				D21B08701A1B6AD60041ECF3 /* UIKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EF83B5C41DE0CC67002C14AE /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				EF83B5C51DE0CC70002C14AE /* modelUtil.mm */,
+				EF83B5C61DE0CC70002C14AE /* modelUtil.h */,
+			);
+			name = Utilities;
 			sourceTree = "<group>";
 		};
 		EF9808AA1DE09DBD0088FE4E /* SampleApplication */ = {
@@ -401,6 +415,7 @@
 			files = (
 				FB7A43391A8E376B0068CF5E /* TextureTeapotBlue.png in Resources */,
 				FBEFAEC81A8283F8002B4D62 /* Main.storyboard in Resources */,
+				EF83B5C31DE0CC02002C14AE /* monkey.obj in Resources */,
 				FB7A432B1A8E376B0068CF5E /* IT_about.html in Resources */,
 				18EB634C1ACC70F200EF1C28 /* Localizable.strings in Resources */,
 				FB7A433C1A8E376B0068CF5E /* TextureTeapotRed.png in Resources */,
@@ -416,7 +431,6 @@
 				FB7A433A1A8E376B0068CF5E /* TextureTeapotBrass.png in Resources */,
 				FB7A433D1A8E376B0068CF5E /* TextureTeapotYellow.png in Resources */,
 				FB7A431F1A8E376B0068CF5E /* buildings.txt in Resources */,
-				EF9808A81DE09D850088FE4E /* SampleApplication in Resources */,
 				EF9808D31DE09DE30088FE4E /* Simple.vertsh in Resources */,
 				D21B07F71A1B4AA20041ECF3 /* Images.xcassets in Resources */,
 				EF9808D41DE09DE30088FE4E /* SimpleWithColor.fragsh in Resources */,
@@ -449,6 +463,7 @@
 				FB7A43511A8E38AB0068CF5E /* ImageTargetsViewController.mm in Sources */,
 				EF9808BF1DE09DD80088FE4E /* PresentMenuSegue.m in Sources */,
 				EF9808C61DE09DD80088FE4E /* UnwindMenuSegue.m in Sources */,
+				EF83B5C71DE0CC70002C14AE /* modelUtil.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

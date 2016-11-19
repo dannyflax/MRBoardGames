@@ -21,6 +21,7 @@ countries.
 #import "SampleAppRenderer.h"
 #import "ARTouchableView.h"
 #import "Point3D.h"
+#import "modelUtil.h"
 
 #define kNumAugmentationTextures 4
 
@@ -68,6 +69,8 @@ countries.
     GLuint currentViewTexture;
   
     UIImageView *occlusionView;
+  
+    demoModel *modelSource;
 }
 
 @property (nonatomic, weak) SampleApplicationSession * vapp;
