@@ -7,10 +7,18 @@
 //
 
 #import "SampleCommunicationViewController.h"
+#import "GameListTableViewCell.h"
 
 @import SocketIO;
 
-@interface SampleCommunicationViewController ()
+// This class holds information about games available to us.
+@implementation GameInfo
+
+@end
+
+@interface SampleCommunicationViewController ()  {
+    NSMutableArray *gameList;
+}
 
 @end
 
@@ -18,151 +26,92 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    _connectedLabel.text = @"Disconnected";
+    self.gameTableView.delegate = self;
+    self.gameTableView.dataSource = self;
 }
 
-- (IBAction) sendMessage {
-    
-    NSString *response  = [NSString stringWithFormat:@"msg:%@\r\n", _dataToSendText.text];
-    NSData *data = [[NSData alloc] initWithData:[response dataUsingEncoding:NSASCIIStringEncoding]];
-    [outputStream write:[data bytes] maxLength:[data length]];
-    
+- (void)viewWillAppear:(BOOL)animated {
+    [self setViewActive:NO];
 }
 
-- (void) messageReceived:(NSString *)message {
-    
-    [messages addObject:message];
-    
-    _dataRecievedTextView.text = message;
-    NSLog(@"%@", message);
+- (void)viewDidAppear:(BOOL)animated {
+    [self connectToServer];
 }
 
-- (void)stream:(NSStream *)theStream handleEvent:(NSStreamEvent)streamEvent {
-    
-    NSLog(@"stream event %lu", streamEvent);
-    
-    switch (streamEvent) {
-            
-        case NSStreamEventOpenCompleted:
-            NSLog(@"Stream opened");
-            _connectedLabel.text = @"Connected";
-            break;
-        case NSStreamEventHasBytesAvailable:
-            
-            if (theStream == inputStream)
-            {
-                uint8_t buffer[1024];
-                NSInteger len;
-                
-                while ([inputStream hasBytesAvailable])
-                {
-                    len = [inputStream read:buffer maxLength:sizeof(buffer)];
-                    if (len > 0)
-                    {
-                        NSString *output = [[NSString alloc] initWithBytes:buffer length:len encoding:NSASCIIStringEncoding];
-                        
-                        if (nil != output)
-                        {
-                            NSLog(@"server said: %@", output);
-                            [self messageReceived:output];
-                        }
-                    }
-                }
-            }
-            break;
-            
-        case NSStreamEventHasSpaceAvailable:
-            NSLog(@"Stream has space available now");
-            break;
-            
-        case NSStreamEventErrorOccurred:
-            NSLog(@"%@",[theStream streamError].localizedDescription);
-            break;
-            
-        case NSStreamEventEndEncountered:
-            
-            [theStream close];
-            [theStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-            _connectedLabel.text = @"Disconnected";
-            NSLog(@"close stream");
-            break;
-        default:
-            NSLog(@"Unknown event");
+- (void)setViewActive:(BOOL)active {
+    self.gameTableView.hidden = !active;
+    self.activityIndicator.hidden = active;
+    self.gameButton.enabled = active;
+    if (active) {
+        [self.activityIndicator stopAnimating];
+    } else {
+        [self.activityIndicator startAnimating];
     }
-    
 }
 
-// called manually
-- (IBAction)connectToServer {
+// Called when view has appeared
+- (void)connectToServer {
     NSURL* url = [[NSURL alloc] initWithString:@"http://ec2-52-15-161-144.us-east-2.compute.amazonaws.com:3901"];
     SocketIOClient* socket = [[SocketIOClient alloc] initWithSocketURL:url config:@{@"log": @YES, @"forcePolling": @YES}];
     
     [socket on:@"connect" callback:^(NSArray* data, SocketAckEmitter* ack) {
-        _connectedLabel.text = @"Connected!";
         [socket emit:@"listGames" with:@[]];
+    }];
+
+    [socket on:@"gameList" callback:^(NSArray *data, SocketAckEmitter *ack) {
+        // populate the table view with games!
+        //NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        gameList = [[NSMutableArray alloc] init];
+        NSDictionary *gameObjects = data[0];
+        for (NSString *key in [gameObjects allKeys]) {
+            int numPlayers = [[gameObjects objectForKey:key] intValue];
+            GameInfo *gameInfo = [[GameInfo alloc] init];
+            gameInfo.gameTitle = key;
+            gameInfo.playersInGame = numPlayers;
+            [gameList addObject:gameInfo];
+        }
+        [self.gameTableView reloadData];
+        [self setViewActive:YES];
     }];
     
     [socket on:@"disconnect" callback:^(NSArray* data, SocketAckEmitter* ack) {
-        _connectedLabel.text = @"Disconnected!";
-    }];
-    
-    [socket on:@"currentAmount" callback:^(NSArray* data, SocketAckEmitter* ack) {
-        double cur = [[data objectAtIndex:0] floatValue];
-        
-        [[socket emitWithAck:@"canUpdate" with:@[@(cur)]] timingOutAfter:0 callback:^(NSArray* data) {
-            //[socket emit:@"update" withItems:];
-            [socket emit:@"update" with:@[@{@"amount": @(cur + 2.50)}]];
-        }];
-        
-        [ack with:@[@"Got your currentAmount, ", @"dude"]];
+        // would be good to handle this gracefully...
     }];
     
     [socket connect];
 }
 
-// Called manually
-- (IBAction)disconnect:(id)sender {
-    
-    [self close];
-}
-
-- (void)open {
-    
-    NSLog(@"Opening streams.");
-    
-    outputStream = (__bridge NSOutputStream *)writeStream;
-    inputStream = (__bridge NSInputStream *)readStream;
-    
-    [outputStream setDelegate:self];
-    [inputStream setDelegate:self];
-    
-    [outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    
-    [outputStream open];
-    [inputStream open];
-    
-    self.connectedLabel.text = @"Connected";
-}
-
-- (void)close {
-    NSLog(@"Closing streams.");
-    [inputStream close];
-    [outputStream close];
-    [inputStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [outputStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [inputStream setDelegate:nil];
-    [outputStream setDelegate:nil];
-    inputStream = nil;
-    outputStream = nil;
-    
-    self.connectedLabel.text = @"Disconnected";
+- (IBAction)newGamePressed:(id)sender {
+    // launch into a new view that will connect to the game.
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+#pragma MARK - UITableViewDelegate
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (gameList) {
+        return [gameList count];
+    } else {
+        return 0;
+    }
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    GameListTableViewCell *cell = (GameListTableViewCell*)[tableView dequeueReusableCellWithIdentifier:@"GameListTableViewCell"];
+    // remove an item from the dictionary for the cell.
+    GameInfo *gameInfo = [gameList objectAtIndex:indexPath.row];
+    cell.gameName.text = gameInfo.gameTitle;
+    cell.playersLabel.text = [NSString stringWithFormat:@"[%i]", gameInfo.playersInGame];
+    return cell;
 }
 
 @end
