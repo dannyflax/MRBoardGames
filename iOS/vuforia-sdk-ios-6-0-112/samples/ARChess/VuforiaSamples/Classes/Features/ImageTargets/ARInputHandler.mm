@@ -12,6 +12,11 @@
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 
+#import <Vuforia/ImageTarget.h>
+#import <Vuforia/ImageTargetResult.h>
+
+#import <Vuforia/VirtualButtonResult.h>
+
 #import "Texture.h"
 #import "Quad.h"
 #import "SampleApplicationUtils.h"
@@ -22,11 +27,21 @@
   Point3D *_currentPos;
   bool _backgroundInSight;
   bool _cursorInSight;
+  bool _grabbingMode;
+  bool _waitingForZero;
   Vuforia::Matrix44F _cursorModelView;
   Vuforia::Matrix44F _bgModelView;
 }
 
 const float kObjectScaleNormal = 3.0f;
+
+- (id)init{
+  if (self = [super init]) {
+    _grabbingMode = NO;
+    _waitingForZero = NO;
+  }
+  return self;
+}
 
 - (void)computeInputFromState:(const Vuforia::State&)state projectMatrix:(Vuforia::Matrix44F&) projectionMatrix
 {
@@ -41,8 +56,6 @@ const float kObjectScaleNormal = 3.0f;
   
   _backgroundInSight = NO;
   _cursorInSight = NO;
-  
-  
   
   int viewPort[4] = { 0, 0, 320, 480 };
   
@@ -143,6 +156,26 @@ const float kObjectScaleNormal = 3.0f;
       _cursorModelView = modelViewMatrix;
       
       _cursorInSight = YES;
+      
+      const Vuforia::ImageTargetResult* imageTargetResult =
+      static_cast<const Vuforia::ImageTargetResult*>(result);
+      
+      
+      for (int i = 0; i < imageTargetResult->getNumVirtualButtons(); ++i)
+      {
+        const Vuforia::VirtualButtonResult* buttonResult = imageTargetResult->getVirtualButtonResult("grabButton");
+        
+        if (buttonResult) {
+          NSLog(@"%i", _grabbingMode);
+          if(buttonResult->isPressed() && !_waitingForZero) {
+            _waitingForZero = YES;
+            _grabbingMode = !_grabbingMode;
+          } else if(!buttonResult->isPressed()) {
+            _waitingForZero = NO;
+          }
+        }
+      }
+      
     }
     
     SampleApplicationUtils::checkGlError("EAGLView renderFrameVuforia");
@@ -215,6 +248,11 @@ const float kObjectScaleNormal = 3.0f;
 - (bool)cursorInSight
 {
   return _cursorInSight;
+}
+
+- (bool)grabbingMode
+{
+  return _grabbingMode;
 }
 
 - (Point3D *)currentPos

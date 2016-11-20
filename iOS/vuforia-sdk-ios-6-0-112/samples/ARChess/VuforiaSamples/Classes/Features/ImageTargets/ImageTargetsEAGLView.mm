@@ -58,6 +58,8 @@ namespace {
   };
 }
 
+static const float kBoardSize = 200;
+static const float kBoardPadding = 50.0;
 
 @interface ImageTargetsEAGLView (PrivateMethods)
 
@@ -91,6 +93,9 @@ namespace {
   if (self) {
     NSString *filePathName = [[NSBundle mainBundle] pathForResource:@"monkey" ofType:@"obj"];
     monkeySource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
+    
+    filePathName = [[NSBundle mainBundle] pathForResource:@"queen-t" ofType:@"obj"];
+    queenSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
     
     CGRect scaledBounds = self.bounds;
     scaledBounds.size.width = scaledBounds.size.width / [UIScreen mainScreen].nativeScale;
@@ -341,65 +346,46 @@ namespace {
   
   [inputHandler computeInputFromState:state projectMatrix:projectionMatrix];
   
-  float viewPadding = 50.0f;
-  
-  currentPos = [inputHandler currentPos];
-  
-  float labelWidth = projectedView.bounds.size.width;
-  float labelHeight = projectedView.bounds.size.height;
-  CGPoint pointInView = CGPointMake(currentPos.y + (labelWidth + viewPadding), currentPos.x + labelHeight/2.0);
-  
-  bool touching = currentPos.z < 0.0;
-  
-  if (touching) {
-    if ([projectedView pointInside:pointInView withEvent:nil]) {
-      if (stylusHeld) {
-        [projectedView tapMoved:pointInView];
-      } else {
-        [projectedView tapBegan:pointInView];
-        stylusHeld = YES;
-      }
-    } else {
-      if (stylusHeld) {
-        [projectedView tapEnded:pointInView];
-        stylusHeld = NO;
-      }
-    }
-  } else {
-    if (stylusHeld) {
-      [projectedView tapEnded:pointInView];
-      stylusHeld = NO;
-    }
-  }
-  
   if ([inputHandler backgroundInSight]) {
-    float boardSize = 100;
-    float padding = 50.0;
-    
     const float boardVertices[3*4]{
-      -boardSize / 2.0f, -boardSize / 2.0f, 0.0,
-       boardSize / 2.0f, -boardSize / 2.0f, 0.0,
-       boardSize / 2.0f,  boardSize / 2.0f, 0.0,
-      -boardSize / 2.0f,  boardSize / 2.0f, 0.0
+      -kBoardSize / 2.0f, -kBoardSize / 2.0f, 0.0,
+       kBoardSize / 2.0f, -kBoardSize / 2.0f, 0.0,
+       kBoardSize / 2.0f,  kBoardSize / 2.0f, 0.0,
+      -kBoardSize / 2.0f,  kBoardSize / 2.0f, 0.0
     };
     
+    float objModelView[16];
     float objModelViewProjection[16];
     
     Vuforia::Matrix44F bgModelView = [inputHandler backgroundModelView];
     
-    float scale = 2.0;
+    for (int i = 0; i < 16; i++) {
+      objModelView[i] = bgModelView.data[i];
+    }
     
-    SampleApplicationUtils::translatePoseMatrix(0.0, -(scale*boardSize/2 + padding), 0.0, &bgModelView.data[0]);
+    float scale = 1.0;
     
-    SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], &bgModelView.data[0], objModelViewProjection);
+    SampleApplicationUtils::translatePoseMatrix(0.0, -(kBoardSize/2 + kBoardPadding), 0.0, objModelView);
+    
+    SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], objModelView, objModelViewProjection);
     
     [self drawModelWithMvp:objModelViewProjection vertexCoords:(GLvoid *)boardVertices elements:(GLvoid *)quadIndices numElements:kNumQuadIndices normalCoords:(GLvoid *)quadNormals texCoords:(GLvoid *)quadTexCoords hasTexture:YES modelScale:scale textureID:chessboardTextureID color:nil];
+    
+    [self drawQueenAtX:0 queenY:0 queenZ:0 projectionMatrix:projectionMatrix];
+    
   }
   
   
-  
-  
   if ([inputHandler cursorInSight]) {
+    currentPos = [inputHandler currentPos];
+    
+    if ([inputHandler backgroundInSight]) {
+      if ([inputHandler grabbingMode]) {
+        [self drawQueenAtX:-90 queenY:0 queenZ:0 projectionMatrix:projectionMatrix];
+      }
+    }
+    
+    
     Vuforia::Matrix44F cursorModelView = [inputHandler cursorModelView];
     
     
@@ -446,13 +432,32 @@ namespace {
       [occlusionView setImage:nil];
   }
   
-  
-  
-  
   glDisable(GL_DEPTH_TEST);
   glDisable(GL_CULL_FACE);
   
   [self presentFramebuffer];
+}
+
+- (void)drawQueenAtX:(float)queenX queenY:(float)queenY queenZ:(float)queenZ projectionMatrix:(Vuforia::Matrix44F)projectionMatrix
+{
+  float objModelView[16];
+  float objModelViewProjection[16];
+  
+  Vuforia::Matrix44F bgModelView = [inputHandler backgroundModelView];
+  
+  for (int i = 0; i < 16; i++) {
+    objModelView[i] = bgModelView.data[i];
+  }
+ 
+  SampleApplicationUtils::rotatePoseMatrix(90, 1.0, 0.0, 0.0, objModelView);
+  
+  SampleApplicationUtils::translatePoseMatrix(queenY, queenZ, kBoardPadding + kBoardSize/2.0f + queenX, objModelView);
+  
+  SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], objModelView, objModelViewProjection);
+  
+  float queenColor[3] = {1.0, 1.0, 1.0};
+  
+  [self drawModelWithMvp:objModelViewProjection modelSource:queenSource modelScale:10.0 textureID:-1 color:queenColor];
 }
 
 - (void)drawModelWithMvp:(GLvoid *)mvp modelSource:(demoModel *)source modelScale:(float)modelScale textureID:(GLuint)textureID color:(float *)color

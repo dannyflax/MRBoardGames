@@ -16,6 +16,11 @@ countries.
 #import <Vuforia/DataSet.h>
 #import <Vuforia/CameraDevice.h>
 
+#import <Vuforia/ImageTarget.h>
+#import <Vuforia/VirtualButton.h>
+
+#import <Vuforia/Rectangle.h>
+
 #import "UnwindMenuSegue.h"
 #import "PresentMenuSegue.h"
 #import "SampleAppMenuViewController.h"
@@ -242,8 +247,35 @@ countries.
         NSLog(@"Failed to activate dataset");
         return NO;
     }
-    
-    
+  
+  Vuforia::ObjectTracker* ot = reinterpret_cast<Vuforia::ObjectTracker*>(Vuforia::TrackerManager::getInstance().getTracker(Vuforia::ObjectTracker::getClassType()));
+  
+    // Deactivate the data set prior to reconfiguration:
+    ot->deactivateDataSet(dataSetStonesAndChips);
+  
+    //Stones is index 0
+    Vuforia::Trackable* trackable = dataSetStonesAndChips->getTrackable(0);
+  
+    Vuforia::ImageTarget* imageTarget = static_cast<Vuforia::ImageTarget*>(trackable);
+  
+    const char *buttonName = "grabButton";
+  
+    Vuforia::VirtualButton* virtualButton = imageTarget->getVirtualButton(buttonName);
+  
+    if (!virtualButton) {
+      float lOff = -50;
+      float size = 30;
+      
+      Vuforia::Rectangle vbRectangle(-size/2 - lOff, size/2, size/2 - lOff, -size/2);
+      virtualButton = imageTarget->createVirtualButton(buttonName, vbRectangle);
+      if (virtualButton) {
+        virtualButton->setEnabled(true);
+        virtualButton->setSensitivity(Vuforia::VirtualButton::MEDIUM);
+      }
+    }
+  
+    ot->activateDataSet(dataSetStonesAndChips);
+  
     return YES;
 }
 
@@ -318,6 +350,7 @@ countries.
     
     // Get the Vuforia tracker manager image tracker
     Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+  
     Vuforia::ObjectTracker* objectTracker = static_cast<Vuforia::ObjectTracker*>(trackerManager.getTracker(Vuforia::ObjectTracker::getClassType()));
     
     if (NULL == objectTracker) {
@@ -339,6 +372,9 @@ countries.
         else {
             NSLog(@"ERROR: failed to create data set");
         }
+      
+      
+      
     }
     
     return dataSet;

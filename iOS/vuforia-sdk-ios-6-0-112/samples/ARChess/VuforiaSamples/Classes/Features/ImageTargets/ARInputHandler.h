@@ -26,6 +26,7 @@
 
 - (bool)backgroundInSight;
 - (bool)cursorInSight;
+- (bool)grabbingMode;
 
 - (Point3D *)currentPos;
 

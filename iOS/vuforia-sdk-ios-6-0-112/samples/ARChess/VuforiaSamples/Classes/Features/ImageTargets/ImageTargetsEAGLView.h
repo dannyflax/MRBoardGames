@@ -77,7 +77,7 @@ countries.
   
     demoModel *monkeySource;
   
-    demoModel *boardSource;
+    demoModel *queenSource;
 }
 
 @property (nonatomic, weak) SampleApplicationSession * vapp;
