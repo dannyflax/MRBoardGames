@@ -122,8 +122,8 @@ io.on('connection', function(client){
 					return obj !== data.playerID;
 				});
 				delete players[data.playerID];
-				if(game.players.length == 0){
-					delete games.data.gameID;
+				if(game.players.length === 0){
+					delete games[data.gameID];
 				}
 				client.emit('gameLeft', {success: true});
 				console.log("removing player " + data.playerID);
@@ -140,13 +140,13 @@ io.on('connection', function(client){
 	//objectsHeld
 	
 	client.on('updateGameState', function(data){
-		console.log("UPDATE GAME STATE\n" + JSON.stringify(data));
+		//console.log("UPDATE GAME STATE\n" + JSON.stringify(data));
 		
 		if(games[data.gameID] && players[data.playerID] && games[data.gameID].players.indexOf(data.playerID) >= 0){
 			var game = games[data.gameID];
 			
 			if(data.hasOwnProperty(holding) &&  game.objectsHeld.hasOwnProperty(data.holding) && game.objectsHeld[data.holding] != data.playerID){
-				client.emit('gameStateUpdated', {success: false, gameState: "Illegal game state update"});
+				client.emit('gameStateUpdated', {success: false, gameState: game.state, objectsHeld: game.objectsHeld});
 				return;
 			}
 			
@@ -163,7 +163,7 @@ io.on('connection', function(client){
 						}
 					}
 					if(delEntry){
-						delete game.objectsHoldingp[delEntry];
+						delete game.objectsHeld[delEntry];
 					}
 				}else{
 					console.log("Execing else part to set objectsHeld");
@@ -175,9 +175,11 @@ io.on('connection', function(client){
 				console.log(playersInGame);
 				for(var i = 0; i < playersInGame.length; i++){
 					var player = playersInGame[i];
-					console.log(JSON.stringify(players) + "\n" + player);
-					//console.log(io.sockets.connected[players[player]]);
+					if(io.sockets.connected[players[player]]){
+					//console.log(JSON.stringify(players) + "\n" + player);
+					console.log(io.sockets.connected[players[player]].id);
 					io.sockets.connected[players[player]].emit('gameStateUpdated', {success: true, player: data.playerID, state: data.state, objectsHeld: game.objectsHeld});
+					}
 				}
 			});
 		}else{
