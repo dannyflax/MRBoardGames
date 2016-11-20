@@ -25,6 +25,8 @@
 #import "SampleApplicationShaderUtils.h"
 #import "Teapot.h"
 #import "Quad.h"
+#import "BaseObject.h"
+#import "CollisionChecker.h"
 
 
 //******************************************************************************
@@ -61,6 +63,10 @@ namespace {
 static const float kBoardSize = 200;
 static const float kBoardPadding = 50.0;
 
+static float kRedColor[3] =   {1.0, 0.0, 0.0};
+static float kGreenColor[3] = {0.0, 1.0, 0.0};
+static float kBlueColor[3] = {0.0, 1.0, 1.0};
+
 @interface ImageTargetsEAGLView (PrivateMethods)
 
 - (void)initShaders;
@@ -72,6 +78,14 @@ static const float kBoardPadding = 50.0;
 @end
 
 @implementation ImageTargetsEAGLView
+{
+  BaseObject *_queen;
+  BaseObject *_collidingObject;
+  BaseObject *_grabbedObject;
+  bool _grabMode;
+  Point3D *_grabObjPos;
+  Point3D *_grabCursorPos;
+}
 
 @synthesize vapp = vapp;
 
@@ -91,6 +105,8 @@ static const float kBoardPadding = 50.0;
   self = [super initWithFrame:frame];
   
   if (self) {
+    _queen = [[BaseObject alloc] initWithProperties:@"" HolderId:[NSNumber numberWithInt:0] Location:[[Point3D alloc] initWithX:0.0 Y:0.0 Z:0.0] Dimensions:[[Point3D alloc] initWithX:13.46 Y:13.46 Z:29.949] Scale:1.0 AndMeshName:@""];
+    
     NSString *filePathName = [[NSBundle mainBundle] pathForResource:@"monkey" ofType:@"obj"];
     monkeySource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
     
@@ -108,6 +124,8 @@ static const float kBoardPadding = 50.0;
     [self addSubview:occlusionView];
     
     inputHandler = [ARInputHandler new];
+    
+    inputHandler.delegate = self;
     
     currentViewTexture = -1;
     
@@ -128,8 +146,6 @@ static const float kBoardPadding = 50.0;
     for (int i = 0; i < kNumAugmentationTextures; ++i) {
       augmentationTexture[i] = [[Texture alloc] initWithImageFile:[NSString stringWithCString:textureFilenames[i] encoding:NSASCIIStringEncoding]];
     }
-    
-    
     
     // Create the OpenGL ES context
     context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
@@ -346,6 +362,8 @@ static const float kBoardPadding = 50.0;
   
   [inputHandler computeInputFromState:state projectMatrix:projectionMatrix];
   
+  _collidingObject = nil;
+  
   if ([inputHandler backgroundInSight]) {
     const float boardVertices[3*4]{
       -kBoardSize / 2.0f, -kBoardSize / 2.0f, 0.0,
@@ -371,16 +389,18 @@ static const float kBoardPadding = 50.0;
     
     [self drawModelWithMvp:objModelViewProjection vertexCoords:(GLvoid *)boardVertices elements:(GLvoid *)quadIndices numElements:kNumQuadIndices normalCoords:(GLvoid *)quadNormals texCoords:(GLvoid *)quadTexCoords hasTexture:YES modelScale:scale textureID:chessboardTextureID color:nil];
     
-    [self drawQueenAtX:0 queenY:0 queenZ:0 projectionMatrix:projectionMatrix];
-    
+    [self drawQueenAtX:_queen.location.x queenY:_queen.location.y queenZ:_queen.location.z projectionMatrix:projectionMatrix];
   }
   
   
   if ([inputHandler cursorInSight]) {
     currentPos = [inputHandler currentPos];
+    currentPos = [[Point3D alloc] initWithX:-(currentPos.y + kBoardPadding + kBoardSize/2.0f)
+                                          Y:currentPos.x
+                                          Z:currentPos.z];
+    
     
     Vuforia::Matrix44F cursorModelView = [inputHandler cursorModelView];
-    
     
     int vpWidth = static_cast<int>(vapp.viewport.sizeX/[UIScreen mainScreen].nativeScale);
     
@@ -416,11 +436,31 @@ static const float kBoardPadding = 50.0;
     
     SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], &cursorModelView.data[0], objModelViewProjection);
     
-    //Show green if grabbing, red if not
-    float redColor[3] =   {1.0, 0.0, 0.0};
-    float greenColor[3] = {0.0, 1.0, 0.0};
+    float *monkeyColor = [inputHandler grabbingMode] ? kGreenColor : kRedColor;
     
-    float *monkeyColor = [inputHandler grabbingMode] ? greenColor : redColor;
+    if ([inputHandler backgroundInSight]) {
+      if (_grabMode && _grabbedObject) {
+        Point3D *difference = [[Point3D alloc] initWithX:(currentPos.x - _grabCursorPos.x)
+                                                      Y:currentPos.y - _grabCursorPos.y
+                                                      Z:currentPos.z - _grabCursorPos.z];
+        
+        Point3D *newLocation = [[Point3D alloc] initWithX:_grabObjPos.x + difference.x
+                                                        Y:_grabObjPos.y + difference.y
+                                                        Z:_grabObjPos.z + difference.z];
+        
+        [_grabbedObject setLocation:newLocation];
+      } else if (!_grabMode) {
+        bool collides = [CollisionChecker checkCollisionBetweenRectWithCenter:_queen.location
+                                                                andDimensions:_queen.dimensions
+                                                                     andPoint:currentPos];
+        if (collides) {
+          monkeyColor = kBlueColor;
+          _collidingObject = _queen;
+        }
+      }
+    }
+    
+    
     
     [self drawModelWithMvp:objModelViewProjection modelSource:monkeySource modelScale:2.0 textureID:-1 color:monkeyColor];
     
@@ -619,6 +659,22 @@ static const float kBoardPadding = 50.0;
   return [context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
+#pragma mark ARInputHandlerDelegate
 
+- (void)grabModeBegan
+{
+  if (_collidingObject) {
+    _grabbedObject = _collidingObject;
+    _grabObjPos = _grabbedObject.location;
+    _grabCursorPos = currentPos;
+  }
+  _grabMode = YES;
+}
+
+- (void)grabModeEnded
+{
+  _grabbedObject = nil;
+  _grabMode = NO;
+}
 
 @end

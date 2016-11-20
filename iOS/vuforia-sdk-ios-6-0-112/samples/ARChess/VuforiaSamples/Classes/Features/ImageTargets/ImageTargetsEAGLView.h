@@ -20,6 +20,7 @@ countries.
 #import "SampleGLResourceHandler.h"
 #import "SampleAppRenderer.h"
 #import "ARTouchableView.h"
+#import "ARInputHandler.h"
 #import "Point3D.h"
 #import "modelUtil.h"
 
@@ -28,7 +29,7 @@ countries.
 
 // EAGLView is a subclass of UIView and conforms to the informal protocol
 // UIGLViewProtocol
-@interface ImageTargetsEAGLView : UIView <UIGLViewProtocol, SampleGLResourceHandler, SampleAppRendererControl> {
+@interface ImageTargetsEAGLView : UIView <UIGLViewProtocol, SampleGLResourceHandler, SampleAppRendererControl, ARInputHandlerDelegate> {
 @private
     ARInputHandler *inputHandler;
   

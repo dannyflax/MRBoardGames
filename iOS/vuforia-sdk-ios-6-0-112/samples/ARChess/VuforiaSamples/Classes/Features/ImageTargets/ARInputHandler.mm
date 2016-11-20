@@ -170,6 +170,11 @@ const float kObjectScaleNormal = 3.0f;
           if(buttonResult->isPressed() && !_waitingForZero) {
             _waitingForZero = YES;
             _grabbingMode = !_grabbingMode;
+            if (_grabbingMode) {
+              [_delegate grabModeBegan];
+            } else {
+              [_delegate grabModeEnded];
+            }
           } else if(!buttonResult->isPressed()) {
             _waitingForZero = NO;
           }
@@ -201,7 +206,7 @@ const float kObjectScaleNormal = 3.0f;
     float invertedBackgroundRotation[9];
     float multipliedResult[3];
     
-    float cursorOffset[3] = {-30.0, -20.0, -50.0};
+    float cursorOffset[3] = {-247.0/6.0, 173.0/6.0, 0.0};
     float rotatedCursorOffset[3];
     
     float w_scale = .333;

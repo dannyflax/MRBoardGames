@@ -20,6 +20,13 @@
 
 #import "Point3D.h"
 
+@protocol ARInputHandlerDelegate
+
+- (void)grabModeBegan;
+- (void)grabModeEnded;
+
+@end
+
 @interface ARInputHandler : NSObject
 
 - (void)computeInputFromState:(const Vuforia::State&)state projectMatrix:(Vuforia::Matrix44F&) projectionMatrix;
@@ -32,5 +39,7 @@
 
 - (Vuforia::Matrix44F)backgroundModelView;
 - (Vuforia::Matrix44F)cursorModelView;
+
+@property id<ARInputHandlerDelegate> delegate;
 
 @end
