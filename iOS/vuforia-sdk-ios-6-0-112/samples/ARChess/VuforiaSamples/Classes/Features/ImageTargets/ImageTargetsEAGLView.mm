@@ -27,6 +27,7 @@
 #import "Quad.h"
 #import "BaseObject.h"
 #import "CollisionChecker.h"
+#import "ChessPiecesFactory.h"
 
 
 //******************************************************************************
@@ -85,6 +86,7 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
   bool _grabMode;
   Point3D *_grabObjPos;
   Point3D *_grabCursorPos;
+  NSDictionary<NSString *, id> *_pieceMeshMap;
 }
 
 @synthesize vapp = vapp;
@@ -105,13 +107,37 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
   self = [super initWithFrame:frame];
   
   if (self) {
-    _queen = [[BaseObject alloc] initWithProperties:@"" HolderId:[NSNumber numberWithInt:0] Location:[[Point3D alloc] initWithX:0.0 Y:0.0 Z:0.0] Dimensions:[[Point3D alloc] initWithX:13.46 Y:13.46 Z:29.949] Scale:1.0 AndMeshName:@""];
+    _queen = [ChessPiecesFactory createNewKnight];
     
     NSString *filePathName = [[NSBundle mainBundle] pathForResource:@"monkey" ofType:@"obj"];
     monkeySource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
     
     filePathName = [[NSBundle mainBundle] pathForResource:@"queen-t" ofType:@"obj"];
     queenSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
+    
+    filePathName = [[NSBundle mainBundle] pathForResource:@"king-t" ofType:@"obj"];
+    kingSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
+    
+    filePathName = [[NSBundle mainBundle] pathForResource:@"rook-t" ofType:@"obj"];
+    rookSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
+    
+    filePathName = [[NSBundle mainBundle] pathForResource:@"bishop-t" ofType:@"obj"];
+    bishopSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
+    
+    filePathName = [[NSBundle mainBundle] pathForResource:@"knight-t" ofType:@"obj"];
+    knightSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
+    
+    filePathName = [[NSBundle mainBundle] pathForResource:@"pawn-t" ofType:@"obj"];
+    pawnSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
+    
+    _pieceMeshMap = @{
+                      kQueenName : [NSValue valueWithPointer:queenSource],
+                      kKingName : [NSValue valueWithPointer:kingSource],
+                      kRookName : [NSValue valueWithPointer:rookSource],
+                      kBishopName : [NSValue valueWithPointer:bishopSource],
+                      kKnightName : [NSValue valueWithPointer:knightSource],
+                      kPawnName : [NSValue valueWithPointer:pawnSource]
+                      };
     
     CGRect scaledBounds = self.bounds;
     scaledBounds.size.width = scaledBounds.size.width / [UIScreen mainScreen].nativeScale;
@@ -190,6 +216,12 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
   }
   
   return self;
+}
+
+- (demoModel *)getMeshForGameObject:(BaseObject *)gameObject
+{
+  NSValue *ptr = [_pieceMeshMap objectForKey:gameObject.meshName];
+  return (demoModel *)[ptr pointerValue];
 }
 
 
@@ -365,13 +397,11 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
   _collidingObject = nil;
   
   if ([inputHandler backgroundInSight]) {
-    float boardZ = -5.0;
-    
     const float boardVertices[3*4]{
-      -kBoardSize / 2.0f, -kBoardSize / 2.0f, boardZ,
-       kBoardSize / 2.0f, -kBoardSize / 2.0f, boardZ,
-       kBoardSize / 2.0f,  kBoardSize / 2.0f, boardZ,
-      -kBoardSize / 2.0f,  kBoardSize / 2.0f, boardZ
+      -kBoardSize / 2.0f, -kBoardSize / 2.0f, 0.0,
+       kBoardSize / 2.0f, -kBoardSize / 2.0f, 0.0,
+       kBoardSize / 2.0f,  kBoardSize / 2.0f, 0.0,
+      -kBoardSize / 2.0f,  kBoardSize / 2.0f, 0.0
     };
     
     float objModelView[16];
@@ -391,7 +421,7 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
     
     [self drawModelWithMvp:objModelViewProjection vertexCoords:(GLvoid *)boardVertices elements:(GLvoid *)quadIndices numElements:kNumQuadIndices normalCoords:(GLvoid *)quadNormals texCoords:(GLvoid *)quadTexCoords hasTexture:YES modelScale:scale textureID:chessboardTextureID color:nil];
     
-    [self drawQueenAtX:_queen.location.x queenY:_queen.location.y queenZ:_queen.location.z projectionMatrix:projectionMatrix];
+    [self drawPiece:_queen projectionMatrix:projectionMatrix];
   }
   
   
@@ -477,7 +507,7 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
   [self presentFramebuffer];
 }
 
-- (void)drawQueenAtX:(float)queenX queenY:(float)queenY queenZ:(float)queenZ projectionMatrix:(Vuforia::Matrix44F)projectionMatrix
+- (void)drawPiece:(BaseObject *)piece projectionMatrix:(Vuforia::Matrix44F)projectionMatrix
 {
   float objModelView[16];
   float objModelViewProjection[16];
@@ -490,13 +520,18 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
  
   SampleApplicationUtils::rotatePoseMatrix(90, 1.0, 0.0, 0.0, objModelView);
   
-  SampleApplicationUtils::translatePoseMatrix(queenY, queenZ, kBoardPadding + kBoardSize/2.0f + queenX, objModelView);
+  SampleApplicationUtils::translatePoseMatrix(piece.location.y,
+                                              piece.location.z,
+                                              kBoardPadding + kBoardSize/2.0f + piece.location.x,
+                                              objModelView);
   
   SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], objModelView, objModelViewProjection);
   
   float queenColor[3] = {1.0, 1.0, 1.0};
   
-  [self drawModelWithMvp:objModelViewProjection modelSource:queenSource modelScale:10.0 textureID:-1 color:queenColor];
+  demoModel *modelSource = [self getMeshForGameObject:piece];
+  
+  [self drawModelWithMvp:objModelViewProjection modelSource:modelSource modelScale:10.0 textureID:-1 color:queenColor];
 }
 
 - (void)drawModelWithMvp:(GLvoid *)mvp modelSource:(demoModel *)source modelScale:(float)modelScale textureID:(GLuint)textureID color:(float *)color

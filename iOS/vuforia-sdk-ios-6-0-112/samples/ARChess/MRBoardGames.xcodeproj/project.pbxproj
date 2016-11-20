@@ -35,6 +35,12 @@
 		EF83B5CB1DE0D74F002C14AE /* queen-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B5CA1DE0D74F002C14AE /* queen-t.obj */; };
 		EF83B5D51DE0F013002C14AE /* chessboard.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EF83B5D41DE0F013002C14AE /* chessboard.jpg */; };
 		EF83B5FD1DE13DEC002C14AE /* CollisionChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = EF83B5FC1DE13DEC002C14AE /* CollisionChecker.m */; };
+		EF83B6001DE152F4002C14AE /* ChessPiecesFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = EF83B5FF1DE152F4002C14AE /* ChessPiecesFactory.m */; };
+		EF83B6061DE1571D002C14AE /* bishop-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B6021DE1571D002C14AE /* bishop-t.obj */; };
+		EF83B6071DE1571D002C14AE /* king-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B6031DE1571D002C14AE /* king-t.obj */; };
+		EF83B6081DE1571D002C14AE /* knight-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B6041DE1571D002C14AE /* knight-t.obj */; };
+		EF83B6091DE1571D002C14AE /* pawn-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B6051DE1571D002C14AE /* pawn-t.obj */; };
+		EF83B60B1DE15B73002C14AE /* rook-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B60A1DE15B73002C14AE /* rook-t.obj */; };
 		EF9808951DDE0B680088FE4E /* libVuforia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D21B08791A1B6AEA0041ECF3 /* libVuforia.a */; };
 		EF9808981DDEC1FC0088FE4E /* ARInputHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF9808971DDEC1FC0088FE4E /* ARInputHandler.mm */; };
 		EF98089B1DDEC6F80088FE4E /* Point3D.m in Sources */ = {isa = PBXBuildFile; fileRef = EF98089A1DDEC6F80088FE4E /* Point3D.m */; };
@@ -113,6 +119,13 @@
 		EF83B5D41DE0F013002C14AE /* chessboard.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = chessboard.jpg; path = Resources/Assets/chessboard.jpg; sourceTree = "<group>"; };
 		EF83B5FB1DE13DEC002C14AE /* CollisionChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CollisionChecker.h; path = Classes/Features/ImageTargets/CollisionChecker.h; sourceTree = "<group>"; };
 		EF83B5FC1DE13DEC002C14AE /* CollisionChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CollisionChecker.m; path = Classes/Features/ImageTargets/CollisionChecker.m; sourceTree = "<group>"; };
+		EF83B5FE1DE152F4002C14AE /* ChessPiecesFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChessPiecesFactory.h; path = Classes/Features/ImageTargets/ChessPiecesFactory.h; sourceTree = "<group>"; };
+		EF83B5FF1DE152F4002C14AE /* ChessPiecesFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChessPiecesFactory.m; path = Classes/Features/ImageTargets/ChessPiecesFactory.m; sourceTree = "<group>"; };
+		EF83B6021DE1571D002C14AE /* bishop-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "bishop-t.obj"; sourceTree = "<group>"; };
+		EF83B6031DE1571D002C14AE /* king-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "king-t.obj"; sourceTree = "<group>"; };
+		EF83B6041DE1571D002C14AE /* knight-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "knight-t.obj"; sourceTree = "<group>"; };
+		EF83B6051DE1571D002C14AE /* pawn-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "pawn-t.obj"; sourceTree = "<group>"; };
+		EF83B60A1DE15B73002C14AE /* rook-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "rook-t.obj"; sourceTree = "<group>"; };
 		EF9808961DDEC1FC0088FE4E /* ARInputHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARInputHandler.h; path = Classes/Features/ImageTargets/ARInputHandler.h; sourceTree = "<group>"; };
 		EF9808971DDEC1FC0088FE4E /* ARInputHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ARInputHandler.mm; path = Classes/Features/ImageTargets/ARInputHandler.mm; sourceTree = "<group>"; };
 		EF9808991DDEC6F80088FE4E /* Point3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point3D.h; path = Classes/Features/ImageTargets/Point3D.h; sourceTree = "<group>"; };
@@ -291,8 +304,8 @@
 		D21B08161A1B4D320041ECF3 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				EF83B6011DE15708002C14AE /* ChessPieces */,
 				EF83B5D41DE0F013002C14AE /* chessboard.jpg */,
-				EF83B5CA1DE0D74F002C14AE /* queen-t.obj */,
 				EF83B5C21DE0CC02002C14AE /* monkey.obj */,
 				FB7A42E71A8E376B0068CF5E /* building_texture.jpeg */,
 				FB7A42E81A8E376B0068CF5E /* buildings.txt */,
@@ -335,6 +348,19 @@
 				EF83B5C61DE0CC70002C14AE /* modelUtil.h */,
 			);
 			name = Utilities;
+			sourceTree = "<group>";
+		};
+		EF83B6011DE15708002C14AE /* ChessPieces */ = {
+			isa = PBXGroup;
+			children = (
+				EF83B60A1DE15B73002C14AE /* rook-t.obj */,
+				EF83B6021DE1571D002C14AE /* bishop-t.obj */,
+				EF83B6031DE1571D002C14AE /* king-t.obj */,
+				EF83B6041DE1571D002C14AE /* knight-t.obj */,
+				EF83B6051DE1571D002C14AE /* pawn-t.obj */,
+				EF83B5CA1DE0D74F002C14AE /* queen-t.obj */,
+			);
+			name = ChessPieces;
 			sourceTree = "<group>";
 		};
 		EF9808AA1DE09DBD0088FE4E /* SampleApplication */ = {
@@ -395,6 +421,8 @@
 				EF98089A1DDEC6F80088FE4E /* Point3D.m */,
 				EF83B5FB1DE13DEC002C14AE /* CollisionChecker.h */,
 				EF83B5FC1DE13DEC002C14AE /* CollisionChecker.m */,
+				EF83B5FE1DE152F4002C14AE /* ChessPiecesFactory.h */,
+				EF83B5FF1DE152F4002C14AE /* ChessPiecesFactory.m */,
 			);
 			name = ImageTargets;
 			sourceTree = "<group>";
@@ -483,11 +511,14 @@
 				18EB634C1ACC70F200EF1C28 /* Localizable.strings in Resources */,
 				FB7A433C1A8E376B0068CF5E /* TextureTeapotRed.png in Resources */,
 				EF9808CF1DE09DE30088FE4E /* Background.vertsh in Resources */,
+				EF83B6061DE1571D002C14AE /* bishop-t.obj in Resources */,
 				FB7A43531A8E41840068CF5E /* IT.png in Resources */,
 				EF9808CE1DE09DE30088FE4E /* Background.fragsh in Resources */,
 				EF9808D21DE09DE30088FE4E /* Simple.fragsh in Resources */,
 				EF9808D01DE09DE30088FE4E /* Line.fragsh in Resources */,
+				EF83B60B1DE15B73002C14AE /* rook-t.obj in Resources */,
 				FB7A433B1A8E376B0068CF5E /* TextureTeapotGreen.png in Resources */,
+				EF83B6081DE1571D002C14AE /* knight-t.obj in Resources */,
 				FB7A432D1A8E376B0068CF5E /* StonesAndChips.xml in Resources */,
 				FB7A432E1A8E376B0068CF5E /* Tarmac.dat in Resources */,
 				FB7A431E1A8E376B0068CF5E /* building_texture.jpeg in Resources */,
@@ -497,8 +528,10 @@
 				EF9808D31DE09DE30088FE4E /* Simple.vertsh in Resources */,
 				D21B07F71A1B4AA20041ECF3 /* Images.xcassets in Resources */,
 				EF9808D41DE09DE30088FE4E /* SimpleWithColor.fragsh in Resources */,
+				EF83B6091DE1571D002C14AE /* pawn-t.obj in Resources */,
 				FB7A432C1A8E376B0068CF5E /* StonesAndChips.dat in Resources */,
 				EF9808D11DE09DE30088FE4E /* Line.vertsh in Resources */,
+				EF83B6071DE1571D002C14AE /* king-t.obj in Resources */,
 				FB7A432F1A8E376B0068CF5E /* Tarmac.xml in Resources */,
 				EF83B5CB1DE0D74F002C14AE /* queen-t.obj in Resources */,
 			);
@@ -579,6 +612,7 @@
 				EF9808BF1DE09DD80088FE4E /* PresentMenuSegue.m in Sources */,
 				EF83B5FD1DE13DEC002C14AE /* CollisionChecker.m in Sources */,
 				EF9808C61DE09DD80088FE4E /* UnwindMenuSegue.m in Sources */,
+				EF83B6001DE152F4002C14AE /* ChessPiecesFactory.m in Sources */,
 				EF83B5C71DE0CC70002C14AE /* modelUtil.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

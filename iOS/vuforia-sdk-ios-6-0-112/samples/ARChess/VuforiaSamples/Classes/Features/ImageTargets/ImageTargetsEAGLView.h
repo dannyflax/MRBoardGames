@@ -79,6 +79,11 @@ countries.
     demoModel *monkeySource;
   
     demoModel *queenSource;
+    demoModel *kingSource;
+    demoModel *rookSource;
+    demoModel *bishopSource;
+    demoModel *knightSource;
+    demoModel *pawnSource;
 }
 
 @property (nonatomic, weak) SampleApplicationSession * vapp;
