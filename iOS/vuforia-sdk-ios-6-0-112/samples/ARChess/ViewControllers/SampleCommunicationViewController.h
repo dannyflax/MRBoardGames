@@ -8,18 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SampleCommunicationViewController : UIViewController <NSStreamDelegate> {
-    CFReadStreamRef readStream;
-    CFWriteStreamRef writeStream;
-    
-    NSInputStream   *inputStream;
-    NSOutputStream  *outputStream;
-    
-    NSMutableArray  *messages;
-}
+@interface GameInfo : NSObject
 
-@property (weak, nonatomic) IBOutlet UITextField *dataToSendText;
-@property (weak, nonatomic) IBOutlet UITextView *dataRecievedTextView;
-@property (weak, nonatomic) IBOutlet UILabel *connectedLabel;
+@property NSString *gameTitle;
+@property int playersInGame;
+
+@end
+
+@interface SampleCommunicationViewController : UIViewController <NSStreamDelegate,UITableViewDelegate, UITableViewDataSource>
+
+@property (weak, nonatomic) IBOutlet UITableView *gameTableView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UIButton *gameButton;
 
 @end
