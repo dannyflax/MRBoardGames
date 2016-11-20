@@ -15,6 +15,10 @@ var players = {}; //keeps track of players.
 //mutexLock
 //gamestate
 
+
+//gamestate
+//data includes serialized version of all objects + 
+
 //locks
 var locks = require('locks');
 var gamesLock = locks.createReadWriteLock(), playersLock = locks.createReadWriteLock();
@@ -33,16 +37,7 @@ var io = require('socket.io')(server);
 
 io.on('connection', function(client){
 	console.log('User connected');
-	
-	client.on('createPlayer', function(data){
-		playersLock.writeLock(function(data){
-			var playerId = "player" + Object.keys(players).length;
-			var socketId = client.id;
-			players[playerId] = socketId;
-			playersLock.unlock();
-			client.emit('playerCreated', {"playerId": playerId});
-		});
-	});
+	console.log('socket id : ' + client.id);
 	
 	client.on('listGames', function(){
 		var keys = {};
@@ -54,44 +49,102 @@ io.on('connection', function(client){
 	});
 	
 	client.on('createGame', function(data){
-		gamesLock.writeLock(function(){;
-			var game = {state: null, players: [], lock: locks.createMutex()};
-			var id = "game" + Object.keys(games).length;
-			game.players.push(data.playerId);
-			games[id] =  game;
-			gamesLock.unlock();
-			client.emit('gameCreated', {gameId: id});
+		
+		console.log("CREATE GAME\n" + JSON.stringify(data));
+		
+		playersLock.writeLock(function(){
+			var playerId = "player" + Object.keys(players).length;
+			while((playerId in players)){
+					playerId = "player" + Object.keys(players).length + Math.floor((Math.random() * 10) + 1);
+			}
+			
+			var socketId = client.id;
+			players[playerId] = socketId;
+			playersLock.unlock();
+			gamesLock.writeLock(function(){
+				var game = {state: data.state, players: [playerId], lock: locks.createMutex()};
+				var id = "game" + Object.keys(games).length;
+				
+				while(id in games){
+					id = "game" + Object.keys(games).length + Math.floor((Math.random() * 10) + 1);
+				}
+				
+				game.players.push(data.playerId);
+				games[id] =  game;
+				gamesLock.unlock();
+				client.emit('gameCreated', {gameId: id, playerID: playerId});
+			});
 		});
+		
 	});
 	
 	client.on('joinGame', function(data){
-		if(games[data.gameID] && players[data.playerID]){
-			var game = games[data.gameID];
-			game.lock.lock(function(){
-				game.players.push(data.playerID);
-				client.emit('gameJoined', {success: true});
-				game.lock.unlock();
-		});
+		
+		console.log("JOIN GAME\n" + JSON.stringify(data));
+		
+		if(games[data.gameID]){
+			playersLock.writeLock(function(){
+				var playerId = "player" + Object.keys(players).length;
+				while((playerId in players)){
+					playerId = "player" + Object.keys(players).length + Math.floor((Math.random() * 10) + 1);
+				}
+				var socketId = client.id;
+				players[playerId] = socketId;
+				playersLock.unlock();
+			
+				var game = games[data.gameID];
+				game.lock.lock(function(){
+					game.players.push(data.playerID);
+					client.emit('gameJoined', {success: true, playerID: playerId});
+					game.lock.unlock();
+				});
+			});
 		}else{
 			client.emit('gameJoined', {success: false});
 		}
 	});
 	
 	client.on('leaveGame', function(data){
+		
+		console.log("LEAVE GAME\n" + JSON.stringify(data));
+		
 		if(games[data.gameID] && players[data.playerID]){
 			var game = games[data.gameID];
 			game.lock.lock(function(){
 				game.players = game.players.filter(function( obj ) {
 					return obj !== data.playerID;
 				});
+				delete players[data.playerID];
 				if(game.players.length == 0){
 					delete games.data.gameID;
 				}
 				client.emit('gameLeft', {success: true});
+				console.log("removing player " + data.playerID);
+				console.log(players);
 				game.lock.unlock();
 			});
 		}else{
 			client.emit('gameLeft', {success: false});
+		}
+	});
+	
+	
+	client.on('updateGameState', function(data){
+		console.log("UPDATE GAME STATE\n" + JSON.stringify(data));
+		
+		if(games[data.gameID] && players[data.playerID] && games[data.gameID].players.indexof(data.playerID) >= 0){
+			var game = games[data.gameID];
+			game.lock.lock(function(){
+				game.gamestate = data.gameState;
+				game.lock.unlock();
+				
+				var playersInGame = game.players;
+				for(var player in playersInGame){
+					io.sockets[players[player]].emit('gameStateUpdated', {player: data.playerID, gameState: data.state});
+				}
+			});
+		}else{
+			client.emit('gameStateUpdated', {gameState: "Fuck you for trying to update state of game that you are not in"});
 		}
 	});
 	
