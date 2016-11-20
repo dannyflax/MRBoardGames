@@ -9,8 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "SessionObject.h"
 #import "GameListTableViewCell.h"
+//#import "ImageTargetsEAGLView.h"
 
-@interface SampleCommunicationViewController : UIViewController <NSStreamDelegate,UITableViewDelegate, UITableViewDataSource, SessionObjectDelegate, GameListLabelViewCellDelegate>
+@protocol GameView <NSObject>
+
+- (void)startGameWithID:(NSString *)gameID playerID:(NSString *)playerID networkless:(bool)networkless;
+
+@end
+
+@interface SampleCommunicationViewController : UIViewController <NSStreamDelegate,UITableViewDelegate, UITableViewDataSource, SessionObjectJoinDelegate, GameListLabelViewCellDelegate>
 
 @property SessionObject *sessionObject;
 

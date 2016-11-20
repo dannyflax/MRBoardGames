@@ -9,15 +9,23 @@
 #import <Foundation/Foundation.h>
 #import "GameInfo.h"
 
-@protocol SessionObjectDelegate <NSObject>
+@protocol SessionObjectGameDelegate <NSObject>
 @required
+- (void)sessionStateUpdated:(NSMutableArray *)objectList;
+
+@end
+
+@protocol SessionObjectJoinDelegate <NSObject>
 - (void)sessionFoundGames:(NSMutableArray *)gameList;
-// ... other methods here
+- (void)successfullyCreatedGame:(NSString *)playerID withGameID:(NSString *)gameID;
+- (void)successfullyJoinedGame:(NSString *)playerID;
+
 @end
 
 @interface SessionObject : NSObject
 
-@property id<SessionObjectDelegate> delegate;
+@property id<SessionObjectGameDelegate> gameDelegate;
+@property id<SessionObjectJoinDelegate> joinDelegate;
 
 - (void)connectToServer;
 - (void)refreshGames;

@@ -37,13 +37,17 @@
     }];
     
     [socket on:@"gameCreated" callback:^(NSArray* data, SocketAckEmitter* ack) {
-        // called when player creates a game.
-        // IF GAMEJOINED IS CALLED THEN THIS IS NOT.
+        NSDictionary *objects = data[0];
+        if ([objects objectForKey:@"playerID"]) {
+          [self.joinDelegate successfullyCreatedGame:[objects objectForKey:@"playerID"] withGameID:[objects objectForKey:@"gameID"]];
+        }
     }];
     
     [socket on:@"gameJoined" callback:^(NSArray* data, SocketAckEmitter* ack) {
-        // called when player joins a game.
-        // IF GAMECREATED IS CALLED THEN THIS IS NOT.
+        NSDictionary *objects = data[0];
+        if ([objects objectForKey:@"playerID"]) {
+          [self.joinDelegate successfullyJoinedGame:[objects objectForKey:@"playerID"]];
+        }
     }];
 
     [socket on:@"gameList" callback:^(NSArray* data, SocketAckEmitter* ack) {
@@ -77,7 +81,7 @@
         gameInfo.playersInGame = numPlayers;
         [gameList addObject:gameInfo];
     }
-    [self.delegate sessionFoundGames:gameList];
+    [self.joinDelegate sessionFoundGames:gameList];
 }
 
 - (void)joinGame:(GameInfo *)gameInfo {

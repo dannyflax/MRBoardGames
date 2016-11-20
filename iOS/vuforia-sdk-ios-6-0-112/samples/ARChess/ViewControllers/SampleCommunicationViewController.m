@@ -13,11 +13,35 @@
 
 @interface SampleCommunicationViewController ()  {
     NSMutableArray *gamesToList;
+    bool _isNetworkless;
+    NSString *_gameID;
+    NSString *_playerID;
 }
 
 @end
 
 @implementation SampleCommunicationViewController
+
+- (void)successfullyJoinedGame:(NSString *)playerID
+{
+  _playerID = playerID;
+  _isNetworkless = false;
+  [self goToMainView];
+}
+
+- (void)successfullyCreatedGame:(NSString *)playerID withGameID:(NSString *)gameID
+{
+  _playerID = playerID;
+  _gameID = gameID;
+  _isNetworkless = false;
+  [self goToMainView];
+}
+
+- (void)goToMainView
+{
+  [self.sessionObject disconnect];
+  [self performSegueWithIdentifier:@"startNetworklessViewer" sender:self];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -29,7 +53,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [self setViewActive:NO];
     self.sessionObject = [[SessionObject alloc] init];
-    self.sessionObject.delegate = self;
+    self.sessionObject.joinDelegate = self;
     [self.sessionObject connectToServer];
 }
 
@@ -69,8 +93,8 @@
 }
 
 - (IBAction)networklessPressed:(id)sender {
-    [self.sessionObject disconnect];
-    [self performSegueWithIdentifier:@"startNetworklessViewer" sender:self];
+    _isNetworkless = true;
+    [self goToMainView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -106,6 +130,14 @@
 
 - (void)addUserToGame:(GameInfo *)game {
     [self.sessionObject joinGame:game];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+  if([segue.identifier isEqualToString:@"startNetworklessViewer"]) {
+    id<GameView> eaglView = segue.destinationViewController;
+    [eaglView startGameWithID:_gameID playerID:_playerID networkless:_isNetworkless];
+  }
 }
 
 @end

@@ -103,9 +103,9 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
 //------------------------------------------------------------------------------
 #pragma mark - Lifecycle
 
-- (void)createNewChessGame
++ (NSArray *)createNewChessGame
 {
-  _chessPieces = [NSMutableArray new];
+  NSMutableArray *chessPieces = [NSMutableArray new];
   
   for (int side = 0; side < 2; side++) {
     bool isWhite = (side == 0);
@@ -115,38 +115,40 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
     
     for (int i = 0; i < 8; i++) {
       ChessObject *pawn = (ChessObject *)[ChessPiecesFactory createNewPawn];
-      pawn.location = [self getLocationForX:i Y:secondRow];
+      pawn.location = [ImageTargetsEAGLView getLocationForX:i Y:secondRow];
       pawn.isWhite = isWhite;
-      [_chessPieces addObject:pawn];
+      [chessPieces addObject:pawn];
     }
     
     for (int i = 0; i < 2; i++) {
       ChessObject *rook = (ChessObject *)[ChessPiecesFactory createNewRook];
-      rook.location = [self getLocationForX:(i == 0) ? 0 : 7 Y:backRow];
-      [_chessPieces addObject:rook];
+      rook.location = [ImageTargetsEAGLView getLocationForX:(i == 0) ? 0 : 7 Y:backRow];
+      [chessPieces addObject:rook];
       rook.isWhite = isWhite;
       
       ChessObject *knight = (ChessObject *)[ChessPiecesFactory createNewKnight];
-      knight.location = [self getLocationForX:(i == 0) ? 1 : 6 Y:backRow];
-      [_chessPieces addObject:knight];
+      knight.location = [ImageTargetsEAGLView getLocationForX:(i == 0) ? 1 : 6 Y:backRow];
+      [chessPieces addObject:knight];
       knight.isWhite = isWhite;
       
       ChessObject *bishop = (ChessObject *)[ChessPiecesFactory createNewBishop];
-      bishop.location = [self getLocationForX:(i == 0) ? 2 : 5 Y:backRow];
-      [_chessPieces addObject:bishop];
+      bishop.location = [ImageTargetsEAGLView getLocationForX:(i == 0) ? 2 : 5 Y:backRow];
+      [chessPieces addObject:bishop];
       bishop.isWhite = isWhite;
     }
     
     ChessObject *queen = (ChessObject *)[ChessPiecesFactory createNewQueen];
-    queen.location = [self getLocationForX:3 Y:backRow];
-    [_chessPieces addObject:queen];
+    queen.location = [ImageTargetsEAGLView getLocationForX:3 Y:backRow];
+    [chessPieces addObject:queen];
     queen.isWhite = isWhite;
     
     ChessObject *king = (ChessObject *)[ChessPiecesFactory createNewKing];
-    king.location = [self getLocationForX:4 Y:backRow];
-    [_chessPieces addObject:king];
+    king.location = [ImageTargetsEAGLView getLocationForX:4 Y:backRow];
+    [chessPieces addObject:king];
     king.isWhite = isWhite;
   }
+  
+  return chessPieces;
 }
 
 - (id)initWithFrame:(CGRect)frame gamePieces:(NSMutableArray <ChessObject*> *)chessObjects appSession:(SampleApplicationSession *)app
@@ -166,11 +168,15 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
   self = [super initWithFrame:frame];
   
   if (self) {
-      [self createNewChessGame];
       [self configureView:app];
   }
   
   return self;
+}
+
+- (void)startGameWithID:(NSString *)gameID playerID:(NSString *)playerID networkless:(bool)networkless
+{
+  
 }
 
 - (void)configureView:(SampleApplicationSession *)app {
@@ -280,7 +286,7 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
     [sampleAppRenderer initRendering];
 }
 
-- (Point3D *)getLocationForX:(int)tileX Y:(int)tileY
++ (Point3D *)getLocationForX:(int)tileX Y:(int)tileY
 {
   Point3D *point = [Point3D zero];
   
