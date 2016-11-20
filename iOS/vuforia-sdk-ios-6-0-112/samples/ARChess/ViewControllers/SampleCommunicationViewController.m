@@ -131,6 +131,7 @@
 #pragma MARK - GameListTableViewCellDelegate
 
 - (void)addUserToGame:(GameInfo *)game {
+    _gameID = game.gameTitle;
     [self.sessionObject joinGame:game];
 }
 
