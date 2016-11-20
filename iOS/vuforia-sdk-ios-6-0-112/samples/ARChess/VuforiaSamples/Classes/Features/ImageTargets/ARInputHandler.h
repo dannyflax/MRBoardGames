@@ -22,7 +22,7 @@
 
 @protocol ARInputHandlerDelegate
 
-- (void)grabModeBegan;
+- (bool)grabModeWillBegin;
 - (void)grabModeEnded;
 
 @end

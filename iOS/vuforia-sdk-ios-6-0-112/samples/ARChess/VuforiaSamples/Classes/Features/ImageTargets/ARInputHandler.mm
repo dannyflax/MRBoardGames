@@ -171,7 +171,7 @@ const float kObjectScaleNormal = 3.0f;
             _waitingForZero = YES;
             _grabbingMode = !_grabbingMode;
             if (_grabbingMode) {
-              [_delegate grabModeBegan];
+              _grabbingMode = [_delegate grabModeWillBegin];
             } else {
               [_delegate grabModeEnded];
             }

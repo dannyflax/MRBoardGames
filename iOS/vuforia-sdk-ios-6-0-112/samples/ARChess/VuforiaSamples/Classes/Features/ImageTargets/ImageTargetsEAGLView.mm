@@ -365,11 +365,13 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
   _collidingObject = nil;
   
   if ([inputHandler backgroundInSight]) {
+    float boardZ = -5.0;
+    
     const float boardVertices[3*4]{
-      -kBoardSize / 2.0f, -kBoardSize / 2.0f, 0.0,
-       kBoardSize / 2.0f, -kBoardSize / 2.0f, 0.0,
-       kBoardSize / 2.0f,  kBoardSize / 2.0f, 0.0,
-      -kBoardSize / 2.0f,  kBoardSize / 2.0f, 0.0
+      -kBoardSize / 2.0f, -kBoardSize / 2.0f, boardZ,
+       kBoardSize / 2.0f, -kBoardSize / 2.0f, boardZ,
+       kBoardSize / 2.0f,  kBoardSize / 2.0f, boardZ,
+      -kBoardSize / 2.0f,  kBoardSize / 2.0f, boardZ
     };
     
     float objModelView[16];
@@ -446,7 +448,7 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
         
         Point3D *newLocation = [[Point3D alloc] initWithX:_grabObjPos.x + difference.x
                                                         Y:_grabObjPos.y + difference.y
-                                                        Z:_grabObjPos.z + difference.z];
+                                                        Z:MAX(0, _grabObjPos.z + difference.z)];
         
         [_grabbedObject setLocation:newLocation];
       } else if (!_grabMode) {
@@ -661,14 +663,17 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
 
 #pragma mark ARInputHandlerDelegate
 
-- (void)grabModeBegan
+- (bool)grabModeWillBegin
 {
   if (_collidingObject) {
     _grabbedObject = _collidingObject;
     _grabObjPos = _grabbedObject.location;
     _grabCursorPos = currentPos;
+    _grabMode = YES;
+    return YES;
+  } else {
+    return NO;
   }
-  _grabMode = YES;
 }
 
 - (void)grabModeEnded
