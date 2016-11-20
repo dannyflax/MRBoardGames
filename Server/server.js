@@ -68,11 +68,10 @@ io.on('connection', function(client){
 				while(id in games){
 					id = "game" + Object.keys(games).length + Math.floor((Math.random() * 10) + 1);
 				}
-				
-				game.players.push(data.playerId);
+			
 				games[id] =  game;
 				gamesLock.unlock();
-				client.emit('gameCreated', {gameId: id, playerID: playerId});
+				client.emit('gameCreated', {gameID: id, playerID: playerId});
 			});
 		});
 		
@@ -81,8 +80,9 @@ io.on('connection', function(client){
 	client.on('joinGame', function(data){
 		
 		console.log("JOIN GAME\n" + JSON.stringify(data));
-		
+		console.log(data.gameID);
 		if(games[data.gameID]){
+			
 			playersLock.writeLock(function(){
 				var playerId = "player" + Object.keys(players).length;
 				while((playerId in players)){
@@ -94,7 +94,7 @@ io.on('connection', function(client){
 			
 				var game = games[data.gameID];
 				game.lock.lock(function(){
-					game.players.push(data.playerID);
+					game.players.push(playerId);
 					client.emit('gameJoined', {success: true, playerID: playerId});
 					game.lock.unlock();
 				});
@@ -132,15 +132,18 @@ io.on('connection', function(client){
 	client.on('updateGameState', function(data){
 		console.log("UPDATE GAME STATE\n" + JSON.stringify(data));
 		
-		if(games[data.gameID] && players[data.playerID] && games[data.gameID].players.indexof(data.playerID) >= 0){
+		if(games[data.gameID] && players[data.playerID] && games[data.gameID].players.indexOf(data.playerID) >= 0){
 			var game = games[data.gameID];
 			game.lock.lock(function(){
-				game.gamestate = data.gameState;
+				game.state = data.state;
 				game.lock.unlock();
-				
 				var playersInGame = game.players;
-				for(var player in playersInGame){
-					io.sockets[players[player]].emit('gameStateUpdated', {player: data.playerID, gameState: data.state});
+				console.log(playersInGame);
+				for(var i = 0; i < playersInGame.length; i++){
+					var player = playersInGame[i];
+					console.log(JSON.stringify(players) + "\n" + player);
+					//console.log(io.sockets.connected[players[player]]);
+					io.sockets.connected[players[player]].emit('gameStateUpdated', {player: data.playerID, state: data.state});
 				}
 			});
 		}else{
@@ -148,4 +151,8 @@ io.on('connection', function(client){
 		}
 	});
 	
+	client.on('getGameState', function(data){
+		console.log("GET GAME STATE \n" + JSON.stringify(data));
+		client.emit('gameState', {state: games[data.gameID].state});
+	});
 });
