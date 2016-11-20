@@ -18,6 +18,8 @@ static NSString *kBishopName = @"bishop";
 
 @interface ChessPiecesFactory : NSObject
 
++ (NSArray *)createNewChessGame;
+
 +(BaseObject *)createNewQueen;
 +(BaseObject *)createNewPawn;
 +(BaseObject *)createNewKing;

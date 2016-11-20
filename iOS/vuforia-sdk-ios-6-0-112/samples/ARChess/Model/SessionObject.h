@@ -11,7 +11,7 @@
 
 @protocol SessionObjectGameDelegate <NSObject>
 @required
-- (void)sessionStateUpdated:(NSMutableArray *)objectList;
+- (void)gameStateUpdated:(NSArray *)objectList;
 
 @end
 
@@ -32,5 +32,7 @@
 - (void)joinGame:(GameInfo *)gameInfo;
 - (void)createGame;
 - (void)disconnect;
+- (void)sendGameUpdate:(NSString *)gameID playerID:(NSString *)playerID unserializedGameStat:(NSArray *)unserializedGS;
+- (void)pollForGameUpdate:(NSString *)gameID playerID:(NSString *)playerID;
 
 @end

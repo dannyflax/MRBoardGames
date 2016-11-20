@@ -13,7 +13,7 @@
 
 @protocol GameView <NSObject>
 
-- (void)startGameWithID:(NSString *)gameID playerID:(NSString *)playerID networkless:(bool)networkless;
+- (void)startGameWithID:(NSString *)gameID playerID:(NSString *)playerID networkless:(bool)networkless sessionObject:(SessionObject *)sessionObject;
 
 @end
 

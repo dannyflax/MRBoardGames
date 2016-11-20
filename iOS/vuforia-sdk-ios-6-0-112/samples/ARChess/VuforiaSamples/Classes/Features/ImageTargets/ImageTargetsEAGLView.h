@@ -24,6 +24,7 @@ countries.
 #import "Point3D.h"
 #import "modelUtil.h"
 #import "SampleCommunicationViewController.h"
+#import "SessionObject.h"
 
 #import "ChessObject.h"
 
@@ -32,7 +33,7 @@ countries.
 
 // EAGLView is a subclass of UIView and conforms to the informal protocol
 // UIGLViewProtocol
-@interface ImageTargetsEAGLView : UIView <UIGLViewProtocol, SampleGLResourceHandler, SampleAppRendererControl, ARInputHandlerDelegate, GameView> {
+@interface ImageTargetsEAGLView : UIView <UIGLViewProtocol, SampleGLResourceHandler, SampleAppRendererControl, ARInputHandlerDelegate, GameView, SessionObjectGameDelegate> {
 @private
     ARInputHandler *inputHandler;
   
@@ -93,8 +94,6 @@ countries.
 @property NSMutableArray <ChessObject *> *chessPieces;
 
 @property (nonatomic, weak) SampleApplicationSession * vapp;
-
-+ (NSArray *)createNewChessGame;
 
 - (id)initWithFrame:(CGRect)frame appSession:(SampleApplicationSession *) app;
 

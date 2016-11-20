@@ -39,7 +39,6 @@
 
 - (void)goToMainView
 {
-  [self.sessionObject disconnect];
   [self performSegueWithIdentifier:@"startNetworklessViewer" sender:self];
 }
 
@@ -136,7 +135,7 @@
 {
   if([segue.identifier isEqualToString:@"startNetworklessViewer"]) {
     id<GameView> eaglView = segue.destinationViewController;
-    [eaglView startGameWithID:_gameID playerID:_playerID networkless:_isNetworkless];
+    [eaglView startGameWithID:_gameID playerID:_playerID networkless:_isNetworkless sessionObject:_sessionObject];
   }
 }
 
