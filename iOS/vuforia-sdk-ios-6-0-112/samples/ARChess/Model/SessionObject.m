@@ -120,7 +120,12 @@
     [processedData addObject:[baseObj getJsonRepresentation]];
   }
   
-  [socket emit:@"updateGameState" with:@[@{@"playerID":playerID, @"gameID":gameID, @"state":processedData, @"holding":holding}]];
+  if (holding) {
+      [socket emit:@"updateGameState" with:@[@{@"playerID":playerID, @"gameID":gameID, @"state":processedData, @"holding":holding}]];
+  } else {
+      [socket emit:@"updateGameState" with:@[@{@"playerID":playerID, @"gameID":gameID, @"state":processedData}]];
+  }
+  
 }
 
 - (void)processGameList:(NSArray *)data {

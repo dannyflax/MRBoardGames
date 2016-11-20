@@ -92,6 +92,7 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
   NSString *_gameID;
   NSString *_playerID;
   bool _networkless;
+  UILabel *_gameIDLabel;
 }
 
 @synthesize vapp = vapp;
@@ -124,6 +125,12 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
   self = [super initWithFrame:frame];
   
   if (self) {
+      _gameIDLabel = [UILabel new];
+      CGRect frm = _gameIDLabel.frame;
+      frm.origin = CGPointMake(5.0, 5.0);
+      _gameIDLabel.frame = frm;
+      [_gameIDLabel setTextColor:[UIColor colorWithWhite:1.0 alpha:0.7]];
+      [self addSubview:_gameIDLabel];
       [self configureView:app];
   }
   
@@ -142,6 +149,8 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
   _gameID = gameID;
   _playerID = playerID;
   _networkless = networkless;
+  [_gameIDLabel setText:_gameID];
+  [_gameIDLabel sizeToFit];
 }
 
 - (void)gameStateUpdated:(NSArray *)objectList
@@ -775,6 +784,10 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
 {
   _grabbedObject = nil;
   _grabMode = NO;
+  
+  if (!_networkless) {
+    [_sessionObject sendGameUpdate:_gameID playerID:_playerID unserializedGameStat:_chessPieces holding:nil];
+  }
 }
 
 @end
