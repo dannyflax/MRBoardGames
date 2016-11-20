@@ -379,13 +379,6 @@ static const float kBoardPadding = 50.0;
   if ([inputHandler cursorInSight]) {
     currentPos = [inputHandler currentPos];
     
-    if ([inputHandler backgroundInSight]) {
-      if ([inputHandler grabbingMode]) {
-        [self drawQueenAtX:-90 queenY:0 queenZ:0 projectionMatrix:projectionMatrix];
-      }
-    }
-    
-    
     Vuforia::Matrix44F cursorModelView = [inputHandler cursorModelView];
     
     
@@ -415,7 +408,7 @@ static const float kBoardPadding = 50.0;
     
     [sampleAppRenderer setImageViewToBackground:occlusionView withCroppingPath:path];
     
-    float cursorOffset[3] = {-30.0, 20.0, -50.0};
+    float cursorOffset[3] = {-247.0/6.0, 173.0/6.0, 0.0};
     
     float objModelViewProjection[16];
     
@@ -423,7 +416,11 @@ static const float kBoardPadding = 50.0;
     
     SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], &cursorModelView.data[0], objModelViewProjection);
     
-    float monkeyColor[3] = {1.0 , 0.0, 0.0};
+    //Show green if grabbing, red if not
+    float redColor[3] =   {1.0, 0.0, 0.0};
+    float greenColor[3] = {0.0, 1.0, 0.0};
+    
+    float *monkeyColor = [inputHandler grabbingMode] ? greenColor : redColor;
     
     [self drawModelWithMvp:objModelViewProjection modelSource:monkeySource modelScale:2.0 textureID:-1 color:monkeyColor];
     
