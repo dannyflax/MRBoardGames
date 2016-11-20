@@ -271,7 +271,7 @@ countries.
       virtualButton = imageTarget->createVirtualButton(buttonName, vbRectangle);
       if (virtualButton) {
         virtualButton->setEnabled(true);
-        virtualButton->setSensitivity(Vuforia::VirtualButton::MEDIUM);
+        virtualButton->setSensitivity(Vuforia::VirtualButton::HIGH);
       }
     }
   
