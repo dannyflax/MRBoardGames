@@ -20,15 +20,20 @@ countries.
 #import "SampleGLResourceHandler.h"
 #import "SampleAppRenderer.h"
 #import "ARTouchableView.h"
+#import "ARInputHandler.h"
 #import "Point3D.h"
 #import "modelUtil.h"
+#import "SampleCommunicationViewController.h"
+#import "SessionObject.h"
+
+#import "ChessObject.h"
 
 #define kNumAugmentationTextures 4
 
 
 // EAGLView is a subclass of UIView and conforms to the informal protocol
 // UIGLViewProtocol
-@interface ImageTargetsEAGLView : UIView <UIGLViewProtocol, SampleGLResourceHandler, SampleAppRendererControl> {
+@interface ImageTargetsEAGLView : UIView <UIGLViewProtocol, SampleGLResourceHandler, SampleAppRendererControl, ARInputHandlerDelegate, GameView, SessionObjectGameDelegate> {
 @private
     ARInputHandler *inputHandler;
   
@@ -50,10 +55,16 @@ countries.
     GLint texSampler2DHandle;
     GLint modelScaleHandle;
     GLint texAlphaHandle;
+    GLint colorHandle;
+    GLboolean textureUsedHandle;
+    GLboolean flippedHandle;
+  
   
     // Texture used when rendering augmentation
     Texture* augmentationTexture[kNumAugmentationTextures];
-    
+  
+    GLuint chessboardTextureID;
+  
     BOOL offTargetTrackingEnabled;
     SampleApplication3DModel * buildingModel;
     
@@ -70,8 +81,17 @@ countries.
   
     UIImageView *occlusionView;
   
-    demoModel *modelSource;
+    demoModel *monkeySource;
+  
+    demoModel *queenSource;
+    demoModel *kingSource;
+    demoModel *rookSource;
+    demoModel *bishopSource;
+    demoModel *knightSource;
+    demoModel *pawnSource;
 }
+
+@property NSMutableArray <ChessObject *> *chessPieces;
 
 @property (nonatomic, weak) SampleApplicationSession * vapp;
 

@@ -16,6 +16,11 @@ countries.
 #import <Vuforia/DataSet.h>
 #import <Vuforia/CameraDevice.h>
 
+#import <Vuforia/ImageTarget.h>
+#import <Vuforia/VirtualButton.h>
+
+#import <Vuforia/Rectangle.h>
+
 #import "UnwindMenuSegue.h"
 #import "PresentMenuSegue.h"
 #import "SampleAppMenuViewController.h"
@@ -27,6 +32,13 @@ countries.
 @end
 
 @implementation ImageTargetsViewController
+{
+  NSString *_gameID;
+  NSString *_playerID;
+  bool _networkless;
+  SessionObject *_sessionObject;
+  NSArray *_gameState;
+}
 
 @synthesize tapGestureRecognizer, vapp, eaglView;
 
@@ -65,6 +77,9 @@ countries.
     CGRect viewFrame = [self getCurrentARViewFrame];
     
     eaglView = [[ImageTargetsEAGLView alloc] initWithFrame:viewFrame appSession:vapp];
+  
+    [eaglView startGameWithID:_gameID playerID:_playerID networkless:_networkless sessionObject:_sessionObject gameState:_gameState];
+  
     [self setView:eaglView];
     VuforiaSamplesAppDelegate *appDelegate = (VuforiaSamplesAppDelegate*)[[UIApplication sharedApplication] delegate];
     appDelegate.glResourceHandler = eaglView;
@@ -152,7 +167,11 @@ countries.
     // thread is not executing, inform the root view controller that the
     // EAGLView should finish any OpenGL ES commands
     [self finishOpenGLESCommands];
-    
+  
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
+  
+    [_sessionObject endGame:_gameID playerID:_playerID];
+  
     VuforiaSamplesAppDelegate *appDelegate = (VuforiaSamplesAppDelegate*)[[UIApplication sharedApplication] delegate];
     appDelegate.glResourceHandler = nil;
     
@@ -242,8 +261,36 @@ countries.
         NSLog(@"Failed to activate dataset");
         return NO;
     }
-    
-    
+  
+  Vuforia::ObjectTracker* ot = reinterpret_cast<Vuforia::ObjectTracker*>(Vuforia::TrackerManager::getInstance().getTracker(Vuforia::ObjectTracker::getClassType()));
+  
+    // Deactivate the data set prior to reconfiguration:
+    ot->deactivateDataSet(dataSetStonesAndChips);
+  
+    //Stones is index 0
+    Vuforia::Trackable* trackable = dataSetStonesAndChips->getTrackable(0);
+  
+    Vuforia::ImageTarget* imageTarget = static_cast<Vuforia::ImageTarget*>(trackable);
+  
+    const char *buttonName = "grabButton";
+  
+    Vuforia::VirtualButton* virtualButton = imageTarget->getVirtualButton(buttonName);
+  
+    if (!virtualButton) {
+      float lOff = -50;
+      float sizeX = 50;
+      float sizeY = 50;
+      
+      Vuforia::Rectangle vbRectangle(-sizeX/2 - lOff, sizeY/2, sizeX/2 - lOff, -sizeY/2);
+      virtualButton = imageTarget->createVirtualButton(buttonName, vbRectangle);
+      if (virtualButton) {
+        virtualButton->setEnabled(true);
+        virtualButton->setSensitivity(Vuforia::VirtualButton::HIGH);
+      }
+    }
+  
+    ot->activateDataSet(dataSetStonesAndChips);
+  
     return YES;
 }
 
@@ -318,6 +365,7 @@ countries.
     
     // Get the Vuforia tracker manager image tracker
     Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+  
     Vuforia::ObjectTracker* objectTracker = static_cast<Vuforia::ObjectTracker*>(trackerManager.getTracker(Vuforia::ObjectTracker::getClassType()));
     
     if (NULL == objectTracker) {
@@ -339,6 +387,9 @@ countries.
         else {
             NSLog(@"ERROR: failed to create data set");
         }
+      
+      
+      
     }
     
     return dataSet;
@@ -605,7 +656,7 @@ countries.
             SampleAppMenuViewController *menuVC = (SampleAppMenuViewController *)dest;
             menuVC.menuDelegate = self;
             menuVC.sampleAppFeatureName = @"Image Targets";
-            menuVC.dismissItemName = @"Vuforia Samples";
+            menuVC.dismissItemName = @"Exit to Lobby";
             menuVC.backSegueId = @"BackToImageTargets";
             
             NSLog(@"Dataset current %@", dataSetCurrent == dataSetTarmac ? @"Tarmac" : @"Stones & Chips");
@@ -626,6 +677,17 @@ countries.
             }
         }
     }
+}
+
+#pragma mark Random
+
+- (void)startGameWithID:(NSString *)gameID playerID:(NSString *)playerID networkless:(bool)networkless sessionObject:(SessionObject *)sessionObject gameState:(NSArray *)gameState
+{
+  _gameID = gameID;
+  _playerID = playerID;
+  _networkless = networkless;
+  _sessionObject = sessionObject;
+  _gameState = gameState;
 }
 
 @end

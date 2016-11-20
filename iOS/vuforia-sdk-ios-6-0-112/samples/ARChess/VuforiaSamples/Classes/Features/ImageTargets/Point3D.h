@@ -12,4 +12,8 @@
 @property (nonatomic) float x;
 @property (nonatomic) float y;
 @property (nonatomic) float z;
+
+- (id)initWithX:(float)x Y:(float)y Z:(float)z;
++(Point3D *)zero;
+
 @end

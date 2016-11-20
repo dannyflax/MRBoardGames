@@ -25,6 +25,9 @@
 #import "SampleApplicationShaderUtils.h"
 #import "Teapot.h"
 #import "Quad.h"
+#import "ChessObject.h"
+#import "CollisionChecker.h"
+#import "ChessPiecesFactory.h"
 
 
 //******************************************************************************
@@ -58,6 +61,14 @@ namespace {
   };
 }
 
+static const float kBoardSize = 200;
+static const float kBoardPadding = 50.0;
+
+static float kRedColor[3] =   {1.0, 0.0, 0.0};
+static float kGreenColor[3] = {0.0, 1.0, 0.0};
+static float kBlueColor[3] = {0.0, 1.0, 1.0};
+static float kWhiteColor[3] = {1.0, 1.0, 1.0};
+static float kBlackColor[3] = {.3, 0.3, 0.3};
 
 @interface ImageTargetsEAGLView (PrivateMethods)
 
@@ -70,6 +81,19 @@ namespace {
 @end
 
 @implementation ImageTargetsEAGLView
+{
+  ChessObject *_collidingObject;
+  ChessObject *_grabbedObject;
+  bool _grabMode;
+  Point3D *_grabObjPos;
+  Point3D *_grabCursorPos;
+  NSDictionary<NSString *, id> *_pieceMeshMap;
+  SessionObject *_sessionObject;
+  NSString *_gameID;
+  NSString *_playerID;
+  bool _networkless;
+  UILabel *_gameIDLabel;
+}
 
 @synthesize vapp = vapp;
 
@@ -84,14 +108,96 @@ namespace {
 //------------------------------------------------------------------------------
 #pragma mark - Lifecycle
 
-- (id)initWithFrame:(CGRect)frame appSession:(SampleApplicationSession *) app
+- (id)initWithFrame:(CGRect)frame gamePieces:(NSMutableArray <ChessObject*> *)chessObjects appSession:(SampleApplicationSession *)app
+{
+    self = [super initWithFrame:frame];
+    
+    if (self) {
+        _chessPieces = chessObjects;
+        [self configureView:app];
+    }
+    
+    return self;
+}
+
+- (id)initWithFrame:(CGRect)frame appSession:(SampleApplicationSession *)app
 {
   self = [super initWithFrame:frame];
   
   if (self) {
+      _gameIDLabel = [UILabel new];
+      CGRect frm = _gameIDLabel.frame;
+      frm.origin = CGPointMake(5.0, 5.0);
+      _gameIDLabel.frame = frm;
+      [_gameIDLabel setTextColor:[UIColor colorWithWhite:1.0 alpha:0.7]];
+      [self addSubview:_gameIDLabel];
+      [self configureView:app];
+  }
+  
+  return self;
+}
+
+- (void)startGameWithID:(NSString *)gameID playerID:(NSString *)playerID networkless:(bool)networkless sessionObject:(SessionObject *)sessionObject gameState:(NSArray *)gameState
+{
+  _sessionObject = sessionObject;
+  sessionObject.gameDelegate = self;
+  if (networkless) {
+    _chessPieces = [NSMutableArray arrayWithArray:[ChessPiecesFactory createNewChessGame]];
+  } else {
+    _chessPieces = [NSMutableArray arrayWithArray:gameState];
+  }
+  _gameID = gameID;
+  _playerID = playerID;
+  _networkless = networkless;
+  [_gameIDLabel setText:_gameID];
+  [_gameIDLabel sizeToFit];
+}
+
+- (void)gameStateUpdated:(NSArray *)objectList playerID:(NSString *)playerID success:(BOOL)success
+{
+  if ([playerID isEqualToString:playerID] && success) {
+    return;
+  }
+  
+  for (ChessObject *baseObj in objectList) {
+    for (ChessObject *baseObj2 in _chessPieces) {
+      if ([baseObj2.name isEqualToString:baseObj.name] && baseObj2 != _grabbedObject) {
+        baseObj2.location = baseObj.location;
+      }
+    }
+  }
+}
+
+- (void)configureView:(SampleApplicationSession *)app {
     NSString *filePathName = [[NSBundle mainBundle] pathForResource:@"monkey" ofType:@"obj"];
-    modelSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
+    monkeySource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
     
+    filePathName = [[NSBundle mainBundle] pathForResource:@"queen-t" ofType:@"obj"];
+    queenSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
+    
+    filePathName = [[NSBundle mainBundle] pathForResource:@"king-t" ofType:@"obj"];
+    kingSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
+    
+    filePathName = [[NSBundle mainBundle] pathForResource:@"rook-t" ofType:@"obj"];
+    rookSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
+    
+    filePathName = [[NSBundle mainBundle] pathForResource:@"bishop-t" ofType:@"obj"];
+    bishopSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
+    
+    filePathName = [[NSBundle mainBundle] pathForResource:@"knight-t" ofType:@"obj"];
+    knightSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
+    
+    filePathName = [[NSBundle mainBundle] pathForResource:@"pawn-t" ofType:@"obj"];
+    pawnSource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
+    
+    _pieceMeshMap = @{
+                      kQueenName : [NSValue valueWithPointer:queenSource],
+                      kKingName : [NSValue valueWithPointer:kingSource],
+                      kRookName : [NSValue valueWithPointer:rookSource],
+                      kBishopName : [NSValue valueWithPointer:bishopSource],
+                      kKnightName : [NSValue valueWithPointer:knightSource],
+                      kPawnName : [NSValue valueWithPointer:pawnSource]
+                      };
     
     CGRect scaledBounds = self.bounds;
     scaledBounds.size.width = scaledBounds.size.width / [UIScreen mainScreen].nativeScale;
@@ -99,11 +205,13 @@ namespace {
     
     occlusionView = [[UIImageView alloc] initWithFrame:scaledBounds];
     [occlusionView setBackgroundColor:[UIColor clearColor]];
-    [occlusionView setAlpha:0.5];
+    [occlusionView setAlpha:0.7];
     
     [self addSubview:occlusionView];
     
     inputHandler = [ARInputHandler new];
+    
+    inputHandler.delegate = self;
     
     currentViewTexture = -1;
     
@@ -117,12 +225,12 @@ namespace {
     
     // Enable retina mode if available on this device
     if (YES == [vapp isRetinaDisplay]) {
-      [self setContentScaleFactor:[UIScreen mainScreen].nativeScale];
+        [self setContentScaleFactor:[UIScreen mainScreen].nativeScale];
     }
     
     // Load the augmentation textures
     for (int i = 0; i < kNumAugmentationTextures; ++i) {
-      augmentationTexture[i] = [[Texture alloc] initWithImageFile:[NSString stringWithCString:textureFilenames[i] encoding:NSASCIIStringEncoding]];
+        augmentationTexture[i] = [[Texture alloc] initWithImageFile:[NSString stringWithCString:textureFilenames[i] encoding:NSASCIIStringEncoding]];
     }
     
     // Create the OpenGL ES context
@@ -131,20 +239,31 @@ namespace {
     // The EAGLContext must be set for each thread that wishes to use it.
     // Set it the first time this method is called (on the main thread)
     if (context != [EAGLContext currentContext]) {
-      [EAGLContext setCurrentContext:context];
+        [EAGLContext setCurrentContext:context];
     }
     
     // Generate the OpenGL ES texture and upload the texture data for use
     // when rendering the augmentation
     for (int i = 0; i < kNumAugmentationTextures; ++i) {
-      GLuint textureID;
-      glGenTextures(1, &textureID);
-      [augmentationTexture[i] setTextureID:textureID];
-      glBindTexture(GL_TEXTURE_2D, textureID);
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, [augmentationTexture[i] width], [augmentationTexture[i] height], 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)[augmentationTexture[i] pngData]);
+        GLuint textureID;
+        glGenTextures(1, &textureID);
+        [augmentationTexture[i] setTextureID:textureID];
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, [augmentationTexture[i] width], [augmentationTexture[i] height], 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)[augmentationTexture[i] pngData]);
     }
+    
+    Texture *chessboardTexture = [[Texture alloc] initWithImageFile:[NSString stringWithCString:"chessboard.jpg" encoding:NSASCIIStringEncoding]];
+    
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+    chessboardTextureID = textureID;
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, [chessboardTexture width], [chessboardTexture height], 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)[chessboardTexture pngData]);
+    
     
     offTargetTrackingEnabled = NO;
     sampleAppRenderer = [[SampleAppRenderer alloc]initWithSampleAppRendererControl:self deviceMode:Vuforia::Device::MODE_AR stereo:false];
@@ -154,9 +273,12 @@ namespace {
     
     // we initialize the rendering method of the SampleAppRenderer
     [sampleAppRenderer initRendering];
-  }
-  
-  return self;
+}
+
+- (demoModel *)getMeshForGameObject:(ChessObject *)gameObject
+{
+  NSValue *ptr = [_pieceMeshMap objectForKey:gameObject.meshName];
+  return (demoModel *)[ptr pointerValue];
 }
 
 
@@ -329,93 +451,46 @@ namespace {
   
   [inputHandler computeInputFromState:state projectMatrix:projectionMatrix];
   
-  float viewPadding = 50.0f;
-  
-  currentPos = [inputHandler currentPos];
-  
-  float labelWidth = projectedView.bounds.size.width;
-  float labelHeight = projectedView.bounds.size.height;
-  CGPoint pointInView = CGPointMake(currentPos.y + (labelWidth + viewPadding), currentPos.x + labelHeight/2.0);
-  
-  bool touching = currentPos.z < 0.0;
-  
-  if (touching) {
-    if ([projectedView pointInside:pointInView withEvent:nil]) {
-      if (stylusHeld) {
-        [projectedView tapMoved:pointInView];
-      } else {
-        [projectedView tapBegan:pointInView];
-        stylusHeld = YES;
-      }
-    } else {
-      if (stylusHeld) {
-        [projectedView tapEnded:pointInView];
-        stylusHeld = NO;
-      }
-    }
-  } else {
-    if (stylusHeld) {
-      [projectedView tapEnded:pointInView];
-      stylusHeld = NO;
-    }
-  }
+  _collidingObject = nil;
   
   if ([inputHandler backgroundInSight]) {
-    GLuint viewTexture = [self makeViewOpenGLTexture:projectedView];
+    const float boardVertices[3*4]{
+      -kBoardSize / 2.0f, -kBoardSize / 2.0f, 0.0,
+       kBoardSize / 2.0f, -kBoardSize / 2.0f, 0.0,
+       kBoardSize / 2.0f,  kBoardSize / 2.0f, 0.0,
+      -kBoardSize / 2.0f,  kBoardSize / 2.0f, 0.0
+    };
     
-    float labelWidth = projectedView.bounds.size.width;
-    float labelHeight = projectedView.bounds.size.height;
-    
+    float objModelView[16];
     float objModelViewProjection[16];
     
     Vuforia::Matrix44F bgModelView = [inputHandler backgroundModelView];
     
-    SampleApplicationUtils::rotatePoseMatrix(90.0f, 0.0, 0.0, 1.0, &bgModelView.data[0]);
+    for (int i = 0; i < 16; i++) {
+      objModelView[i] = bgModelView.data[i];
+    }
     
-    SampleApplicationUtils::translatePoseMatrix(-(labelWidth + viewPadding), -labelHeight/2.0, 0.0, &bgModelView.data[0]);
+    float scale = 1.0;
     
-    SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], &bgModelView.data[0], objModelViewProjection);
+    SampleApplicationUtils::translatePoseMatrix(0.0, -(kBoardSize/2 + kBoardPadding), 0.0, objModelView);
     
-    glUseProgram(shaderProgramID);
+    SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], objModelView, objModelViewProjection);
     
+    [self drawModelWithMvp:objModelViewProjection vertexCoords:(GLvoid *)boardVertices elements:(GLvoid *)quadIndices numElements:kNumQuadIndices normalCoords:(GLvoid *)quadNormals texCoords:(GLvoid *)quadTexCoords hasTexture:YES modelScale:scale textureID:chessboardTextureID color:nil flipped:NO];
     
-    static const float viewVertices[kNumQuadVertices * 3] =
-    {
-      0,  0,  0.0f,
-      labelWidth,  0,  0.0f,
-      labelWidth,   labelHeight,  0.0f,
-      0,   labelHeight,  0.0f,
-    };
-    
-    
-    glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)viewVertices);
-    glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)quadNormals);
-    glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)quadTexCoords);
-    
-    glEnableVertexAttribArray(vertexHandle);
-    glEnableVertexAttribArray(normalHandle);
-    glEnableVertexAttribArray(textureCoordHandle);
-    
-    glActiveTexture(GL_TEXTURE0);
-    
-    glBindTexture(GL_TEXTURE_2D, viewTexture);
-    
-    glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE, (const GLfloat*)objModelViewProjection);
-    glUniform1i(texSampler2DHandle, 0 /*GL_TEXTURE0*/);
-    glUniform1f(modelScaleHandle, 1.0);
-    glUniform1f(texAlphaHandle, 1.0);
-    
-    glDrawElements(GL_TRIANGLES, kNumQuadIndices, GL_UNSIGNED_SHORT, (const GLvoid*)quadIndices);
-    
-    glDisableVertexAttribArray(vertexHandle);
-    glDisableVertexAttribArray(normalHandle);
-    glDisableVertexAttribArray(textureCoordHandle);
+    for (int i = 0; i < _chessPieces.count; i++) {
+      [self drawPiece:[_chessPieces objectAtIndex:i] projectionMatrix:projectionMatrix];
+    }
   }
   
   
-  
-  
   if ([inputHandler cursorInSight]) {
+    currentPos = [inputHandler currentPos];
+    currentPos = [[Point3D alloc] initWithX:-(currentPos.y + kBoardPadding + kBoardSize/2.0f)
+                                          Y:currentPos.x
+                                          Z:currentPos.z];
+    
+    
     Vuforia::Matrix44F cursorModelView = [inputHandler cursorModelView];
     
     int vpWidth = static_cast<int>(vapp.viewport.sizeX/[UIScreen mainScreen].nativeScale);
@@ -444,34 +519,57 @@ namespace {
     
     [sampleAppRenderer setImageViewToBackground:occlusionView withCroppingPath:path];
     
-    float cursorWidth = 5.0;
-    float cursorHeight = 5.0;
-    
-    float cursorOffset[3] = {-30.0, -20.0, -50.0};
+    float cursorOffset[3] = {-247.0/6.0, 173.0/6.0, 0.0};
     
     float objModelViewProjection[16];
     
+    SampleApplicationUtils::translatePoseMatrix(cursorOffset[0],cursorOffset[1],cursorOffset[2],&cursorModelView.data[0]);
+    
     SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], &cursorModelView.data[0], objModelViewProjection);
     
-    glUseProgram(shaderProgramID);
+    float *monkeyColor = [inputHandler grabbingMode] ? kGreenColor : kRedColor;
     
-    static const float viewVertices[kNumQuadVertices * 3] =
-    {
-      cursorOffset[0] + -cursorWidth/2.0f, cursorOffset[1] + -cursorHeight/2.0f,  cursorOffset[2],
-      cursorOffset[0] + cursorWidth/2.0f,  cursorOffset[1] +-cursorHeight/2.0f,   cursorOffset[2],
-      cursorOffset[0] + cursorWidth/2.0f,  cursorOffset[1] + cursorHeight/2.0f,   cursorOffset[2],
-      cursorOffset[0] + -cursorWidth/2.0f, cursorOffset[1] + cursorHeight/2.0f,   cursorOffset[2],
-    };
+    if ([inputHandler backgroundInSight]) {
+      if (_grabMode && _grabbedObject) {
+        Point3D *difference = [[Point3D alloc] initWithX:(currentPos.x - _grabCursorPos.x)
+                                                      Y:currentPos.y - _grabCursorPos.y
+                                                      Z:currentPos.z - _grabCursorPos.z];
+        
+        Point3D *newLocation = [[Point3D alloc] initWithX:_grabObjPos.x + difference.x
+                                                        Y:_grabObjPos.y + difference.y
+                                                        Z:MAX(0, _grabObjPos.z + difference.z)];
+        
+        [_grabbedObject setLocation:newLocation];
+        
+        if (!_networkless)
+        {
+          [_sessionObject sendGameUpdate:_gameID playerID:_playerID unserializedGameStat:_chessPieces holding:_grabbedObject.name];
+        }
+      } else if (!_grabMode) {
+        
+        for (int i = 0; i < _chessPieces.count; i++) {
+          ChessObject *piece = [_chessPieces objectAtIndex:i];
+          bool collides = [CollisionChecker checkCollisionBetweenRectWithCenter:piece.location
+                                                                  andDimensions:piece.dimensions
+                                                                       andPoint:currentPos];
+          if (collides) {
+            monkeyColor = kBlueColor;
+            _collidingObject = piece;
+          }
+        }
+        
+        
+      }
+    }
     
-    [self drawModelWithMvp:objModelViewProjection modelSource:modelSource modelScale:5.0];
+    
+    
+    [self drawModelWithMvp:objModelViewProjection modelSource:monkeySource modelScale:4.0 textureID:-1 color:monkeyColor flipped:NO];
     
   } else {
     if(occlusionView.image)
       [occlusionView setImage:nil];
   }
-  
-  
-  
   
   glDisable(GL_DEPTH_TEST);
   glDisable(GL_CULL_FACE);
@@ -479,13 +577,42 @@ namespace {
   [self presentFramebuffer];
 }
 
-- (void)drawModelWithMvp:(GLvoid *)mvp modelSource:(demoModel *)source modelScale:(float)modelScale
+- (void)drawPiece:(ChessObject *)piece projectionMatrix:(Vuforia::Matrix44F)projectionMatrix
 {
-  [self drawModelWithMvp:mvp vertexCoords:source->positions elements:source->elements numElements:source->numElements normalCoords:source->normals texCoords:source->texcoords hasTexture:(source->texcoordArraySize > 0) modelScale:modelScale];
+  float objModelView[16];
+  float objModelViewProjection[16];
+  
+  Vuforia::Matrix44F bgModelView = [inputHandler backgroundModelView];
+  
+  for (int i = 0; i < 16; i++) {
+    objModelView[i] = bgModelView.data[i];
+  }
+ 
+  SampleApplicationUtils::rotatePoseMatrix(90, 1.0, 0.0, 0.0, objModelView);
+  
+  SampleApplicationUtils::translatePoseMatrix(piece.location.y,
+                                              piece.location.z,
+                                              kBoardPadding + kBoardSize/2.0f + piece.location.x,
+                                              objModelView);
+  
+  SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], objModelView, objModelViewProjection);
+  
+  float *queenColor = piece.isWhite ? kWhiteColor : kBlackColor;
+  
+  demoModel *modelSource = [self getMeshForGameObject:piece];
+  
+  [self drawModelWithMvp:objModelViewProjection modelSource:modelSource modelScale:10.0 textureID:-1 color:queenColor flipped:!piece.isWhite];
 }
 
-- (void)drawModelWithMvp:(GLvoid *)mvp vertexCoords:(GLvoid *)vertexCoords elements:(GLvoid *)elements numElements:(int)numElements normalCoords:(GLvoid *)normalCoords texCoords:(GLvoid *)texCoords hasTexture:(bool)hasTexCoords modelScale:(float)modelScale
+- (void)drawModelWithMvp:(GLvoid *)mvp modelSource:(demoModel *)source modelScale:(float)modelScale textureID:(GLuint)textureID color:(float *)color flipped:(bool)flipped
 {
+  [self drawModelWithMvp:mvp vertexCoords:source->positions elements:source->elements numElements:source->numElements normalCoords:source->normals texCoords:source->texcoords hasTexture:(source->texcoordArraySize > 0) modelScale:modelScale textureID:textureID color:color flipped:flipped];
+}
+
+- (void)drawModelWithMvp:(GLvoid *)mvp vertexCoords:(GLvoid *)vertexCoords elements:(GLvoid *)elements numElements:(int)numElements normalCoords:(GLvoid *)normalCoords texCoords:(GLvoid *)texCoords hasTexture:(bool)hasTexCoords modelScale:(float)modelScale textureID:(GLuint)textureID color:(float *)color flipped:(bool)flipped
+{
+  glUseProgram(shaderProgramID);
+  
   glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)vertexCoords);
   glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)normalCoords);
   
@@ -496,21 +623,27 @@ namespace {
   
   glEnableVertexAttribArray(vertexHandle);
   glEnableVertexAttribArray(normalHandle);
-  if (modelSource->texcoordArraySize > 0) {
+  if (hasTexCoords) {
     glEnableVertexAttribArray(textureCoordHandle);
   }
   
   glActiveTexture(GL_TEXTURE0);
-  
   glBindTexture(GL_TEXTURE_2D, [augmentationTexture[0] textureID]);
   
-  glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE, (const GLfloat*)mvp);
-  glUniform1i(texSampler2DHandle, 0 /*GL_TEXTURE0*/);
-  glUniform1f(modelScaleHandle, modelScale);
+  glUniform1i(textureUsedHandle, hasTexCoords);
   
   if (hasTexCoords) {
-    glUniform1f(texAlphaHandle, 1.0);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glUniform1i(texSampler2DHandle, 0 /*GL_TEXTURE0*/);
+  } else {
+    glUniform3f(colorHandle, color[0], color[1], color[2]);
   }
+  
+  glUniform1i(flippedHandle, flipped);
+  
+  glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE, (const GLfloat*)mvp);
+  glUniform1f(modelScaleHandle, modelScale);
+  glUniform1f(texAlphaHandle, 1.0);
   
   glDrawElements(GL_TRIANGLES, numElements, GL_UNSIGNED_SHORT, (const GLvoid*)elements);
   
@@ -520,6 +653,8 @@ namespace {
   if (hasTexCoords) {
     glDisableVertexAttribArray(textureCoordHandle);
   }
+  
+  glUseProgram(0);
 }
 
 //------------------------------------------------------------------------------
@@ -538,6 +673,9 @@ namespace {
     texSampler2DHandle  = glGetUniformLocation(shaderProgramID,"texSampler2D");
     modelScaleHandle  = glGetUniformLocation(shaderProgramID,"modelScale");
     texAlphaHandle  = glGetUniformLocation(shaderProgramID,"texAlpha");
+    colorHandle  = glGetUniformLocation(shaderProgramID,"color");
+    textureUsedHandle  = glGetUniformLocation(shaderProgramID,"textureUsed");
+    flippedHandle  = glGetUniformLocation(shaderProgramID,"flipped");
   }
   else {
     NSLog(@"Could not initialise augmentation shader");
@@ -631,6 +769,29 @@ namespace {
   return [context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
+#pragma mark ARInputHandlerDelegate
 
+- (bool)grabModeWillBegin
+{
+  if (_collidingObject) {
+    _grabbedObject = _collidingObject;
+    _grabObjPos = _grabbedObject.location;
+    _grabCursorPos = currentPos;
+    _grabMode = YES;
+    return YES;
+  } else {
+    return NO;
+  }
+}
+
+- (void)grabModeEnded
+{
+  _grabbedObject = nil;
+  _grabMode = NO;
+  
+  if (!_networkless) {
+    [_sessionObject sendGameUpdate:_gameID playerID:_playerID unserializedGameStat:_chessPieces holding:nil];
+  }
+}
 
 @end
