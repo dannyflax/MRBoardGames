@@ -8,6 +8,8 @@
 
 #import "SampleCommunicationViewController.h"
 
+@import SocketIO;
+
 @interface SampleCommunicationViewController ()
 
 @end
@@ -93,13 +95,30 @@
 
 // called manually
 - (IBAction)connectToServer {
+    NSURL* url = [[NSURL alloc] initWithString:@"http://ec2-52-15-161-144.us-east-2.compute.amazonaws.com:3901"];
+    SocketIOClient* socket = [[SocketIOClient alloc] initWithSocketURL:url config:@{@"log": @YES, @"forcePolling": @YES}];
     
-    //NSLog(@"Setting up connection to %@ : %i", @"http://ec2-52-15-161-144.us-east-2.compute.amazonaws.com", 3901);
-    CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (CFStringRef)@"52.15.161.144", 3901, &readStream, &writeStream);
+    [socket on:@"connect" callback:^(NSArray* data, SocketAckEmitter* ack) {
+        _connectedLabel.text = @"Connected!";
+        [socket emit:@"listGames" with:@[]];
+    }];
     
-    messages = [[NSMutableArray alloc] init];
+    [socket on:@"disconnect" callback:^(NSArray* data, SocketAckEmitter* ack) {
+        _connectedLabel.text = @"Disconnected!";
+    }];
     
-    [self open];
+    [socket on:@"currentAmount" callback:^(NSArray* data, SocketAckEmitter* ack) {
+        double cur = [[data objectAtIndex:0] floatValue];
+        
+        [[socket emitWithAck:@"canUpdate" with:@[@(cur)]] timingOutAfter:0 callback:^(NSArray* data) {
+            //[socket emit:@"update" withItems:];
+            [socket emit:@"update" with:@[@{@"amount": @(cur + 2.50)}]];
+        }];
+        
+        [ack with:@[@"Got your currentAmount, ", @"dude"]];
+    }];
+    
+    [socket connect];
 }
 
 // Called manually

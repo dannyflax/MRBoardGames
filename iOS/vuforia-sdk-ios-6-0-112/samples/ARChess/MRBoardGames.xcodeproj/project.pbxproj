@@ -12,6 +12,7 @@
 		B54D0ADE1DE0D610000C7014 /* BaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B54D0ADD1DE0D610000C7014 /* BaseObject.m */; };
 		B54D0AE21DE0EDD9000C7014 /* MainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B54D0AE11DE0EDD9000C7014 /* MainMenuViewController.m */; };
 		B54D0AE51DE0F4CE000C7014 /* SampleCommunicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B54D0AE41DE0F4CE000C7014 /* SampleCommunicationViewController.m */; };
+		C155ED4B7D3AF6BFD94DFEAB /* Pods_MRBoardGames.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A4C8977A57F0F605050FD4 /* Pods_MRBoardGames.framework */; };
 		D21B07EC1A1B4AA20041ECF3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D21B07EB1A1B4AA20041ECF3 /* main.m */; };
 		D21B07EF1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D21B07EE1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m */; };
 		D21B07F71A1B4AA20041ECF3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D21B07F61A1B4AA20041ECF3 /* Images.xcassets */; };
@@ -68,9 +69,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		09A4C8977A57F0F605050FD4 /* Pods_MRBoardGames.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MRBoardGames.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18EB634B1ACC70F200EF1C28 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		8F467BCB1D18AC3F00682E4C /* SampleAppRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SampleAppRenderer.h; path = Classes/Features/ImageTargets/SampleAppRenderer.h; sourceTree = "<group>"; };
 		8F467BCC1D18AC3F00682E4C /* SampleAppRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SampleAppRenderer.mm; path = Classes/Features/ImageTargets/SampleAppRenderer.mm; sourceTree = "<group>"; };
+		9776B62E1537833F45905DB6 /* Pods-MRBoardGames.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRBoardGames.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MRBoardGames/Pods-MRBoardGames.debug.xcconfig"; sourceTree = "<group>"; };
+		AC1435C896624A8570BA2618 /* Pods-MRBoardGames.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRBoardGames.release.xcconfig"; path = "Pods/Target Support Files/Pods-MRBoardGames/Pods-MRBoardGames.release.xcconfig"; sourceTree = "<group>"; };
 		B54D0ADC1DE0D610000C7014 /* BaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseObject.h; path = ObjectClasses/BaseObject.h; sourceTree = "<group>"; };
 		B54D0ADD1DE0D610000C7014 /* BaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseObject.m; path = ObjectClasses/BaseObject.m; sourceTree = "<group>"; };
 		B54D0AE01DE0EDD9000C7014 /* MainMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainMenuViewController.h; path = ViewControllers/MainMenuViewController.h; sourceTree = "<group>"; };
@@ -171,12 +175,22 @@
 				D21B08761A1B6AD60041ECF3 /* Security.framework in Frameworks */,
 				D21B08771A1B6AD60041ECF3 /* SystemConfiguration.framework in Frameworks */,
 				D21B08781A1B6AD60041ECF3 /* UIKit.framework in Frameworks */,
+				C155ED4B7D3AF6BFD94DFEAB /* Pods_MRBoardGames.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3DCCCA4D9DD66F6BF3A548A4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9776B62E1537833F45905DB6 /* Pods-MRBoardGames.debug.xcconfig */,
+				AC1435C896624A8570BA2618 /* Pods-MRBoardGames.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		B54D0ADB1DE0D411000C7014 /* ObjectClasses */ = {
 			isa = PBXGroup;
 			children = (
@@ -205,6 +219,7 @@
 				D21B087B1A1B6C710041ECF3 /* Frameworks */,
 				D21B07E81A1B4AA20041ECF3 /* VuforiaSamples */,
 				D21B07E71A1B4AA20041ECF3 /* Products */,
+				3DCCCA4D9DD66F6BF3A548A4 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -299,6 +314,7 @@
 				D21B086E1A1B6AD60041ECF3 /* Security.framework */,
 				D21B086F1A1B6AD60041ECF3 /* SystemConfiguration.framework */,
 				D21B08701A1B6AD60041ECF3 /* UIKit.framework */,
+				09A4C8977A57F0F605050FD4 /* Pods_MRBoardGames.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -393,9 +409,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D21B08091A1B4AA20041ECF3 /* Build configuration list for PBXNativeTarget "MRBoardGames" */;
 			buildPhases = (
+				D49204A9C94D4FD3CB4FB752 /* [CP] Check Pods Manifest.lock */,
 				D21B07E21A1B4AA20041ECF3 /* Sources */,
 				D21B07E31A1B4AA20041ECF3 /* Frameworks */,
 				D21B07E41A1B4AA20041ECF3 /* Resources */,
+				0883B5E6BA84ECDE9ECE1F9C /* [CP] Embed Pods Frameworks */,
+				3AE9C9D5AB147BBF82A84765 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -418,6 +437,7 @@
 					D21B07E51A1B4AA20041ECF3 = {
 						CreatedOnToolsVersion = 6.1;
 						DevelopmentTeam = 6KMG279R88;
+						LastSwiftMigration = 0810;
 					};
 				};
 			};
@@ -472,6 +492,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0883B5E6BA84ECDE9ECE1F9C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MRBoardGames/Pods-MRBoardGames-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3AE9C9D5AB147BBF82A84765 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MRBoardGames/Pods-MRBoardGames-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D49204A9C94D4FD3CB4FB752 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D21B07E21A1B4AA20041ECF3 /* Sources */ = {
@@ -536,6 +604,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEFINES_MODULE = YES;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -583,6 +652,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEFINES_MODULE = YES;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -604,21 +674,28 @@
 		};
 		D21B080A1A1B4AA20041ECF3 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9776B62E1537833F45905DB6 /* Pods-MRBoardGames.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 6KMG279R88;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = ../../build/include;
 				INFOPLIST_FILE = "VuforiaSamples/ARChess-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = ../../build/lib/arm;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sfotm.mrboardgames;
 				PRODUCT_NAME = Vuforia;
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "MRBoardGames-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
@@ -626,23 +703,29 @@
 		};
 		D21B080B1A1B4AA20041ECF3 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC1435C896624A8570BA2618 /* Pods-MRBoardGames.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 21;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 6KMG279R88;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = ../../build/include;
 				INFOPLIST_FILE = "VuforiaSamples/ARChess-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = ../../build/lib/arm;
 				"LIBRARY_SEARCH_PATHS[arch=*]" = ../../build/lib/arm;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sfotm.mrboardgames;
 				PRODUCT_NAME = Vuforia;
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "MRBoardGames-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
