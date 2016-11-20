@@ -45,13 +45,12 @@ io.on('connection', function(client){
 	});
 	
 	client.on('listGames', function(){
-		var keys = [];
+		var keys = {};
 		for(var k in games){
-			var pair = {};
-			pair[k] = games[k].players.length;
-			keys.push(pair);
+			keys[k] = games[k].players.length;
+			
 		}
-		client.emit('gameList', {list: keys})
+		client.emit('gameList', keys);
 	});
 	
 	client.on('createGame', function(data){
@@ -85,13 +84,15 @@ io.on('connection', function(client){
 				game.players = game.players.filter(function( obj ) {
 					return obj !== data.playerID;
 				});
+				if(game.players.length == 0){
+					delete games.data.gameID;
+				}
 				client.emit('gameLeft', {success: true});
 				game.lock.unlock();
-		});
+			});
 		}else{
 			client.emit('gameLeft', {success: false});
 		}
 	});
-	
 	
 });
