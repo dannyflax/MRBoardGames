@@ -53,6 +53,7 @@ countries.
     GLint texAlphaHandle;
     GLint colorHandle;
     GLboolean textureUsedHandle;
+    GLboolean flippedHandle;
   
   
     // Texture used when rendering augmentation

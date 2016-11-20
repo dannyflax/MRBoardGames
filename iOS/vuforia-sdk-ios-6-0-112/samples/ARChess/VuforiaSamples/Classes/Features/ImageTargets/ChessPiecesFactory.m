@@ -21,7 +21,7 @@ static int numPieces = 0;
                                                  Y:13.46
                                                  Z:29.949];
   
-  return [[BaseObject alloc] initWithProperties:identifier HolderId:[NSNumber numberWithInt:0] Location:[Point3D zero] Dimensions:dimensions Scale:10.0 AndMeshName:kQueenName];
+  return [[ChessObject alloc] initWithProperties:identifier HolderId:[NSNumber numberWithInt:0] Location:[Point3D zero] Dimensions:dimensions Scale:10.0 AndMeshName:kQueenName];
 }
 
 +(BaseObject *)createNewPawn
@@ -33,7 +33,7 @@ static int numPieces = 0;
                                                  Y:13.46
                                                  Z:20.67];
   
-  return [[BaseObject alloc] initWithProperties:identifier HolderId:[NSNumber numberWithInt:0] Location:[Point3D zero] Dimensions:dimensions Scale:10.0 AndMeshName:kPawnName];
+  return [[ChessObject alloc] initWithProperties:identifier HolderId:[NSNumber numberWithInt:0] Location:[Point3D zero] Dimensions:dimensions Scale:10.0 AndMeshName:kPawnName];
 }
 
 +(BaseObject *)createNewKing
@@ -45,7 +45,7 @@ static int numPieces = 0;
                                                  Y:13.46
                                                  Z:36.47];
   
-  return [[BaseObject alloc] initWithProperties:identifier HolderId:[NSNumber numberWithInt:0] Location:[Point3D zero] Dimensions:dimensions Scale:10.0 AndMeshName:kKingName];
+  return [[ChessObject alloc] initWithProperties:identifier HolderId:[NSNumber numberWithInt:0] Location:[Point3D zero] Dimensions:dimensions Scale:10.0 AndMeshName:kKingName];
 }
 
 +(BaseObject *)createNewRook
@@ -57,7 +57,7 @@ static int numPieces = 0;
                                                  Y:13.46
                                                  Z:20.67];
   
-  return [[BaseObject alloc] initWithProperties:identifier HolderId:[NSNumber numberWithInt:0] Location:[Point3D zero] Dimensions:dimensions Scale:10.0 AndMeshName:kRookName];
+  return [[ChessObject alloc] initWithProperties:identifier HolderId:[NSNumber numberWithInt:0] Location:[Point3D zero] Dimensions:dimensions Scale:10.0 AndMeshName:kRookName];
 }
 
 
@@ -70,7 +70,7 @@ static int numPieces = 0;
                                                  Y:13.46
                                                  Z:22.73];
   
-  return [[BaseObject alloc] initWithProperties:identifier HolderId:[NSNumber numberWithInt:0] Location:[Point3D zero] Dimensions:dimensions Scale:10.0 AndMeshName:kKnightName];
+  return [[ChessObject alloc] initWithProperties:identifier HolderId:[NSNumber numberWithInt:0] Location:[Point3D zero] Dimensions:dimensions Scale:10.0 AndMeshName:kKnightName];
 }
 
 
@@ -83,7 +83,7 @@ static int numPieces = 0;
                                                  Y:13.46
                                                  Z:26.26];
   
-  return [[BaseObject alloc] initWithProperties:identifier HolderId:[NSNumber numberWithInt:0] Location:[Point3D zero] Dimensions:dimensions Scale:10.0 AndMeshName:kBishopName];
+  return [[ChessObject alloc] initWithProperties:identifier HolderId:[NSNumber numberWithInt:0] Location:[Point3D zero] Dimensions:dimensions Scale:10.0 AndMeshName:kBishopName];
 }
 
 @end

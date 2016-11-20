@@ -25,7 +25,7 @@
 #import "SampleApplicationShaderUtils.h"
 #import "Teapot.h"
 #import "Quad.h"
-#import "BaseObject.h"
+#import "ChessObject.h"
 #import "CollisionChecker.h"
 #import "ChessPiecesFactory.h"
 
@@ -67,6 +67,8 @@ static const float kBoardPadding = 50.0;
 static float kRedColor[3] =   {1.0, 0.0, 0.0};
 static float kGreenColor[3] = {0.0, 1.0, 0.0};
 static float kBlueColor[3] = {0.0, 1.0, 1.0};
+static float kWhiteColor[3] = {1.0, 1.0, 1.0};
+static float kBlackColor[3] = {.3, 0.3, 0.3};
 
 @interface ImageTargetsEAGLView (PrivateMethods)
 
@@ -80,9 +82,9 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
 
 @implementation ImageTargetsEAGLView
 {
-  BaseObject *_queen;
-  BaseObject *_collidingObject;
-  BaseObject *_grabbedObject;
+  NSMutableArray <ChessObject *> *_chessPieces;
+  ChessObject *_collidingObject;
+  ChessObject *_grabbedObject;
   bool _grabMode;
   Point3D *_grabObjPos;
   Point3D *_grabCursorPos;
@@ -102,12 +104,59 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
 //------------------------------------------------------------------------------
 #pragma mark - Lifecycle
 
+- (void)setupNewChessboard
+{
+  _chessPieces = [NSMutableArray new];
+  
+  for (int side = 0; side < 2; side++) {
+    bool isWhite = (side == 0);
+    
+    int backRow = (side == 0) ? 7 : 0;
+    int secondRow = (side == 0) ? 6 : 1;
+    
+    for (int i = 0; i < 8; i++) {
+      ChessObject *pawn = (ChessObject *)[ChessPiecesFactory createNewPawn];
+      pawn.location = [self getLocationForX:i Y:secondRow];
+      pawn.isWhite = isWhite;
+      [_chessPieces addObject:pawn];
+    }
+    
+    for (int i = 0; i < 2; i++) {
+      ChessObject *rook = (ChessObject *)[ChessPiecesFactory createNewRook];
+      rook.location = [self getLocationForX:(i == 0) ? 0 : 7 Y:backRow];
+      [_chessPieces addObject:rook];
+      rook.isWhite = isWhite;
+      
+      ChessObject *knight = (ChessObject *)[ChessPiecesFactory createNewKnight];
+      knight.location = [self getLocationForX:(i == 0) ? 1 : 6 Y:backRow];
+      [_chessPieces addObject:knight];
+      knight.isWhite = isWhite;
+      
+      ChessObject *bishop = (ChessObject *)[ChessPiecesFactory createNewBishop];
+      bishop.location = [self getLocationForX:(i == 0) ? 2 : 5 Y:backRow];
+      [_chessPieces addObject:bishop];
+      bishop.isWhite = isWhite;
+    }
+    
+    ChessObject *queen = (ChessObject *)[ChessPiecesFactory createNewQueen];
+    queen.location = [self getLocationForX:3 Y:backRow];
+    [_chessPieces addObject:queen];
+    queen.isWhite = isWhite;
+    
+    ChessObject *king = (ChessObject *)[ChessPiecesFactory createNewKing];
+    king.location = [self getLocationForX:4 Y:backRow];
+    [_chessPieces addObject:king];
+    king.isWhite = isWhite;
+  }
+}
+
 - (id)initWithFrame:(CGRect)frame appSession:(SampleApplicationSession *) app
 {
   self = [super initWithFrame:frame];
   
+  
   if (self) {
-    _queen = [ChessPiecesFactory createNewKnight];
+    [self setupNewChessboard];
     
     NSString *filePathName = [[NSBundle mainBundle] pathForResource:@"monkey" ofType:@"obj"];
     monkeySource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
@@ -218,7 +267,17 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
   return self;
 }
 
-- (demoModel *)getMeshForGameObject:(BaseObject *)gameObject
+- (Point3D *)getLocationForX:(int)tileX Y:(int)tileY
+{
+  Point3D *point = [Point3D zero];
+  
+  point.x = -kBoardSize/2.0 + kBoardSize/16.0 + tileX*kBoardSize/8.0;
+  point.y = -kBoardSize/2.0 + kBoardSize/16.0 + tileY*kBoardSize/8.0;
+  
+  return point;
+}
+
+- (demoModel *)getMeshForGameObject:(ChessObject *)gameObject
 {
   NSValue *ptr = [_pieceMeshMap objectForKey:gameObject.meshName];
   return (demoModel *)[ptr pointerValue];
@@ -419,9 +478,11 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
     
     SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], objModelView, objModelViewProjection);
     
-    [self drawModelWithMvp:objModelViewProjection vertexCoords:(GLvoid *)boardVertices elements:(GLvoid *)quadIndices numElements:kNumQuadIndices normalCoords:(GLvoid *)quadNormals texCoords:(GLvoid *)quadTexCoords hasTexture:YES modelScale:scale textureID:chessboardTextureID color:nil];
+    [self drawModelWithMvp:objModelViewProjection vertexCoords:(GLvoid *)boardVertices elements:(GLvoid *)quadIndices numElements:kNumQuadIndices normalCoords:(GLvoid *)quadNormals texCoords:(GLvoid *)quadTexCoords hasTexture:YES modelScale:scale textureID:chessboardTextureID color:nil flipped:NO];
     
-    [self drawPiece:_queen projectionMatrix:projectionMatrix];
+    for (int i = 0; i < _chessPieces.count; i++) {
+      [self drawPiece:[_chessPieces objectAtIndex:i] projectionMatrix:projectionMatrix];
+    }
   }
   
   
@@ -482,19 +543,25 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
         
         [_grabbedObject setLocation:newLocation];
       } else if (!_grabMode) {
-        bool collides = [CollisionChecker checkCollisionBetweenRectWithCenter:_queen.location
-                                                                andDimensions:_queen.dimensions
-                                                                     andPoint:currentPos];
-        if (collides) {
-          monkeyColor = kBlueColor;
-          _collidingObject = _queen;
+        
+        for (int i = 0; i < _chessPieces.count; i++) {
+          ChessObject *piece = [_chessPieces objectAtIndex:i];
+          bool collides = [CollisionChecker checkCollisionBetweenRectWithCenter:piece.location
+                                                                  andDimensions:piece.dimensions
+                                                                       andPoint:currentPos];
+          if (collides) {
+            monkeyColor = kBlueColor;
+            _collidingObject = piece;
+          }
         }
+        
+        
       }
     }
     
     
     
-    [self drawModelWithMvp:objModelViewProjection modelSource:monkeySource modelScale:2.0 textureID:-1 color:monkeyColor];
+    [self drawModelWithMvp:objModelViewProjection modelSource:monkeySource modelScale:2.0 textureID:-1 color:monkeyColor flipped:NO];
     
   } else {
     if(occlusionView.image)
@@ -507,7 +574,7 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
   [self presentFramebuffer];
 }
 
-- (void)drawPiece:(BaseObject *)piece projectionMatrix:(Vuforia::Matrix44F)projectionMatrix
+- (void)drawPiece:(ChessObject *)piece projectionMatrix:(Vuforia::Matrix44F)projectionMatrix
 {
   float objModelView[16];
   float objModelViewProjection[16];
@@ -527,19 +594,19 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
   
   SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], objModelView, objModelViewProjection);
   
-  float queenColor[3] = {1.0, 1.0, 1.0};
+  float *queenColor = piece.isWhite ? kWhiteColor : kBlackColor;
   
   demoModel *modelSource = [self getMeshForGameObject:piece];
   
-  [self drawModelWithMvp:objModelViewProjection modelSource:modelSource modelScale:10.0 textureID:-1 color:queenColor];
+  [self drawModelWithMvp:objModelViewProjection modelSource:modelSource modelScale:10.0 textureID:-1 color:queenColor flipped:!piece.isWhite];
 }
 
-- (void)drawModelWithMvp:(GLvoid *)mvp modelSource:(demoModel *)source modelScale:(float)modelScale textureID:(GLuint)textureID color:(float *)color
+- (void)drawModelWithMvp:(GLvoid *)mvp modelSource:(demoModel *)source modelScale:(float)modelScale textureID:(GLuint)textureID color:(float *)color flipped:(bool)flipped
 {
-  [self drawModelWithMvp:mvp vertexCoords:source->positions elements:source->elements numElements:source->numElements normalCoords:source->normals texCoords:source->texcoords hasTexture:(source->texcoordArraySize > 0) modelScale:modelScale textureID:textureID color:color];
+  [self drawModelWithMvp:mvp vertexCoords:source->positions elements:source->elements numElements:source->numElements normalCoords:source->normals texCoords:source->texcoords hasTexture:(source->texcoordArraySize > 0) modelScale:modelScale textureID:textureID color:color flipped:flipped];
 }
 
-- (void)drawModelWithMvp:(GLvoid *)mvp vertexCoords:(GLvoid *)vertexCoords elements:(GLvoid *)elements numElements:(int)numElements normalCoords:(GLvoid *)normalCoords texCoords:(GLvoid *)texCoords hasTexture:(bool)hasTexCoords modelScale:(float)modelScale textureID:(GLuint)textureID color:(float *)color
+- (void)drawModelWithMvp:(GLvoid *)mvp vertexCoords:(GLvoid *)vertexCoords elements:(GLvoid *)elements numElements:(int)numElements normalCoords:(GLvoid *)normalCoords texCoords:(GLvoid *)texCoords hasTexture:(bool)hasTexCoords modelScale:(float)modelScale textureID:(GLuint)textureID color:(float *)color flipped:(bool)flipped
 {
   glUseProgram(shaderProgramID);
   
@@ -568,6 +635,8 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
   } else {
     glUniform3f(colorHandle, color[0], color[1], color[2]);
   }
+  
+  glUniform1i(flippedHandle, flipped);
   
   glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE, (const GLfloat*)mvp);
   glUniform1f(modelScaleHandle, modelScale);
@@ -603,6 +672,7 @@ static float kBlueColor[3] = {0.0, 1.0, 1.0};
     texAlphaHandle  = glGetUniformLocation(shaderProgramID,"texAlpha");
     colorHandle  = glGetUniformLocation(shaderProgramID,"color");
     textureUsedHandle  = glGetUniformLocation(shaderProgramID,"textureUsed");
+    flippedHandle  = glGetUniformLocation(shaderProgramID,"flipped");
   }
   else {
     NSLog(@"Could not initialise augmentation shader");

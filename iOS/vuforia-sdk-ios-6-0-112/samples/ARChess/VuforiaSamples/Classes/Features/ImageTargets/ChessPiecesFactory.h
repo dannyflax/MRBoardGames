@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BaseObject.h"
+#import "ChessObject.h"
 
 static NSString *kQueenName = @"queen";
 static NSString *kPawnName = @"pawn";
