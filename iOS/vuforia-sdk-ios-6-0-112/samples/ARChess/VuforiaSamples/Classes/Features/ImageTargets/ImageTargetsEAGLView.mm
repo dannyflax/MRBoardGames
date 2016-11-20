@@ -153,8 +153,12 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
   [_gameIDLabel sizeToFit];
 }
 
-- (void)gameStateUpdated:(NSArray *)objectList
+- (void)gameStateUpdated:(NSArray *)objectList playerID:(NSString *)playerID success:(BOOL)success
 {
+  if ([playerID isEqualToString:playerID] && success) {
+    return;
+  }
+  
   for (ChessObject *baseObj in objectList) {
     for (ChessObject *baseObj2 in _chessPieces) {
       if ([baseObj2.name isEqualToString:baseObj.name] && baseObj2 != _grabbedObject) {

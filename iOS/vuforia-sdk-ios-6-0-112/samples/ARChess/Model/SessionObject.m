@@ -66,16 +66,16 @@
     }];
   
     [socket on:@"gameState" callback:^(NSArray* data, SocketAckEmitter* ack) {
-      NSDictionary *objects = data[0];
-      
-      NSMutableArray *gameObjs = [NSMutableArray new];
-      NSArray *state = [objects objectForKey:@"state"];
-      
-      for (NSData *json in state) {
-        [gameObjs addObject:[[ChessObject alloc] initWithJSON:json]];
-      }
-  
-      [self.gameDelegate gameStateUpdated:gameObjs];
+//      NSDictionary *objects = data[0];
+//      
+//      NSMutableArray *gameObjs = [NSMutableArray new];
+//      NSArray *state = [objects objectForKey:@"state"];
+//      
+//      for (NSData *json in state) {
+//        [gameObjs addObject:[[ChessObject alloc] initWithJSON:json]];
+//      }
+//  
+//      [self.gameDelegate gameStateUpdated:gameObjs];
     }];
   
     [socket on:@"gameStateUpdated" callback:^(NSArray* data, SocketAckEmitter* ack) {
@@ -84,11 +84,16 @@
       NSMutableArray *gameObjs = [NSMutableArray new];
       NSArray *state = [objects objectForKey:@"state"];
       
+      
+      NSString *playerID = [objects objectForKey:@"playerID"];
+      bool success = [[objects objectForKey:@"success"] boolValue];
+      
+      
       for (NSData *json in state) {
         [gameObjs addObject:[[ChessObject alloc] initWithJSON:json]];
       }
       
-      [self.gameDelegate gameStateUpdated:gameObjs];
+      [self.gameDelegate gameStateUpdated:gameObjs playerID:playerID success:success];
     }];
   
     [socket on:@"disconnect" callback:^(NSArray* data, SocketAckEmitter* ack) {

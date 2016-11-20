@@ -11,7 +11,7 @@
 
 @protocol SessionObjectGameDelegate <NSObject>
 @required
-- (void)gameStateUpdated:(NSArray *)objectList;
+- (void)gameStateUpdated:(NSArray *)objectList playerID:(NSString *)playerID success:(BOOL)success;
 
 @end
 
