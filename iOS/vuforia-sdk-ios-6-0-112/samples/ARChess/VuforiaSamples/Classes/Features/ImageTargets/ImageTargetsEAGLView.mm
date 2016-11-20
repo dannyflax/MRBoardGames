@@ -155,8 +155,8 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
 
 - (void)gameStateUpdated:(NSArray *)objectList
 {
-  for (BaseObject *baseObj in objectList) {
-    for (BaseObject *baseObj2 in _chessPieces) {
+  for (ChessObject *baseObj in objectList) {
+    for (ChessObject *baseObj2 in _chessPieces) {
       if ([baseObj2.name isEqualToString:baseObj.name] && baseObj2 != _grabbedObject) {
         baseObj2.location = baseObj.location;
       }

@@ -51,10 +51,10 @@
           NSArray *state = [objects objectForKey:@"state"];
           
           for (NSData *json in state) {
-            [gameObjs addObject:[[BaseObject alloc] initWithJSON:json]];
+            [gameObjs addObject:[[ChessObject alloc] initWithJSON:json]];
           }
           
-          [self.joinDelegate successfullyJoinedGame:[objects objectForKey:@"playerID"] gameState:state];
+          [self.joinDelegate successfullyJoinedGame:[objects objectForKey:@"playerID"] gameState:[NSArray arrayWithArray:gameObjs]];
         }
     }];
 
@@ -69,7 +69,7 @@
       NSArray *state = [objects objectForKey:@"state"];
       
       for (NSData *json in state) {
-        [gameObjs addObject:[[BaseObject alloc] initWithJSON:json]];
+        [gameObjs addObject:[[ChessObject alloc] initWithJSON:json]];
       }
   
       [self.gameDelegate gameStateUpdated:gameObjs];
@@ -82,7 +82,7 @@
       NSArray *state = [objects objectForKey:@"state"];
       
       for (NSData *json in state) {
-        [gameObjs addObject:[[BaseObject alloc] initWithJSON:json]];
+        [gameObjs addObject:[[ChessObject alloc] initWithJSON:json]];
       }
       
       [self.gameDelegate gameStateUpdated:gameObjs];
@@ -112,11 +112,11 @@
 
 - (void)sendGameUpdate:(NSString *)gameID playerID:(NSString *)playerID unserializedGameStat:(NSArray *)unserializedGS holding:(NSString *)holding
 {
-  NSArray<BaseObject *> *initialData = unserializedGS;
+  NSArray<ChessObject *> *initialData = unserializedGS;
   
   NSMutableArray *processedData = [NSMutableArray new];
   
-  for (BaseObject *baseObj in initialData) {
+  for (ChessObject *baseObj in initialData) {
     [processedData addObject:[baseObj getJsonRepresentation]];
   }
   
@@ -146,11 +146,11 @@
 }
 
 - (void)createGame {
-    NSArray<BaseObject *> *initialData = [ChessPiecesFactory createNewChessGame];
+    NSArray<ChessObject *> *initialData = [ChessPiecesFactory createNewChessGame];
   
     NSMutableArray *processedData = [NSMutableArray new];
   
-    for (BaseObject *baseObj in initialData) {
+    for (ChessObject *baseObj in initialData) {
       [processedData addObject:[baseObj getJsonRepresentation]];
     }
   
