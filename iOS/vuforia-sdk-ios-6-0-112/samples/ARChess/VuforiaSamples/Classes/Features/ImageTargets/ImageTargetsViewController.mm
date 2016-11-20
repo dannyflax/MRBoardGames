@@ -264,9 +264,10 @@ countries.
   
     if (!virtualButton) {
       float lOff = -50;
-      float size = 30;
+      float sizeX = 50;
+      float sizeY = 50;
       
-      Vuforia::Rectangle vbRectangle(-size/2 - lOff, size/2, size/2 - lOff, -size/2);
+      Vuforia::Rectangle vbRectangle(-sizeX/2 - lOff, sizeY/2, sizeX/2 - lOff, -sizeY/2);
       virtualButton = imageTarget->createVirtualButton(buttonName, vbRectangle);
       if (virtualButton) {
         virtualButton->setEnabled(true);
