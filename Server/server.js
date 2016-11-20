@@ -46,7 +46,11 @@ io.on('connection', function(client){
 	
 	client.on('listGames', function(){
 		var keys = [];
-		for(var k in games) keys.push({k: games[k].players.length});
+		for(var k in games){
+			var pair = {};
+			pair[k] = games[k].players.length;
+			keys.push(pair);
+		}
 		client.emit('gameList', {list: keys})
 	});
 	
