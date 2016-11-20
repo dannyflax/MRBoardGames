@@ -15,8 +15,9 @@ socket.on('playerCreated', function(data){
 	console.log("player created: \n");
 	console.log(JSON.stringify(data));
 	socket.emit("joinGame", {gameID: "game2", playerID: "player0"});
-	socket.on('gameJoined', function(data){
+});
+
+socket.on('gameJoined', function(data){
 		console.log(JSON.stringify(data));
-	});
-})
+});
 

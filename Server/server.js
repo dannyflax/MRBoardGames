@@ -6,7 +6,7 @@ UUID = require('node-uuid'),
 verbose = false,
 app = express();
 
-var games = {abc: null, def: null}; //object keeps track of all games;
+var games = {}; //object keeps track of all games;
 var players = {}; //keeps track of players.
 
 //each game has following info:
@@ -46,8 +46,8 @@ io.on('connection', function(client){
 	
 	client.on('listGames', function(){
 		var keys = [];
-		for(var k in games) keys.push(k);
-		client.emit('gameList', {keys: keys})
+		for(var k in games) keys.push({k: games[k].players.length});
+		client.emit('gameList', {list: keys})
 	});
 	
 	client.on('createGame', function(data){
