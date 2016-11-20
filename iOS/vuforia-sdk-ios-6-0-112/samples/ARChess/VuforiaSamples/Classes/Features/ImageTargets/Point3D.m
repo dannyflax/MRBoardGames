@@ -10,6 +10,14 @@
 
 @implementation Point3D
 
+-(id)initWithX:(float)x Y:(float)y Z:(float)z {
+    self = [super init];
+    self.x = x;
+    self.y = y;
+    self.z = z;
+    return self;
+}
+
 -(NSString *)description
 {
   return [NSString stringWithFormat:@"[X: %.2f, Y: %.2f, Z: %.2f]", self.x, self.y, self.z];
