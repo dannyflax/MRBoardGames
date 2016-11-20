@@ -12,6 +12,7 @@ var players = {}; //keeps track of players.
 //each game has following info:
 //gameID (used as keys in games)
 //playerID (used as key players and values in games)
+//mutexLock
 //gamestate
 
 //locks
@@ -51,7 +52,7 @@ io.on('connection', function(client){
 	
 	client.on('createGame', function(data){
 		gamesLock.writeLock(function(){;
-			var game = {state: null, players: []};
+			var game = {state: null, players: [], lock: locks.createMutex()};
 			var id = "game" + Object.keys(games).length;
 			game.players.push(data.playerId);
 			games[id] =  game;
@@ -59,5 +60,34 @@ io.on('connection', function(client){
 			client.emit('gameCreated', {gameId: id});
 		});
 	});
+	
+	client.on('joinGame', function(data){
+		if(games[data.gameID] && players[data.playerID]){
+			var game = games[data.gameID];
+			game.lock.lock(function(){
+				game.players.push(data.playerID);
+				client.emit('gameJoined', {success: true});
+				game.lock.unlock();
+		});
+		}else{
+			client.emit('gameJoined', {success: false});
+		}
+	});
+	
+	client.on('leaveGame', function(data){
+		if(games[data.gameID] && players[data.playerID]){
+			var game = games[data.gameID];
+			game.lock.lock(function(){
+				game.players = game.players.filter(function( obj ) {
+					return obj !== data.playerID;
+				});
+				client.emit('gameLeft', {success: true});
+				game.lock.unlock();
+		});
+		}else{
+			client.emit('gameLeft', {success: false});
+		}
+	});
+	
 	
 });
