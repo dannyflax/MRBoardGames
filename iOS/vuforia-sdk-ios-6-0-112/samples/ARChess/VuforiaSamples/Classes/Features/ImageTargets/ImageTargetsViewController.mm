@@ -605,7 +605,7 @@ countries.
             SampleAppMenuViewController *menuVC = (SampleAppMenuViewController *)dest;
             menuVC.menuDelegate = self;
             menuVC.sampleAppFeatureName = @"Image Targets";
-            menuVC.dismissItemName = @"Vuforia Samples";
+            menuVC.dismissItemName = @"Exit to Lobby";
             menuVC.backSegueId = @"BackToImageTargets";
             
             NSLog(@"Dataset current %@", dataSetCurrent == dataSetTarmac ? @"Tarmac" : @"Stones & Chips");
