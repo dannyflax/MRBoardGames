@@ -32,6 +32,7 @@
 - (void)joinGame:(GameInfo *)gameInfo;
 - (void)createGame;
 - (void)disconnect;
+- (void)endGame:(NSString *)gameID playerID:(NSString *)playerID;
 - (void)sendGameUpdate:(NSString *)gameID playerID:(NSString *)playerID unserializedGameStat:(NSArray *)unserializedGS holding:(NSString *)holding;
 - (void)pollForGameUpdate:(NSString *)gameID playerID:(NSString *)playerID;
 

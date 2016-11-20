@@ -170,6 +170,7 @@ countries.
   
     [self.navigationController setNavigationBarHidden:NO animated:animated];
   
+    [_sessionObject endGame:_gameID playerID:_playerID];
   
     VuforiaSamplesAppDelegate *appDelegate = (VuforiaSamplesAppDelegate*)[[UIApplication sharedApplication] delegate];
     appDelegate.glResourceHandler = nil;

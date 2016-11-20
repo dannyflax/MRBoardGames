@@ -18,6 +18,9 @@
 @end
 
 @implementation SessionObject
+{
+  NSMutableArray *_lastGameState;
+}
 
 - (void)connectToServer {
     NSURL* url = [[NSURL alloc] initWithString:@"http://ec2-52-15-161-144.us-east-2.compute.amazonaws.com:3901"];
@@ -40,7 +43,7 @@
     [socket on:@"gameCreated" callback:^(NSArray* data, SocketAckEmitter* ack) {
         NSDictionary *objects = data[0];
         if ([objects objectForKey:@"playerID"]) {
-          [self.joinDelegate successfullyCreatedGame:[objects objectForKey:@"playerID"] withGameID:[objects objectForKey:@"gameID"] gameState:[ChessPiecesFactory createNewChessGame]];
+          [self.joinDelegate successfullyCreatedGame:[objects objectForKey:@"playerID"] withGameID:[objects objectForKey:@"gameID"] gameState:[NSArray arrayWithArray:_lastGameState]];
         }
     }];
     
@@ -101,6 +104,10 @@
     
 }
 
+- (void)endGame:(NSString *)gameID playerID:(NSString *)playerID{
+  [socket emit:@"leaveGame" with:@[@{@"gameID":gameID, @"playerID":playerID}]];
+}
+
 - (void)refreshGames {
     [socket emit:@"listGames" with:@[]];
 }
@@ -155,6 +162,8 @@
     }
   
     [socket emit:@"createGame" with:@[@{@"state":processedData}]];
+  
+    _lastGameState = processedData;
 }
 
 @end
