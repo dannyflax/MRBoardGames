@@ -561,7 +561,7 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
     
     
     
-    [self drawModelWithMvp:objModelViewProjection modelSource:monkeySource modelScale:8.0 textureID:-1 color:monkeyColor flipped:NO];
+    [self drawModelWithMvp:objModelViewProjection modelSource:monkeySource modelScale:4.0 textureID:-1 color:monkeyColor flipped:NO];
     
   } else {
     if(occlusionView.image)
