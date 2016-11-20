@@ -4,13 +4,10 @@ socket.on('connect', function(){});
 socket.on('gameList', function(data){
 	console.log(JSON.stringify(data));
 });
-socket.emit('listGames', {});
-socket.emit('createGame', {state: {abc: 'def'}});
 
 socket.on('gameCreated', function(data){
 	console.log("Game created: \n");
 	console.log(JSON.stringify(data));
-	socket.emit('joinGame', {gameID: 'game0'});
 });
 
 socket.on('gameUpdated', function(data){
@@ -21,7 +18,6 @@ socket.on('gameUpdated', function(data){
 socket.on('gameJoined', function(data){
 		console.log("JOINED GAME");
 		console.log(JSON.stringify(data));
-		socket.emit('leaveGame', {gameID: "game2", playerID: "player2"})
 });
 
 
@@ -30,9 +26,21 @@ socket.on('gameLeft', function(data){
 		console.log(JSON.stringify(data));
 });
 
-socket.on('gamestSteUpdated', function(data){
+socket.on('gameStateUpdated', function(data){
 	console.log("UPDATED GAME");
-		console.log(JSON.stringify(data));
+	console.log(JSON.stringify(data));
 });
 
-socket.emit('updateGame', {gameID: "game0", playerID: "player0", state: {abc: "lmnopqrst"}});
+socket.on('gameState', function(data){
+	console.log("GET GAME");
+	console.log(JSON.stringify(data));
+});
+
+var stdin = process.openStdin();
+
+stdin.addListener("data", function(d) {
+		var input = d.toString().split(' ');
+		var event = input[0];
+		var rest = d.toString().substring(event.length + 1);
+		socket.emit(event, JSON.parse(rest.trim()));
+});
