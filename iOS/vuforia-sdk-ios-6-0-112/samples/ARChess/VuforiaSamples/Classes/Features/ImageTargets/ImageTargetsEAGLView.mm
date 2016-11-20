@@ -82,7 +82,6 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
 
 @implementation ImageTargetsEAGLView
 {
-  NSMutableArray <ChessObject *> *_chessPieces;
   ChessObject *_collidingObject;
   ChessObject *_grabbedObject;
   bool _grabMode;
@@ -104,7 +103,7 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
 //------------------------------------------------------------------------------
 #pragma mark - Lifecycle
 
-- (void)setupNewChessboard
+- (void)createNewChessGame
 {
   _chessPieces = [NSMutableArray new];
   
@@ -150,14 +149,31 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
   }
 }
 
-- (id)initWithFrame:(CGRect)frame appSession:(SampleApplicationSession *) app
+- (id)initWithFrame:(CGRect)frame gamePieces:(NSMutableArray <ChessObject*> *)chessObjects appSession:(SampleApplicationSession *)app
+{
+    self = [super initWithFrame:frame];
+    
+    if (self) {
+        _chessPieces = chessObjects;
+        [self configureView:app];
+    }
+    
+    return self;
+}
+
+- (id)initWithFrame:(CGRect)frame appSession:(SampleApplicationSession *)app
 {
   self = [super initWithFrame:frame];
   
-  
   if (self) {
-    [self setupNewChessboard];
-    
+      [self createNewChessGame];
+      [self configureView:app];
+  }
+  
+  return self;
+}
+
+- (void)configureView:(SampleApplicationSession *)app {
     NSString *filePathName = [[NSBundle mainBundle] pathForResource:@"monkey" ofType:@"obj"];
     monkeySource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
     
@@ -214,12 +230,12 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
     
     // Enable retina mode if available on this device
     if (YES == [vapp isRetinaDisplay]) {
-      [self setContentScaleFactor:[UIScreen mainScreen].nativeScale];
+        [self setContentScaleFactor:[UIScreen mainScreen].nativeScale];
     }
     
     // Load the augmentation textures
     for (int i = 0; i < kNumAugmentationTextures; ++i) {
-      augmentationTexture[i] = [[Texture alloc] initWithImageFile:[NSString stringWithCString:textureFilenames[i] encoding:NSASCIIStringEncoding]];
+        augmentationTexture[i] = [[Texture alloc] initWithImageFile:[NSString stringWithCString:textureFilenames[i] encoding:NSASCIIStringEncoding]];
     }
     
     // Create the OpenGL ES context
@@ -228,19 +244,19 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
     // The EAGLContext must be set for each thread that wishes to use it.
     // Set it the first time this method is called (on the main thread)
     if (context != [EAGLContext currentContext]) {
-      [EAGLContext setCurrentContext:context];
+        [EAGLContext setCurrentContext:context];
     }
     
     // Generate the OpenGL ES texture and upload the texture data for use
     // when rendering the augmentation
     for (int i = 0; i < kNumAugmentationTextures; ++i) {
-      GLuint textureID;
-      glGenTextures(1, &textureID);
-      [augmentationTexture[i] setTextureID:textureID];
-      glBindTexture(GL_TEXTURE_2D, textureID);
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, [augmentationTexture[i] width], [augmentationTexture[i] height], 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)[augmentationTexture[i] pngData]);
+        GLuint textureID;
+        glGenTextures(1, &textureID);
+        [augmentationTexture[i] setTextureID:textureID];
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, [augmentationTexture[i] width], [augmentationTexture[i] height], 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)[augmentationTexture[i] pngData]);
     }
     
     Texture *chessboardTexture = [[Texture alloc] initWithImageFile:[NSString stringWithCString:"chessboard.jpg" encoding:NSASCIIStringEncoding]];
@@ -262,9 +278,6 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
     
     // we initialize the rendering method of the SampleAppRenderer
     [sampleAppRenderer initRendering];
-  }
-  
-  return self;
 }
 
 - (Point3D *)getLocationForX:(int)tileX Y:(int)tileY

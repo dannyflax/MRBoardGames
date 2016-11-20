@@ -19,6 +19,7 @@
              AndMeshName:(NSString *)meshName;
 
 - (id)initWithJSON:(NSData*)jsonData;
+- (NSData*)getJsonRepresentation;
 
 @property NSString *name;
 @property NSNumber *holderId;

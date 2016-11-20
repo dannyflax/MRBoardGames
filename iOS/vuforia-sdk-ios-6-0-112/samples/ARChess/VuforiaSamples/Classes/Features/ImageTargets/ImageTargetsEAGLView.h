@@ -24,6 +24,8 @@ countries.
 #import "Point3D.h"
 #import "modelUtil.h"
 
+#import "ChessObject.h"
+
 #define kNumAugmentationTextures 4
 
 
@@ -86,6 +88,8 @@ countries.
     demoModel *knightSource;
     demoModel *pawnSource;
 }
+
+@property NSMutableArray <ChessObject *> *chessPieces;
 
 @property (nonatomic, weak) SampleApplicationSession * vapp;
 

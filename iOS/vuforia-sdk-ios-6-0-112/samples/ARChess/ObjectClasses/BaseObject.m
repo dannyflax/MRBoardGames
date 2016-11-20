@@ -68,7 +68,7 @@
 }
 
 
-- (NSData*)getJSON {
+- (NSData*)getJsonRepresentation {
     NSError *error = nil;
     NSData *json;
     NSDictionary *objectProperties = @{
