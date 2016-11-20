@@ -11,13 +11,8 @@
 
 @import SocketIO;
 
-// This class holds information about games available to us.
-@implementation GameInfo
-
-@end
-
 @interface SampleCommunicationViewController ()  {
-    NSMutableArray *gameList;
+    NSMutableArray *gamesToList;
 }
 
 @end
@@ -28,14 +23,23 @@
     [super viewDidLoad];
     self.gameTableView.delegate = self;
     self.gameTableView.dataSource = self;
+    self.gameButton.layer.cornerRadius = 10.0;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [self setViewActive:NO];
+    self.sessionObject = [[SessionObject alloc] init];
+    self.sessionObject.delegate = self;
+    [self.sessionObject connectToServer];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [self connectToServer];
+-(void) viewWillDisappear:(BOOL)animated {
+    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
+        // back button was pressed.  We know this is true because self is no longer
+        // in the navigation stack.
+        [self.sessionObject disconnect];
+    }
+    [super viewWillDisappear:animated];
 }
 
 - (void)setViewActive:(BOOL)active {
@@ -49,40 +53,24 @@
     }
 }
 
-// Called when view has appeared
-- (void)connectToServer {
-    NSURL* url = [[NSURL alloc] initWithString:@"http://ec2-52-15-161-144.us-east-2.compute.amazonaws.com:3901"];
-    SocketIOClient* socket = [[SocketIOClient alloc] initWithSocketURL:url config:@{@"log": @YES, @"forcePolling": @YES}];
-    
-    [socket on:@"connect" callback:^(NSArray* data, SocketAckEmitter* ack) {
-        [socket emit:@"listGames" with:@[]];
-    }];
-
-    [socket on:@"gameList" callback:^(NSArray *data, SocketAckEmitter *ack) {
-        // populate the table view with games!
-        //NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-        gameList = [[NSMutableArray alloc] init];
-        NSDictionary *gameObjects = data[0];
-        for (NSString *key in [gameObjects allKeys]) {
-            int numPlayers = [[gameObjects objectForKey:key] intValue];
-            GameInfo *gameInfo = [[GameInfo alloc] init];
-            gameInfo.gameTitle = key;
-            gameInfo.playersInGame = numPlayers;
-            [gameList addObject:gameInfo];
-        }
-        [self.gameTableView reloadData];
-        [self setViewActive:YES];
-    }];
-    
-    [socket on:@"disconnect" callback:^(NSArray* data, SocketAckEmitter* ack) {
-        // would be good to handle this gracefully...
-    }];
-    
-    [socket connect];
+- (void)sessionFoundGames:(NSMutableArray *)gameList {
+    gamesToList = gameList;
+    [self.gameTableView reloadData];
+    [self setViewActive:YES];
 }
 
 - (IBAction)newGamePressed:(id)sender {
-    // launch into a new view that will connect to the game.
+    [self.sessionObject createGame];
+}
+
+- (IBAction)refreshPressed:(id)sender {
+    [self setViewActive:NO];
+    [self.sessionObject refreshGames];
+}
+
+- (IBAction)networklessPressed:(id)sender {
+    [self.sessionObject disconnect];
+    [self performSegueWithIdentifier:@"startNetworklessViewer" sender:self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -98,8 +86,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (gameList) {
-        return [gameList count];
+    if (gamesToList) {
+        return [gamesToList count];
     } else {
         return 0;
     }
@@ -108,10 +96,16 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     GameListTableViewCell *cell = (GameListTableViewCell*)[tableView dequeueReusableCellWithIdentifier:@"GameListTableViewCell"];
     // remove an item from the dictionary for the cell.
-    GameInfo *gameInfo = [gameList objectAtIndex:indexPath.row];
-    cell.gameName.text = gameInfo.gameTitle;
-    cell.playersLabel.text = [NSString stringWithFormat:@"[%i]", gameInfo.playersInGame];
+    GameInfo *gameInfo = [gamesToList objectAtIndex:indexPath.row];
+    [cell configureCellForGameInfo:gameInfo];
+    cell.delegate = self;
     return cell;
+}
+
+#pragma MARK - GameListTableViewCellDelegate
+
+- (void)addUserToGame:(GameInfo *)game {
+    [self.sessionObject joinGame:game];
 }
 
 @end

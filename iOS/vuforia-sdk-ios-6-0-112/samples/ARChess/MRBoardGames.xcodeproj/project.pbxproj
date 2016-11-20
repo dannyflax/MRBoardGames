@@ -14,6 +14,7 @@
 		B54D0AE51DE0F4CE000C7014 /* SampleCommunicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B54D0AE41DE0F4CE000C7014 /* SampleCommunicationViewController.m */; };
 		B54D0B1A1DE13CDF000C7014 /* GameListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B54D0B191DE13CDF000C7014 /* GameListTableViewCell.m */; };
 		B5E405351DE146FF00007884 /* SessionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B5E405341DE146FF00007884 /* SessionObject.m */; };
+		B5E405381DE1886E00007884 /* GameInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B5E405371DE1886E00007884 /* GameInfo.m */; };
 		C155ED4B7D3AF6BFD94DFEAB /* Pods_MRBoardGames.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A4C8977A57F0F605050FD4 /* Pods_MRBoardGames.framework */; };
 		D21B07EC1A1B4AA20041ECF3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D21B07EB1A1B4AA20041ECF3 /* main.m */; };
 		D21B07EF1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D21B07EE1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m */; };
@@ -87,6 +88,8 @@
 		B54D0B191DE13CDF000C7014 /* GameListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GameListTableViewCell.m; path = ViewControllers/GameListTableViewCell.m; sourceTree = "<group>"; };
 		B5E405331DE146FF00007884 /* SessionObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SessionObject.h; path = Model/SessionObject.h; sourceTree = "<group>"; };
 		B5E405341DE146FF00007884 /* SessionObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SessionObject.m; path = Model/SessionObject.m; sourceTree = "<group>"; };
+		B5E405361DE1886E00007884 /* GameInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameInfo.h; sourceTree = "<group>"; };
+		B5E405371DE1886E00007884 /* GameInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameInfo.m; sourceTree = "<group>"; };
 		D21B07E61A1B4AA20041ECF3 /* Vuforia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vuforia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D21B07EB1A1B4AA20041ECF3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D21B07ED1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VuforiaSamplesAppDelegate.h; sourceTree = "<group>"; };
@@ -224,6 +227,8 @@
 			children = (
 				B5E405331DE146FF00007884 /* SessionObject.h */,
 				B5E405341DE146FF00007884 /* SessionObject.m */,
+				B5E405361DE1886E00007884 /* GameInfo.h */,
+				B5E405371DE1886E00007884 /* GameInfo.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -572,6 +577,7 @@
 				D21B07EF1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m in Sources */,
 				B54D0AE21DE0EDD9000C7014 /* MainMenuViewController.m in Sources */,
 				EF98089B1DDEC6F80088FE4E /* Point3D.m in Sources */,
+				B5E405381DE1886E00007884 /* GameInfo.m in Sources */,
 				FB7A43501A8E38AB0068CF5E /* ImageTargetsEAGLView.mm in Sources */,
 				B54D0ADE1DE0D610000C7014 /* BaseObject.m in Sources */,
 				EF9808C21DE09DD80088FE4E /* SampleApplicationShaderUtils.m in Sources */,

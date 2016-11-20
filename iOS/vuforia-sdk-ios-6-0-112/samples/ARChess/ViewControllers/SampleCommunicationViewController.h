@@ -7,15 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SessionObject.h"
+#import "GameListTableViewCell.h"
 
-@interface GameInfo : NSObject
+@interface SampleCommunicationViewController : UIViewController <NSStreamDelegate,UITableViewDelegate, UITableViewDataSource, SessionObjectDelegate, GameListLabelViewCellDelegate>
 
-@property NSString *gameTitle;
-@property int playersInGame;
-
-@end
-
-@interface SampleCommunicationViewController : UIViewController <NSStreamDelegate,UITableViewDelegate, UITableViewDataSource>
+@property SessionObject *sessionObject;
 
 @property (weak, nonatomic) IBOutlet UITableView *gameTableView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;

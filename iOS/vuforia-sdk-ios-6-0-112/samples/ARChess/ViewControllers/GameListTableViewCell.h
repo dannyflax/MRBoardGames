@@ -7,10 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GameInfo.h"
+
+@protocol GameListLabelViewCellDelegate
+@required
+- (void)addUserToGame:(GameInfo*)game;
+@end
 
 @interface GameListTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *gameName;
-@property (weak, nonatomic) IBOutlet UILabel *playersLabel;
+@property id<GameListLabelViewCellDelegate> delegate;
+
+@property (weak, nonatomic) IBOutlet UILabel *gameNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *playerCountLabel;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+
+- (void)configureCellForGameInfo:(GameInfo*)game;
 
 @end
