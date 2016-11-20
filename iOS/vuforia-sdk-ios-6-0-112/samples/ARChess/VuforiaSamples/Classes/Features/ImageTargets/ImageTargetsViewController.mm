@@ -152,7 +152,10 @@ countries.
     // thread is not executing, inform the root view controller that the
     // EAGLView should finish any OpenGL ES commands
     [self finishOpenGLESCommands];
-    
+  
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
+  
+  
     VuforiaSamplesAppDelegate *appDelegate = (VuforiaSamplesAppDelegate*)[[UIApplication sharedApplication] delegate];
     appDelegate.glResourceHandler = nil;
     
