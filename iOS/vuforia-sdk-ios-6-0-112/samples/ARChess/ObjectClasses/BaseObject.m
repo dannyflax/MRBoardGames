@@ -8,17 +8,6 @@
 
 #import "BaseObject.h"
 
-@interface BaseObject()
-
-@property NSString *name;
-@property NSNumber *holderId;
-@property Point3D *location;
-@property Point3D *dimensions;
-@property float scale;
-@property NSString *meshName;
-
-@end
-
 @implementation BaseObject
 
 - (id)initWithProperties:(NSString *)name

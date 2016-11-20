@@ -20,4 +20,11 @@
 
 - (id)initWithJSON:(NSData*)jsonData;
 
+@property NSString *name;
+@property NSNumber *holderId;
+@property Point3D *location;
+@property Point3D *dimensions;
+@property float scale;
+@property NSString *meshName;
+
 @end

@@ -23,4 +23,9 @@
   return [NSString stringWithFormat:@"[X: %.2f, Y: %.2f, Z: %.2f]", self.x, self.y, self.z];
 }
 
++(Point3D *)zero
+{
+  return [[Point3D alloc] initWithX:0.0 Y:0.0 Z:0.0];
+}
+
 @end

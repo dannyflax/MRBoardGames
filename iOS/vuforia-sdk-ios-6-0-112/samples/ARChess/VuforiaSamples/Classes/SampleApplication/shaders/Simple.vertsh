@@ -13,13 +13,26 @@ varying vec4 normal;
 uniform mat4 modelViewProjectionMatrix;
 uniform float modelScale;
 
+uniform bool flipped;
+
 void main()
 {
     vec4 position = vertexPosition;
     position.x = position.x * modelScale;
     position.y = position.y * modelScale;
     position.z = position.z * modelScale;
+
+    vec4 norm = vertexNormal;
+
+
+    normal = norm;
+
+
+
     gl_Position = modelViewProjectionMatrix * position;
-    normal = vertexNormal;
+
+
+
+
     texCoord = vertexTexCoord;
 }

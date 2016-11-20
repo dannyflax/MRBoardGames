@@ -35,6 +35,16 @@
 		EF6862D11DCFE336003F5488 /* ARTouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6862D01DCFE335003F5488 /* ARTouchableView.m */; };
 		EF83B5C31DE0CC02002C14AE /* monkey.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B5C21DE0CC02002C14AE /* monkey.obj */; };
 		EF83B5C71DE0CC70002C14AE /* modelUtil.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF83B5C51DE0CC70002C14AE /* modelUtil.mm */; };
+		EF83B5CB1DE0D74F002C14AE /* queen-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B5CA1DE0D74F002C14AE /* queen-t.obj */; };
+		EF83B5D51DE0F013002C14AE /* chessboard.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EF83B5D41DE0F013002C14AE /* chessboard.jpg */; };
+		EF83B5FD1DE13DEC002C14AE /* CollisionChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = EF83B5FC1DE13DEC002C14AE /* CollisionChecker.m */; };
+		EF83B6001DE152F4002C14AE /* ChessPiecesFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = EF83B5FF1DE152F4002C14AE /* ChessPiecesFactory.m */; };
+		EF83B6061DE1571D002C14AE /* bishop-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B6021DE1571D002C14AE /* bishop-t.obj */; };
+		EF83B6071DE1571D002C14AE /* king-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B6031DE1571D002C14AE /* king-t.obj */; };
+		EF83B6081DE1571D002C14AE /* knight-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B6041DE1571D002C14AE /* knight-t.obj */; };
+		EF83B6091DE1571D002C14AE /* pawn-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B6051DE1571D002C14AE /* pawn-t.obj */; };
+		EF83B60E1DE168FE002C14AE /* ChessObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EF83B60D1DE168FE002C14AE /* ChessObject.m */; };
+		EF83B6101DE172CF002C14AE /* rook-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B60F1DE172CF002C14AE /* rook-t.obj */; };
 		EF9808951DDE0B680088FE4E /* libVuforia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D21B08791A1B6AEA0041ECF3 /* libVuforia.a */; };
 		EF9808981DDEC1FC0088FE4E /* ARInputHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF9808971DDEC1FC0088FE4E /* ARInputHandler.mm */; };
 		EF98089B1DDEC6F80088FE4E /* Point3D.m in Sources */ = {isa = PBXBuildFile; fileRef = EF98089A1DDEC6F80088FE4E /* Point3D.m */; };
@@ -115,6 +125,19 @@
 		EF83B5C21DE0CC02002C14AE /* monkey.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = monkey.obj; sourceTree = "<group>"; };
 		EF83B5C51DE0CC70002C14AE /* modelUtil.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = modelUtil.mm; sourceTree = "<group>"; };
 		EF83B5C61DE0CC70002C14AE /* modelUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modelUtil.h; sourceTree = "<group>"; };
+		EF83B5CA1DE0D74F002C14AE /* queen-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "queen-t.obj"; sourceTree = "<group>"; };
+		EF83B5D41DE0F013002C14AE /* chessboard.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = chessboard.jpg; path = Resources/Assets/chessboard.jpg; sourceTree = "<group>"; };
+		EF83B5FB1DE13DEC002C14AE /* CollisionChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CollisionChecker.h; path = Classes/Features/ImageTargets/CollisionChecker.h; sourceTree = "<group>"; };
+		EF83B5FC1DE13DEC002C14AE /* CollisionChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CollisionChecker.m; path = Classes/Features/ImageTargets/CollisionChecker.m; sourceTree = "<group>"; };
+		EF83B5FE1DE152F4002C14AE /* ChessPiecesFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChessPiecesFactory.h; path = Classes/Features/ImageTargets/ChessPiecesFactory.h; sourceTree = "<group>"; };
+		EF83B5FF1DE152F4002C14AE /* ChessPiecesFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChessPiecesFactory.m; path = Classes/Features/ImageTargets/ChessPiecesFactory.m; sourceTree = "<group>"; };
+		EF83B6021DE1571D002C14AE /* bishop-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "bishop-t.obj"; sourceTree = "<group>"; };
+		EF83B6031DE1571D002C14AE /* king-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "king-t.obj"; sourceTree = "<group>"; };
+		EF83B6041DE1571D002C14AE /* knight-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "knight-t.obj"; sourceTree = "<group>"; };
+		EF83B6051DE1571D002C14AE /* pawn-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "pawn-t.obj"; sourceTree = "<group>"; };
+		EF83B60C1DE168FE002C14AE /* ChessObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChessObject.h; path = ObjectClasses/ChessObject.h; sourceTree = "<group>"; };
+		EF83B60D1DE168FE002C14AE /* ChessObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChessObject.m; path = ObjectClasses/ChessObject.m; sourceTree = "<group>"; };
+		EF83B60F1DE172CF002C14AE /* rook-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "rook-t.obj"; sourceTree = "<group>"; };
 		EF9808961DDEC1FC0088FE4E /* ARInputHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARInputHandler.h; path = Classes/Features/ImageTargets/ARInputHandler.h; sourceTree = "<group>"; };
 		EF9808971DDEC1FC0088FE4E /* ARInputHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ARInputHandler.mm; path = Classes/Features/ImageTargets/ARInputHandler.mm; sourceTree = "<group>"; };
 		EF9808991DDEC6F80088FE4E /* Point3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point3D.h; path = Classes/Features/ImageTargets/Point3D.h; sourceTree = "<group>"; };
@@ -205,6 +228,8 @@
 			children = (
 				B54D0ADC1DE0D610000C7014 /* BaseObject.h */,
 				B54D0ADD1DE0D610000C7014 /* BaseObject.m */,
+				EF83B60C1DE168FE002C14AE /* ChessObject.h */,
+				EF83B60D1DE168FE002C14AE /* ChessObject.m */,
 			);
 			name = ObjectClasses;
 			sourceTree = "<group>";
@@ -307,6 +332,8 @@
 		D21B08161A1B4D320041ECF3 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				EF83B6011DE15708002C14AE /* ChessPieces */,
+				EF83B5D41DE0F013002C14AE /* chessboard.jpg */,
 				EF83B5C21DE0CC02002C14AE /* monkey.obj */,
 				FB7A42E71A8E376B0068CF5E /* building_texture.jpeg */,
 				FB7A42E81A8E376B0068CF5E /* buildings.txt */,
@@ -349,6 +376,19 @@
 				EF83B5C61DE0CC70002C14AE /* modelUtil.h */,
 			);
 			name = Utilities;
+			sourceTree = "<group>";
+		};
+		EF83B6011DE15708002C14AE /* ChessPieces */ = {
+			isa = PBXGroup;
+			children = (
+				EF83B60F1DE172CF002C14AE /* rook-t.obj */,
+				EF83B6021DE1571D002C14AE /* bishop-t.obj */,
+				EF83B6031DE1571D002C14AE /* king-t.obj */,
+				EF83B6041DE1571D002C14AE /* knight-t.obj */,
+				EF83B6051DE1571D002C14AE /* pawn-t.obj */,
+				EF83B5CA1DE0D74F002C14AE /* queen-t.obj */,
+			);
+			name = ChessPieces;
 			sourceTree = "<group>";
 		};
 		EF9808AA1DE09DBD0088FE4E /* SampleApplication */ = {
@@ -407,6 +447,10 @@
 				EF9808971DDEC1FC0088FE4E /* ARInputHandler.mm */,
 				EF9808991DDEC6F80088FE4E /* Point3D.h */,
 				EF98089A1DDEC6F80088FE4E /* Point3D.m */,
+				EF83B5FB1DE13DEC002C14AE /* CollisionChecker.h */,
+				EF83B5FC1DE13DEC002C14AE /* CollisionChecker.m */,
+				EF83B5FE1DE152F4002C14AE /* ChessPiecesFactory.h */,
+				EF83B5FF1DE152F4002C14AE /* ChessPiecesFactory.m */,
 			);
 			name = ImageTargets;
 			sourceTree = "<group>";
@@ -459,7 +503,7 @@
 				TargetAttributes = {
 					D21B07E51A1B4AA20041ECF3 = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = 6KMG279R88;
+						DevelopmentTeam = QE4Q39QVNE;
 						LastSwiftMigration = 0810;
 					};
 				};
@@ -488,29 +532,36 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB7A43391A8E376B0068CF5E /* TextureTeapotBlue.png in Resources */,
+				EF83B5D51DE0F013002C14AE /* chessboard.jpg in Resources */,
 				FBEFAEC81A8283F8002B4D62 /* Main.storyboard in Resources */,
 				EF83B5C31DE0CC02002C14AE /* monkey.obj in Resources */,
 				FB7A432B1A8E376B0068CF5E /* IT_about.html in Resources */,
 				18EB634C1ACC70F200EF1C28 /* Localizable.strings in Resources */,
 				FB7A433C1A8E376B0068CF5E /* TextureTeapotRed.png in Resources */,
 				EF9808CF1DE09DE30088FE4E /* Background.vertsh in Resources */,
+				EF83B6061DE1571D002C14AE /* bishop-t.obj in Resources */,
 				FB7A43531A8E41840068CF5E /* IT.png in Resources */,
 				EF9808CE1DE09DE30088FE4E /* Background.fragsh in Resources */,
 				EF9808D21DE09DE30088FE4E /* Simple.fragsh in Resources */,
 				EF9808D01DE09DE30088FE4E /* Line.fragsh in Resources */,
 				FB7A433B1A8E376B0068CF5E /* TextureTeapotGreen.png in Resources */,
+				EF83B6081DE1571D002C14AE /* knight-t.obj in Resources */,
 				FB7A432D1A8E376B0068CF5E /* StonesAndChips.xml in Resources */,
 				FB7A432E1A8E376B0068CF5E /* Tarmac.dat in Resources */,
 				FB7A431E1A8E376B0068CF5E /* building_texture.jpeg in Resources */,
+				EF83B6101DE172CF002C14AE /* rook-t.obj in Resources */,
 				FB7A433A1A8E376B0068CF5E /* TextureTeapotBrass.png in Resources */,
 				FB7A433D1A8E376B0068CF5E /* TextureTeapotYellow.png in Resources */,
 				FB7A431F1A8E376B0068CF5E /* buildings.txt in Resources */,
 				EF9808D31DE09DE30088FE4E /* Simple.vertsh in Resources */,
 				D21B07F71A1B4AA20041ECF3 /* Images.xcassets in Resources */,
 				EF9808D41DE09DE30088FE4E /* SimpleWithColor.fragsh in Resources */,
+				EF83B6091DE1571D002C14AE /* pawn-t.obj in Resources */,
 				FB7A432C1A8E376B0068CF5E /* StonesAndChips.dat in Resources */,
 				EF9808D11DE09DE30088FE4E /* Line.vertsh in Resources */,
+				EF83B6071DE1571D002C14AE /* king-t.obj in Resources */,
 				FB7A432F1A8E376B0068CF5E /* Tarmac.xml in Resources */,
+				EF83B5CB1DE0D74F002C14AE /* queen-t.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -588,9 +639,12 @@
 				EF9808C51DE09DD80088FE4E /* Texture.mm in Sources */,
 				EF9808C41DE09DD80088FE4E /* SampleAppMenuViewController.mm in Sources */,
 				FB7A43511A8E38AB0068CF5E /* ImageTargetsViewController.mm in Sources */,
+				EF83B60E1DE168FE002C14AE /* ChessObject.m in Sources */,
 				B54D0B1A1DE13CDF000C7014 /* GameListTableViewCell.m in Sources */,
 				EF9808BF1DE09DD80088FE4E /* PresentMenuSegue.m in Sources */,
+				EF83B5FD1DE13DEC002C14AE /* CollisionChecker.m in Sources */,
 				EF9808C61DE09DD80088FE4E /* UnwindMenuSegue.m in Sources */,
+				EF83B6001DE152F4002C14AE /* ChessPiecesFactory.m in Sources */,
 				EF83B5C71DE0CC70002C14AE /* modelUtil.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -709,7 +763,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 6KMG279R88;
+				DEVELOPMENT_TEAM = QE4Q39QVNE;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = ../../build/include;
 				INFOPLIST_FILE = "VuforiaSamples/ARChess-Info.plist";
@@ -739,7 +793,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 21;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 6KMG279R88;
+				DEVELOPMENT_TEAM = QE4Q39QVNE;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = ../../build/include;
 				INFOPLIST_FILE = "VuforiaSamples/ARChess-Info.plist";

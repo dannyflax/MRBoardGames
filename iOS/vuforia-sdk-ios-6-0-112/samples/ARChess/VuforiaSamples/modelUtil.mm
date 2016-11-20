@@ -576,15 +576,16 @@ demoModel* loadFile(const char* filepathname){
     }
     
     
-    GLushort elementArray[isize];
-    
-    GLfloat posArray[isize*3];
-    
-    GLfloat texcoordArray[isize*2];
-    GLfloat normalArray[isize*3];
-    
-    
-    
+    GLushort *elementArray = (GLushort *)malloc(isize * sizeof(GLushort));
+  
+    GLfloat *posArray = (GLfloat *)malloc(3 * isize * sizeof(GLfloat));
+  
+    GLfloat *texcoordArray = (GLfloat *)malloc(2 * isize * sizeof(GLfloat));
+  
+    GLfloat *normalArray = (GLfloat *)malloc(3 * isize * sizeof(GLfloat));
+
+  
+  
     int i;
 
     i = 0;
@@ -628,7 +629,7 @@ demoModel* loadFile(const char* filepathname){
     //the total number of vertices, as there are 3 components
     //per vertex.
     
-	model->positionArraySize = (int)sizeof(posArray);
+	model->positionArraySize = 3 * isize * sizeof(GLfloat);
     //Set what the actual verticies are
     //So first we use a C command to create an empty array to hold the data
 	model->positions = (GLubyte*)malloc(model->positionArraySize);
@@ -641,24 +642,24 @@ demoModel* loadFile(const char* filepathname){
         model->texcoordType = GL_FLOAT;
         //U,V coordinates (2)
         model->texcoordSize = 2;
-        model->texcoordArraySize = (int)sizeof(texcoordArray);
+        model->texcoordArraySize = 2 * isize * sizeof(GLfloat);
         model->texcoords = (GLubyte*)malloc(model->texcoordArraySize);
         memcpy(model->texcoords, texcoordArray, model->texcoordArraySize );
     }
     //And the normals
 	model->normalType = GL_FLOAT;
 	model->normalSize = 3;
-	model->normalArraySize = (int)sizeof(normalArray);
+	model->normalArraySize = 3 * isize * sizeof(GLfloat);
 	model->normals = (GLubyte*)malloc(model->normalArraySize);
 	memcpy(model->normals, normalArray, model->normalArraySize);
 	
     //And the indices
-	model->elementArraySize = (int)sizeof(elementArray);
+	model->elementArraySize = isize * sizeof(GLushort);
 	model->elements	= (GLubyte*)malloc(model->elementArraySize);
 	memcpy(model->elements, elementArray, model->elementArraySize);
 	
 	
-	model->numElements = (int)sizeof(elementArray) / sizeof(GLushort);
+	model->numElements = model->elementArraySize / sizeof(GLushort);
 	//Note that the indicies are stored as shorts
     model->elementType = GL_UNSIGNED_SHORT;
 	//Also note that the word Vertices was spelled wrong :)
