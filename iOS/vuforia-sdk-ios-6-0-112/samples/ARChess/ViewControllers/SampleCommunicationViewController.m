@@ -16,23 +16,26 @@
     bool _isNetworkless;
     NSString *_gameID;
     NSString *_playerID;
+    NSArray *_gameState;
 }
 
 @end
 
 @implementation SampleCommunicationViewController
 
-- (void)successfullyJoinedGame:(NSString *)playerID
+- (void)successfullyJoinedGame:(NSString *)playerID gameState:(NSArray *)gameState
 {
   _playerID = playerID;
   _isNetworkless = false;
+  _gameState = gameState;
   [self goToMainView];
 }
 
-- (void)successfullyCreatedGame:(NSString *)playerID withGameID:(NSString *)gameID
+- (void)successfullyCreatedGame:(NSString *)playerID withGameID:(NSString *)gameID gameState:(NSArray *)gameState
 {
   _playerID = playerID;
   _gameID = gameID;
+  _gameState = gameState;
   _isNetworkless = false;
   [self goToMainView];
 }
@@ -135,7 +138,7 @@
 {
   if([segue.identifier isEqualToString:@"startNetworklessViewer"]) {
     id<GameView> eaglView = segue.destinationViewController;
-    [eaglView startGameWithID:_gameID playerID:_playerID networkless:_isNetworkless sessionObject:_sessionObject];
+    [eaglView startGameWithID:_gameID playerID:_playerID networkless:_isNetworkless sessionObject:_sessionObject gameState:_gameState];
   }
 }
 

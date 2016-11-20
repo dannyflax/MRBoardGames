@@ -40,14 +40,21 @@
     [socket on:@"gameCreated" callback:^(NSArray* data, SocketAckEmitter* ack) {
         NSDictionary *objects = data[0];
         if ([objects objectForKey:@"playerID"]) {
-          [self.joinDelegate successfullyCreatedGame:[objects objectForKey:@"playerID"] withGameID:[objects objectForKey:@"gameID"]];
+          [self.joinDelegate successfullyCreatedGame:[objects objectForKey:@"playerID"] withGameID:[objects objectForKey:@"gameID"] gameState:[ChessPiecesFactory createNewChessGame]];
         }
     }];
     
     [socket on:@"gameJoined" callback:^(NSArray* data, SocketAckEmitter* ack) {
         NSDictionary *objects = data[0];
         if ([objects objectForKey:@"playerID"]) {
-          [self.joinDelegate successfullyJoinedGame:[objects objectForKey:@"playerID"]];
+          NSMutableArray *gameObjs = [NSMutableArray new];
+          NSArray *state = [objects objectForKey:@"state"];
+          
+          for (NSData *json in state) {
+            [gameObjs addObject:[[BaseObject alloc] initWithJSON:json]];
+          }
+          
+          [self.joinDelegate successfullyJoinedGame:[objects objectForKey:@"playerID"] gameState:state];
         }
     }];
 
@@ -65,6 +72,19 @@
         [gameObjs addObject:[[BaseObject alloc] initWithJSON:json]];
       }
   
+      [self.gameDelegate gameStateUpdated:gameObjs];
+    }];
+  
+    [socket on:@"gameStateUpdated" callback:^(NSArray* data, SocketAckEmitter* ack) {
+      NSDictionary *objects = data[0];
+      
+      NSMutableArray *gameObjs = [NSMutableArray new];
+      NSArray *state = [objects objectForKey:@"state"];
+      
+      for (NSData *json in state) {
+        [gameObjs addObject:[[BaseObject alloc] initWithJSON:json]];
+      }
+      
       [self.gameDelegate gameStateUpdated:gameObjs];
     }];
   
@@ -90,7 +110,7 @@
   [socket emit:@"getGameState" with:@[@{@"playerID":playerID, @"gameID":gameID}]];
 }
 
-- (void)sendGameUpdate:(NSString *)gameID playerID:(NSString *)playerID unserializedGameStat:(NSArray *)unserializedGS
+- (void)sendGameUpdate:(NSString *)gameID playerID:(NSString *)playerID unserializedGameStat:(NSArray *)unserializedGS holding:(NSString *)holding
 {
   NSArray<BaseObject *> *initialData = unserializedGS;
   
@@ -100,7 +120,7 @@
     [processedData addObject:[baseObj getJsonRepresentation]];
   }
   
-  [socket emit:@"updateGameState" with:@[@{@"playerID":playerID, @"gameID":gameID, @"state":processedData}]];
+  [socket emit:@"updateGameState" with:@[@{@"playerID":playerID, @"gameID":gameID, @"state":processedData, @"holding":holding}]];
 }
 
 - (void)processGameList:(NSArray *)data {

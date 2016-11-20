@@ -89,6 +89,9 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
   Point3D *_grabCursorPos;
   NSDictionary<NSString *, id> *_pieceMeshMap;
   SessionObject *_sessionObject;
+  NSString *_gameID;
+  NSString *_playerID;
+  bool _networkless;
 }
 
 @synthesize vapp = vapp;
@@ -127,16 +130,28 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
   return self;
 }
 
-- (void)startGameWithID:(NSString *)gameID playerID:(NSString *)playerID networkless:(bool)networkless sessionObject:(SessionObject *)sessionObject
+- (void)startGameWithID:(NSString *)gameID playerID:(NSString *)playerID networkless:(bool)networkless sessionObject:(SessionObject *)sessionObject gameState:(NSArray *)gameState
 {
   _sessionObject = sessionObject;
   sessionObject.gameDelegate = self;
+  if (networkless) {
+    _chessPieces = [NSMutableArray arrayWithArray:[ChessPiecesFactory createNewChessGame]];
+  } else {
+    _chessPieces = [NSMutableArray arrayWithArray:gameState];
+  }
+  _gameID = gameID;
+  _playerID = playerID;
+  _networkless = networkless;
 }
 
 - (void)gameStateUpdated:(NSArray *)objectList
 {
   for (BaseObject *baseObj in objectList) {
-    
+    for (BaseObject *baseObj2 in _chessPieces) {
+      if ([baseObj2.name isEqualToString:baseObj.name] && baseObj2 != _grabbedObject) {
+        baseObj2.location = baseObj.location;
+      }
+    }
   }
 }
 
@@ -512,6 +527,11 @@ static float kBlackColor[3] = {.3, 0.3, 0.3};
                                                         Z:MAX(0, _grabObjPos.z + difference.z)];
         
         [_grabbedObject setLocation:newLocation];
+        
+        if (!_networkless)
+        {
+          [_sessionObject sendGameUpdate:_gameID playerID:_playerID unserializedGameStat:_chessPieces holding:_grabbedObject.name];
+        }
       } else if (!_grabMode) {
         
         for (int i = 0; i < _chessPieces.count; i++) {

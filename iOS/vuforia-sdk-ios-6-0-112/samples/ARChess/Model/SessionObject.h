@@ -17,8 +17,8 @@
 
 @protocol SessionObjectJoinDelegate <NSObject>
 - (void)sessionFoundGames:(NSMutableArray *)gameList;
-- (void)successfullyCreatedGame:(NSString *)playerID withGameID:(NSString *)gameID;
-- (void)successfullyJoinedGame:(NSString *)playerID;
+- (void)successfullyCreatedGame:(NSString *)playerID withGameID:(NSString *)gameID gameState:(NSArray *)gameState;
+- (void)successfullyJoinedGame:(NSString *)playerID gameState:(NSArray *)gameState;
 
 @end
 
@@ -32,7 +32,7 @@
 - (void)joinGame:(GameInfo *)gameInfo;
 - (void)createGame;
 - (void)disconnect;
-- (void)sendGameUpdate:(NSString *)gameID playerID:(NSString *)playerID unserializedGameStat:(NSArray *)unserializedGS;
+- (void)sendGameUpdate:(NSString *)gameID playerID:(NSString *)playerID unserializedGameStat:(NSArray *)unserializedGS holding:(NSString *)holding;
 - (void)pollForGameUpdate:(NSString *)gameID playerID:(NSString *)playerID;
 
 @end

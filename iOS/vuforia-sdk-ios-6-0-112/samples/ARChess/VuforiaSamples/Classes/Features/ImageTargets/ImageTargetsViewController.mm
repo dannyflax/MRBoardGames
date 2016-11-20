@@ -37,6 +37,7 @@ countries.
   NSString *_playerID;
   bool _networkless;
   SessionObject *_sessionObject;
+  NSArray *_gameState;
 }
 
 @synthesize tapGestureRecognizer, vapp, eaglView;
@@ -77,7 +78,7 @@ countries.
     
     eaglView = [[ImageTargetsEAGLView alloc] initWithFrame:viewFrame appSession:vapp];
   
-    [eaglView startGameWithID:_gameID playerID:_playerID networkless:_networkless sessionObject:_sessionObject];
+    [eaglView startGameWithID:_gameID playerID:_playerID networkless:_networkless sessionObject:_sessionObject gameState:_gameState];
   
     [self setView:eaglView];
     VuforiaSamplesAppDelegate *appDelegate = (VuforiaSamplesAppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -679,12 +680,13 @@ countries.
 
 #pragma mark Random
 
-- (void)startGameWithID:(NSString *)gameID playerID:(NSString *)playerID networkless:(bool)networkless sessionObject:(SessionObject *)sessionObject
+- (void)startGameWithID:(NSString *)gameID playerID:(NSString *)playerID networkless:(bool)networkless sessionObject:(SessionObject *)sessionObject gameState:(NSArray *)gameState
 {
   _gameID = gameID;
   _playerID = playerID;
   _networkless = networkless;
   _sessionObject = sessionObject;
+  _gameState = gameState;
 }
 
 @end
