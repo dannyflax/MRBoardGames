@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import <ACEDrawingView/ACEDrawingView.h>
+
 @protocol ARTouchReceiver <NSObject>
 -(void)tapBegan:(CGPoint)tap;
 
@@ -16,7 +18,7 @@
 -(void)tapEnded:(CGPoint)tap;
 @end
 
-@interface ARTouchableView : UIView<ARTouchReceiver>
+@interface ARTouchableView : ACEDrawingView<ARTouchReceiver>
 {
   bool holdingSquare;
   CGPoint grabPoint;

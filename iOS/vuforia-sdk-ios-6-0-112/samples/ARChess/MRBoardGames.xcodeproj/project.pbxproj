@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		18EB634C1ACC70F200EF1C28 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18EB634B1ACC70F200EF1C28 /* Localizable.strings */; };
 		8F467BCD1D18AC3F00682E4C /* SampleAppRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8F467BCC1D18AC3F00682E4C /* SampleAppRenderer.mm */; };
-		C155ED4B7D3AF6BFD94DFEAB /* Pods_MRBoardGames.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A4C8977A57F0F605050FD4 /* Pods_MRBoardGames.framework */; };
 		D21B07EC1A1B4AA20041ECF3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D21B07EB1A1B4AA20041ECF3 /* main.m */; };
 		D21B07EF1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D21B07EE1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m */; };
 		D21B07F71A1B4AA20041ECF3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D21B07F61A1B4AA20041ECF3 /* Images.xcassets */; };
@@ -26,6 +25,7 @@
 		D21B08811A1B71190041ECF3 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D21B08801A1B71190041ECF3 /* CoreMedia.framework */; };
 		D28C51241A8B5B8C000B6C9A /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D28C51231A8B5B8C000B6C9A /* MediaPlayer.framework */; };
 		D28C51261A8B5BC9000B6C9A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D28C51251A8B5BC9000B6C9A /* AudioToolbox.framework */; };
+		D48F458023B14BAD502C8754 /* libPods-MRBoardGames.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27D6C8573014C4646514C28A /* libPods-MRBoardGames.a */; };
 		EF6862D11DCFE336003F5488 /* ARTouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6862D01DCFE335003F5488 /* ARTouchableView.m */; };
 		EF83B5C31DE0CC02002C14AE /* monkey.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B5C21DE0CC02002C14AE /* monkey.obj */; };
 		EF83B5C71DE0CC70002C14AE /* modelUtil.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF83B5C51DE0CC70002C14AE /* modelUtil.mm */; };
@@ -66,12 +66,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		09A4C8977A57F0F605050FD4 /* Pods_MRBoardGames.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MRBoardGames.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18EB634B1ACC70F200EF1C28 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		27D6C8573014C4646514C28A /* libPods-MRBoardGames.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MRBoardGames.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6475002474B6E9D7727ED992 /* Pods-MRBoardGames.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRBoardGames.release.xcconfig"; path = "Pods/Target Support Files/Pods-MRBoardGames/Pods-MRBoardGames.release.xcconfig"; sourceTree = "<group>"; };
 		8F467BCB1D18AC3F00682E4C /* SampleAppRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SampleAppRenderer.h; path = Classes/Features/ImageTargets/SampleAppRenderer.h; sourceTree = "<group>"; };
 		8F467BCC1D18AC3F00682E4C /* SampleAppRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SampleAppRenderer.mm; path = Classes/Features/ImageTargets/SampleAppRenderer.mm; sourceTree = "<group>"; };
-		9776B62E1537833F45905DB6 /* Pods-MRBoardGames.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRBoardGames.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MRBoardGames/Pods-MRBoardGames.debug.xcconfig"; sourceTree = "<group>"; };
-		AC1435C896624A8570BA2618 /* Pods-MRBoardGames.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRBoardGames.release.xcconfig"; path = "Pods/Target Support Files/Pods-MRBoardGames/Pods-MRBoardGames.release.xcconfig"; sourceTree = "<group>"; };
+		D0EFE323D32539D3A791205A /* Pods-MRBoardGames.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRBoardGames.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MRBoardGames/Pods-MRBoardGames.debug.xcconfig"; sourceTree = "<group>"; };
 		D21B07E61A1B4AA20041ECF3 /* Vuforia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vuforia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D21B07EB1A1B4AA20041ECF3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D21B07ED1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VuforiaSamplesAppDelegate.h; sourceTree = "<group>"; };
@@ -166,18 +166,18 @@
 				D21B08761A1B6AD60041ECF3 /* Security.framework in Frameworks */,
 				D21B08771A1B6AD60041ECF3 /* SystemConfiguration.framework in Frameworks */,
 				D21B08781A1B6AD60041ECF3 /* UIKit.framework in Frameworks */,
-				C155ED4B7D3AF6BFD94DFEAB /* Pods_MRBoardGames.framework in Frameworks */,
+				D48F458023B14BAD502C8754 /* libPods-MRBoardGames.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3DCCCA4D9DD66F6BF3A548A4 /* Pods */ = {
+		699E74073F1C25DFF32B1414 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				9776B62E1537833F45905DB6 /* Pods-MRBoardGames.debug.xcconfig */,
-				AC1435C896624A8570BA2618 /* Pods-MRBoardGames.release.xcconfig */,
+				D0EFE323D32539D3A791205A /* Pods-MRBoardGames.debug.xcconfig */,
+				6475002474B6E9D7727ED992 /* Pods-MRBoardGames.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -188,7 +188,7 @@
 				D21B087B1A1B6C710041ECF3 /* Frameworks */,
 				D21B07E81A1B4AA20041ECF3 /* VuforiaSamples */,
 				D21B07E71A1B4AA20041ECF3 /* Products */,
-				3DCCCA4D9DD66F6BF3A548A4 /* Pods */,
+				699E74073F1C25DFF32B1414 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -283,7 +283,7 @@
 				D21B086E1A1B6AD60041ECF3 /* Security.framework */,
 				D21B086F1A1B6AD60041ECF3 /* SystemConfiguration.framework */,
 				D21B08701A1B6AD60041ECF3 /* UIKit.framework */,
-				09A4C8977A57F0F605050FD4 /* Pods_MRBoardGames.framework */,
+				27D6C8573014C4646514C28A /* libPods-MRBoardGames.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -378,12 +378,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D21B08091A1B4AA20041ECF3 /* Build configuration list for PBXNativeTarget "MRBoardGames" */;
 			buildPhases = (
-				D49204A9C94D4FD3CB4FB752 /* [CP] Check Pods Manifest.lock */,
+				7A0DB47ED0658FB07CE7CBE0 /* [CP] Check Pods Manifest.lock */,
 				D21B07E21A1B4AA20041ECF3 /* Sources */,
 				D21B07E31A1B4AA20041ECF3 /* Frameworks */,
 				D21B07E41A1B4AA20041ECF3 /* Resources */,
-				0883B5E6BA84ECDE9ECE1F9C /* [CP] Embed Pods Frameworks */,
-				3AE9C9D5AB147BBF82A84765 /* [CP] Copy Pods Resources */,
+				87AF6343E6CE2314C9DC77C3 /* [CP] Embed Pods Frameworks */,
+				DA4F22882CBDFEF29D0BE568 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -463,7 +463,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0883B5E6BA84ECDE9ECE1F9C /* [CP] Embed Pods Frameworks */ = {
+		7A0DB47ED0658FB07CE7CBE0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		87AF6343E6CE2314C9DC77C3 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -478,7 +493,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MRBoardGames/Pods-MRBoardGames-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3AE9C9D5AB147BBF82A84765 /* [CP] Copy Pods Resources */ = {
+		DA4F22882CBDFEF29D0BE568 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -491,21 +506,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MRBoardGames/Pods-MRBoardGames-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D49204A9C94D4FD3CB4FB752 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -640,7 +640,7 @@
 		};
 		D21B080A1A1B4AA20041ECF3 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9776B62E1537833F45905DB6 /* Pods-MRBoardGames.debug.xcconfig */;
+			baseConfigurationReference = D0EFE323D32539D3A791205A /* Pods-MRBoardGames.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -652,11 +652,17 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = QE4Q39QVNE;
 				ENABLE_BITCODE = NO;
-				HEADER_SEARCH_PATHS = ../../build/include;
+				HEADER_SEARCH_PATHS = (
+					../../build/include,
+					"${PODS_ROOT}/Headers/Public/ACEDrawingView",
+				);
 				INFOPLIST_FILE = "VuforiaSamples/ARChess-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = ../../build/lib/arm;
+				LIBRARY_SEARCH_PATHS = (
+					../../build/lib/arm,
+					$PODS_CONFIGURATION_BUILD_DIR/ACEDrawingView,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sfotm.mrwhiteboard;
 				PRODUCT_NAME = Vuforia;
 				PROVISIONING_PROFILE = "";
@@ -670,7 +676,7 @@
 		};
 		D21B080B1A1B4AA20041ECF3 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AC1435C896624A8570BA2618 /* Pods-MRBoardGames.release.xcconfig */;
+			baseConfigurationReference = 6475002474B6E9D7727ED992 /* Pods-MRBoardGames.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -683,11 +689,17 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = QE4Q39QVNE;
 				ENABLE_BITCODE = NO;
-				HEADER_SEARCH_PATHS = ../../build/include;
+				HEADER_SEARCH_PATHS = (
+					../../build/include,
+					"${PODS_ROOT}/Headers/Public/ACEDrawingView",
+				);
 				INFOPLIST_FILE = "VuforiaSamples/ARChess-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = ../../build/lib/arm;
+				LIBRARY_SEARCH_PATHS = (
+					../../build/lib/arm,
+					$PODS_CONFIGURATION_BUILD_DIR/ACEDrawingView,
+				);
 				"LIBRARY_SEARCH_PATHS[arch=*]" = ../../build/lib/arm;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sfotm.mrwhiteboard;
 				PRODUCT_NAME = Vuforia;

@@ -1,12 +1,16 @@
 PODS:
-  - Socket.IO-Client-Swift (8.1.2)
+  - ACEDrawingView (2.0.1)
 
 DEPENDENCIES:
-  - Socket.IO-Client-Swift (~> 8.1.2)
+  - ACEDrawingView (from `./`)
+
+EXTERNAL SOURCES:
+  ACEDrawingView:
+    :path: ./
 
 SPEC CHECKSUMS:
-  Socket.IO-Client-Swift: 542d82e6708f9901b3f6c1d134fb60fa0d09d4d1
+  ACEDrawingView: d4fc350b27f2c9483245483bb09b389769bc74dd
 
-PODFILE CHECKSUM: 6c4d31b31f17cd179ce3e6c2198e00852864c6c8
+PODFILE CHECKSUM: 09064d8a6571f89243b488873ba9c54e95486c7d
 
 COCOAPODS: 1.1.1
