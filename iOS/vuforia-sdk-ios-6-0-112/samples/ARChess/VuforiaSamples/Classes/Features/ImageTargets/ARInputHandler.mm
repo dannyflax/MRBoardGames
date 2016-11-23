@@ -166,7 +166,6 @@ const float kObjectScaleNormal = 3.0f;
         const Vuforia::VirtualButtonResult* buttonResult = imageTargetResult->getVirtualButtonResult("grabButton");
         
         if (buttonResult) {
-          NSLog(@"%i", _grabbingMode);
           if(buttonResult->isPressed() && !_waitingForZero) {
             _waitingForZero = YES;
             _grabbingMode = !_grabbingMode;

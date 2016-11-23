@@ -13,7 +13,7 @@ countries.
 #import "SampleAppMenuViewController.h"
 #import <Vuforia/DataSet.h>
 
-@interface ImageTargetsViewController : UIViewController <SampleApplicationControl, SampleAppMenuDelegate, GameView> {
+@interface ImageTargetsViewController : UIViewController <SampleApplicationControl, SampleAppMenuDelegate, SampleGLResourceHandler> {
     
     Vuforia::DataSet*  dataSetCurrent;
     Vuforia::DataSet*  dataSetTarmac;

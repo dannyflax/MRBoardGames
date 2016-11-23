@@ -23,17 +23,13 @@ countries.
 #import "ARInputHandler.h"
 #import "Point3D.h"
 #import "modelUtil.h"
-#import "SampleCommunicationViewController.h"
-#import "SessionObject.h"
-
-#import "ChessObject.h"
 
 #define kNumAugmentationTextures 4
 
 
 // EAGLView is a subclass of UIView and conforms to the informal protocol
 // UIGLViewProtocol
-@interface ImageTargetsEAGLView : UIView <UIGLViewProtocol, SampleGLResourceHandler, SampleAppRendererControl, ARInputHandlerDelegate, GameView, SessionObjectGameDelegate> {
+@interface ImageTargetsEAGLView : UIView <UIGLViewProtocol, SampleGLResourceHandler, SampleAppRendererControl, ARInputHandlerDelegate> {
 @private
     ARInputHandler *inputHandler;
   
@@ -82,16 +78,7 @@ countries.
     UIImageView *occlusionView;
   
     demoModel *monkeySource;
-  
-    demoModel *queenSource;
-    demoModel *kingSource;
-    demoModel *rookSource;
-    demoModel *bishopSource;
-    demoModel *knightSource;
-    demoModel *pawnSource;
 }
-
-@property NSMutableArray <ChessObject *> *chessPieces;
 
 @property (nonatomic, weak) SampleApplicationSession * vapp;
 

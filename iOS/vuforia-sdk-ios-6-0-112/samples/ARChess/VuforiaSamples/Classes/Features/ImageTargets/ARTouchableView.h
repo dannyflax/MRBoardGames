@@ -8,17 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ARTouchableView : UIView
+@protocol ARTouchReceiver <NSObject>
+-(void)tapBegan:(CGPoint)tap;
+
+-(void)tapMoved:(CGPoint)tap;
+
+-(void)tapEnded:(CGPoint)tap;
+@end
+
+@interface ARTouchableView : UIView<ARTouchReceiver>
 {
   bool holdingSquare;
   CGPoint grabPoint;
   CGPoint baseViewPoint;
   UIView *subView;
 }
--(void)tapBegan:(CGPoint)tap;
-
--(void)tapMoved:(CGPoint)tap;
-
--(void)tapEnded:(CGPoint)tap;
 
 @end

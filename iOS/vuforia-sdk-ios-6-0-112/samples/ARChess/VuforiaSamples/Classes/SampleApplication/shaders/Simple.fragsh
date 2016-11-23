@@ -14,8 +14,6 @@ uniform bool textureUsed;
 
 uniform vec3 color;
 
-uniform bool flipped;
-
 void main()
 {
     vec3 light = vec3(1.0, 1.0, 1.0);

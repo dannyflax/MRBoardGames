@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -21,154 +20,12 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="I05-nJ-rV9" kind="relationship" relationship="rootViewController" id="V4S-dC-8yf"/>
+                        <segue destination="Dox-ur-9Yg" kind="relationship" relationship="rootViewController" id="cBf-fj-iXo"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rtk-y9-06N" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1050" y="96"/>
-        </scene>
-        <!--Available Games-->
-        <scene sceneID="dD2-yl-Hxp">
-            <objects>
-                <viewController id="I05-nJ-rV9" customClass="SampleCommunicationViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="oD0-Hx-qlc"/>
-                        <viewControllerLayoutGuide type="bottom" id="h50-BB-QF8"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="60R-J0-3TR">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yjn-x6-iRg">
-                                <rect key="frame" x="16" y="527" width="343" height="73"/>
-                                <color key="backgroundColor" red="0.14568294418550864" green="0.53359913161928019" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="73" id="05d-tS-Y2W"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="25"/>
-                                <state key="normal" title="New Game">
-                                    <color key="titleColor" red="0.987812340259552" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="newGamePressed:" destination="I05-nJ-rV9" eventType="touchUpInside" id="i2F-SG-uEf"/>
-                                </connections>
-                            </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="singleLineEtched" allowsSelection="NO" rowHeight="75" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="sbE-Ue-iQi">
-                                <rect key="frame" x="0.0" y="64" width="375" height="455"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GameListTableViewCell" rowHeight="75" id="ijw-Xb-1cZ" customClass="GameListTableViewCell">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="75"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="GameListing" tableViewCell="ijw-Xb-1cZ" id="xPj-F9-ewY">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="74"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qih-ml-VjO">
-                                                    <rect key="frame" x="20" y="25" width="150" height="24"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="150" id="GHP-1n-Tbw"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[4]" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t0H-ir-CLm">
-                                                    <rect key="frame" x="155" y="28" width="34" height="18"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="34" id="qbN-Xy-oT9"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ksi-kr-lA8">
-                                                    <rect key="frame" x="301" y="0.0" width="74" height="74"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" secondItem="ksi-kr-lA8" secondAttribute="height" multiplier="1:1" id="cwG-tN-0MO"/>
-                                                    </constraints>
-                                                    <state key="normal" image="Chevron"/>
-                                                    <connections>
-                                                        <action selector="buttonPressed:" destination="ijw-Xb-1cZ" eventType="touchUpInside" id="938-am-yon"/>
-                                                    </connections>
-                                                </button>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="QJ9-L5-Aj5">
-                                                    <rect key="frame" x="322" y="27" width="20" height="20"/>
-                                                </activityIndicatorView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="ksi-kr-lA8" secondAttribute="trailing" id="2DQ-zb-Afd"/>
-                                                <constraint firstItem="qih-ml-VjO" firstAttribute="centerY" secondItem="xPj-F9-ewY" secondAttribute="centerY" id="LF9-7V-0eH"/>
-                                                <constraint firstItem="ksi-kr-lA8" firstAttribute="top" secondItem="xPj-F9-ewY" secondAttribute="top" id="TR0-57-rnI"/>
-                                                <constraint firstItem="QJ9-L5-Aj5" firstAttribute="centerY" secondItem="xPj-F9-ewY" secondAttribute="centerY" id="bbr-aX-eBL"/>
-                                                <constraint firstItem="qih-ml-VjO" firstAttribute="leading" secondItem="xPj-F9-ewY" secondAttribute="leadingMargin" constant="12" id="elP-tW-Quy"/>
-                                                <constraint firstAttribute="bottom" secondItem="ksi-kr-lA8" secondAttribute="bottom" id="kFZ-dj-M9G"/>
-                                                <constraint firstItem="t0H-ir-CLm" firstAttribute="leading" secondItem="qih-ml-VjO" secondAttribute="trailing" constant="-15" id="mbv-f3-gzg"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="QJ9-L5-Aj5" secondAttribute="trailing" constant="25" id="q4h-b5-JcK"/>
-                                                <constraint firstItem="t0H-ir-CLm" firstAttribute="centerY" secondItem="xPj-F9-ewY" secondAttribute="centerY" id="y3U-LU-eMy"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="activityIndicator" destination="QJ9-L5-Aj5" id="hCI-Rq-wYv"/>
-                                            <outlet property="gameNameLabel" destination="qih-ml-VjO" id="L9b-S4-SZa"/>
-                                            <outlet property="playerCountLabel" destination="t0H-ir-CLm" id="o52-JK-upc"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </prototypes>
-                            </tableView>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="I4N-GY-iNs" userLabel="Activity Indicator">
-                                <rect key="frame" x="178" y="324" width="20" height="20"/>
-                            </activityIndicatorView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zOg-Yl-rvx">
-                                <rect key="frame" x="197.5" y="617" width="161.5" height="30"/>
-                                <state key="normal" title="Refresh"/>
-                                <connections>
-                                    <action selector="refreshPressed:" destination="I05-nJ-rV9" eventType="touchUpInside" id="9FP-5D-G76"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6QG-Xl-1TX">
-                                <rect key="frame" x="16" y="617" width="161.5" height="30"/>
-                                <state key="normal" title="Networkless">
-                                    <color key="titleColor" red="0.55300209979228954" green="0.55266175785557892" blue="0.57002914507772018" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="networklessPressed:" destination="I05-nJ-rV9" eventType="touchUpInside" id="fW8-Ze-S6G"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="yjn-x6-iRg" firstAttribute="top" secondItem="sbE-Ue-iQi" secondAttribute="bottom" constant="8" id="1Jb-5m-ubz"/>
-                            <constraint firstItem="6QG-Xl-1TX" firstAttribute="top" secondItem="yjn-x6-iRg" secondAttribute="bottom" constant="17" id="1LW-DG-Rkt"/>
-                            <constraint firstItem="6QG-Xl-1TX" firstAttribute="leading" secondItem="60R-J0-3TR" secondAttribute="leadingMargin" id="54z-Z4-sEB"/>
-                            <constraint firstItem="I4N-GY-iNs" firstAttribute="centerX" secondItem="60R-J0-3TR" secondAttribute="centerX" id="AEa-76-9nK"/>
-                            <constraint firstItem="h50-BB-QF8" firstAttribute="top" secondItem="6QG-Xl-1TX" secondAttribute="bottom" constant="20" id="CQC-PX-2To"/>
-                            <constraint firstItem="h50-BB-QF8" firstAttribute="top" secondItem="zOg-Yl-rvx" secondAttribute="bottom" constant="20" id="EUD-wN-Ykm"/>
-                            <constraint firstItem="I4N-GY-iNs" firstAttribute="centerY" secondItem="60R-J0-3TR" secondAttribute="centerY" id="FXO-GZ-ldt"/>
-                            <constraint firstItem="sbE-Ue-iQi" firstAttribute="top" secondItem="oD0-Hx-qlc" secondAttribute="bottom" id="K7D-yZ-uge"/>
-                            <constraint firstItem="zOg-Yl-rvx" firstAttribute="leading" secondItem="6QG-Xl-1TX" secondAttribute="trailing" constant="20" id="M7Y-ml-5hB"/>
-                            <constraint firstItem="h50-BB-QF8" firstAttribute="top" secondItem="yjn-x6-iRg" secondAttribute="bottom" constant="67" id="QWW-Ud-k4h"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="yjn-x6-iRg" secondAttribute="trailing" id="QXY-TY-vBI"/>
-                            <constraint firstItem="zOg-Yl-rvx" firstAttribute="width" secondItem="6QG-Xl-1TX" secondAttribute="width" id="cz1-Jd-eOX"/>
-                            <constraint firstItem="zOg-Yl-rvx" firstAttribute="trailing" secondItem="60R-J0-3TR" secondAttribute="trailingMargin" id="df6-bC-hYz"/>
-                            <constraint firstItem="zOg-Yl-rvx" firstAttribute="top" secondItem="yjn-x6-iRg" secondAttribute="bottom" constant="17" id="hkS-d6-52P"/>
-                            <constraint firstAttribute="trailing" secondItem="sbE-Ue-iQi" secondAttribute="trailing" id="l9y-kT-56Y"/>
-                            <constraint firstItem="yjn-x6-iRg" firstAttribute="leading" secondItem="60R-J0-3TR" secondAttribute="leadingMargin" id="m2m-EK-yII"/>
-                            <constraint firstItem="sbE-Ue-iQi" firstAttribute="leading" secondItem="60R-J0-3TR" secondAttribute="leading" id="zPa-CX-nMP"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" title="Available Games" id="J4H-Gk-E8B"/>
-                    <connections>
-                        <outlet property="activityIndicator" destination="I4N-GY-iNs" id="tyo-2q-0Sb"/>
-                        <outlet property="gameButton" destination="yjn-x6-iRg" id="BXb-Ii-myn"/>
-                        <outlet property="gameTableView" destination="sbE-Ue-iQi" id="aCq-xk-X5t"/>
-                        <segue destination="Dox-ur-9Yg" kind="push" identifier="startNetworklessViewer" id="8Ml-q2-bpu"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="VSo-FQ-75n" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-489.5" y="95.5"/>
         </scene>
         <!--Image Targets-->
         <scene sceneID="r9O-MZ-2uJ">
@@ -406,11 +263,10 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Aqo-kd-GgJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4" y="984"/>
+            <point key="canvasLocation" x="150" y="626"/>
         </scene>
     </scenes>
     <resources>
-        <image name="Chevron" width="256" height="256"/>
         <image name="IT.png" width="523" height="874"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
@@ -419,6 +275,6 @@
         <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="8Ml-q2-bpu"/>
+        <segue reference="cBf-fj-iXo"/>
     </inferredMetricsTieBreakers>
 </document>

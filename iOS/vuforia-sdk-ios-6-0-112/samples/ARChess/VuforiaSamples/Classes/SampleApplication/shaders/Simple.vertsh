@@ -13,8 +13,6 @@ varying vec4 normal;
 uniform mat4 modelViewProjectionMatrix;
 uniform float modelScale;
 
-uniform bool flipped;
-
 void main()
 {
     vec4 position = vertexPosition;

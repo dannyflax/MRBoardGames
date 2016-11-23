@@ -9,12 +9,6 @@
 /* Begin PBXBuildFile section */
 		18EB634C1ACC70F200EF1C28 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18EB634B1ACC70F200EF1C28 /* Localizable.strings */; };
 		8F467BCD1D18AC3F00682E4C /* SampleAppRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8F467BCC1D18AC3F00682E4C /* SampleAppRenderer.mm */; };
-		B54D0ADE1DE0D610000C7014 /* BaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B54D0ADD1DE0D610000C7014 /* BaseObject.m */; };
-		B54D0AE21DE0EDD9000C7014 /* MainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B54D0AE11DE0EDD9000C7014 /* MainMenuViewController.m */; };
-		B54D0AE51DE0F4CE000C7014 /* SampleCommunicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B54D0AE41DE0F4CE000C7014 /* SampleCommunicationViewController.m */; };
-		B54D0B1A1DE13CDF000C7014 /* GameListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B54D0B191DE13CDF000C7014 /* GameListTableViewCell.m */; };
-		B5E405351DE146FF00007884 /* SessionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B5E405341DE146FF00007884 /* SessionObject.m */; };
-		B5E405381DE1886E00007884 /* GameInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B5E405371DE1886E00007884 /* GameInfo.m */; };
 		C155ED4B7D3AF6BFD94DFEAB /* Pods_MRBoardGames.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A4C8977A57F0F605050FD4 /* Pods_MRBoardGames.framework */; };
 		D21B07EC1A1B4AA20041ECF3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D21B07EB1A1B4AA20041ECF3 /* main.m */; };
 		D21B07EF1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D21B07EE1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m */; };
@@ -35,16 +29,6 @@
 		EF6862D11DCFE336003F5488 /* ARTouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6862D01DCFE335003F5488 /* ARTouchableView.m */; };
 		EF83B5C31DE0CC02002C14AE /* monkey.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B5C21DE0CC02002C14AE /* monkey.obj */; };
 		EF83B5C71DE0CC70002C14AE /* modelUtil.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF83B5C51DE0CC70002C14AE /* modelUtil.mm */; };
-		EF83B5CB1DE0D74F002C14AE /* queen-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B5CA1DE0D74F002C14AE /* queen-t.obj */; };
-		EF83B5D51DE0F013002C14AE /* chessboard.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EF83B5D41DE0F013002C14AE /* chessboard.jpg */; };
-		EF83B5FD1DE13DEC002C14AE /* CollisionChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = EF83B5FC1DE13DEC002C14AE /* CollisionChecker.m */; };
-		EF83B6001DE152F4002C14AE /* ChessPiecesFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = EF83B5FF1DE152F4002C14AE /* ChessPiecesFactory.m */; };
-		EF83B6061DE1571D002C14AE /* bishop-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B6021DE1571D002C14AE /* bishop-t.obj */; };
-		EF83B6071DE1571D002C14AE /* king-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B6031DE1571D002C14AE /* king-t.obj */; };
-		EF83B6081DE1571D002C14AE /* knight-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B6041DE1571D002C14AE /* knight-t.obj */; };
-		EF83B6091DE1571D002C14AE /* pawn-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B6051DE1571D002C14AE /* pawn-t.obj */; };
-		EF83B60E1DE168FE002C14AE /* ChessObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EF83B60D1DE168FE002C14AE /* ChessObject.m */; };
-		EF83B6101DE172CF002C14AE /* rook-t.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B60F1DE172CF002C14AE /* rook-t.obj */; };
 		EF9808951DDE0B680088FE4E /* libVuforia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D21B08791A1B6AEA0041ECF3 /* libVuforia.a */; };
 		EF9808981DDEC1FC0088FE4E /* ARInputHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF9808971DDEC1FC0088FE4E /* ARInputHandler.mm */; };
 		EF98089B1DDEC6F80088FE4E /* Point3D.m in Sources */ = {isa = PBXBuildFile; fileRef = EF98089A1DDEC6F80088FE4E /* Point3D.m */; };
@@ -88,18 +72,6 @@
 		8F467BCC1D18AC3F00682E4C /* SampleAppRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SampleAppRenderer.mm; path = Classes/Features/ImageTargets/SampleAppRenderer.mm; sourceTree = "<group>"; };
 		9776B62E1537833F45905DB6 /* Pods-MRBoardGames.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRBoardGames.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MRBoardGames/Pods-MRBoardGames.debug.xcconfig"; sourceTree = "<group>"; };
 		AC1435C896624A8570BA2618 /* Pods-MRBoardGames.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRBoardGames.release.xcconfig"; path = "Pods/Target Support Files/Pods-MRBoardGames/Pods-MRBoardGames.release.xcconfig"; sourceTree = "<group>"; };
-		B54D0ADC1DE0D610000C7014 /* BaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseObject.h; path = ObjectClasses/BaseObject.h; sourceTree = "<group>"; };
-		B54D0ADD1DE0D610000C7014 /* BaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseObject.m; path = ObjectClasses/BaseObject.m; sourceTree = "<group>"; };
-		B54D0AE01DE0EDD9000C7014 /* MainMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainMenuViewController.h; path = ViewControllers/MainMenuViewController.h; sourceTree = "<group>"; };
-		B54D0AE11DE0EDD9000C7014 /* MainMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainMenuViewController.m; path = ViewControllers/MainMenuViewController.m; sourceTree = "<group>"; };
-		B54D0AE31DE0F4CE000C7014 /* SampleCommunicationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SampleCommunicationViewController.h; path = ViewControllers/SampleCommunicationViewController.h; sourceTree = "<group>"; };
-		B54D0AE41DE0F4CE000C7014 /* SampleCommunicationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SampleCommunicationViewController.m; path = ViewControllers/SampleCommunicationViewController.m; sourceTree = "<group>"; };
-		B54D0B181DE13CDF000C7014 /* GameListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameListTableViewCell.h; path = ViewControllers/GameListTableViewCell.h; sourceTree = "<group>"; };
-		B54D0B191DE13CDF000C7014 /* GameListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GameListTableViewCell.m; path = ViewControllers/GameListTableViewCell.m; sourceTree = "<group>"; };
-		B5E405331DE146FF00007884 /* SessionObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SessionObject.h; path = Model/SessionObject.h; sourceTree = "<group>"; };
-		B5E405341DE146FF00007884 /* SessionObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SessionObject.m; path = Model/SessionObject.m; sourceTree = "<group>"; };
-		B5E405361DE1886E00007884 /* GameInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameInfo.h; sourceTree = "<group>"; };
-		B5E405371DE1886E00007884 /* GameInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameInfo.m; sourceTree = "<group>"; };
 		D21B07E61A1B4AA20041ECF3 /* Vuforia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vuforia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D21B07EB1A1B4AA20041ECF3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D21B07ED1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VuforiaSamplesAppDelegate.h; sourceTree = "<group>"; };
@@ -125,19 +97,6 @@
 		EF83B5C21DE0CC02002C14AE /* monkey.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = monkey.obj; sourceTree = "<group>"; };
 		EF83B5C51DE0CC70002C14AE /* modelUtil.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = modelUtil.mm; sourceTree = "<group>"; };
 		EF83B5C61DE0CC70002C14AE /* modelUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modelUtil.h; sourceTree = "<group>"; };
-		EF83B5CA1DE0D74F002C14AE /* queen-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "queen-t.obj"; sourceTree = "<group>"; };
-		EF83B5D41DE0F013002C14AE /* chessboard.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = chessboard.jpg; path = Resources/Assets/chessboard.jpg; sourceTree = "<group>"; };
-		EF83B5FB1DE13DEC002C14AE /* CollisionChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CollisionChecker.h; path = Classes/Features/ImageTargets/CollisionChecker.h; sourceTree = "<group>"; };
-		EF83B5FC1DE13DEC002C14AE /* CollisionChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CollisionChecker.m; path = Classes/Features/ImageTargets/CollisionChecker.m; sourceTree = "<group>"; };
-		EF83B5FE1DE152F4002C14AE /* ChessPiecesFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChessPiecesFactory.h; path = Classes/Features/ImageTargets/ChessPiecesFactory.h; sourceTree = "<group>"; };
-		EF83B5FF1DE152F4002C14AE /* ChessPiecesFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChessPiecesFactory.m; path = Classes/Features/ImageTargets/ChessPiecesFactory.m; sourceTree = "<group>"; };
-		EF83B6021DE1571D002C14AE /* bishop-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "bishop-t.obj"; sourceTree = "<group>"; };
-		EF83B6031DE1571D002C14AE /* king-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "king-t.obj"; sourceTree = "<group>"; };
-		EF83B6041DE1571D002C14AE /* knight-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "knight-t.obj"; sourceTree = "<group>"; };
-		EF83B6051DE1571D002C14AE /* pawn-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "pawn-t.obj"; sourceTree = "<group>"; };
-		EF83B60C1DE168FE002C14AE /* ChessObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChessObject.h; path = ObjectClasses/ChessObject.h; sourceTree = "<group>"; };
-		EF83B60D1DE168FE002C14AE /* ChessObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChessObject.m; path = ObjectClasses/ChessObject.m; sourceTree = "<group>"; };
-		EF83B60F1DE172CF002C14AE /* rook-t.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "rook-t.obj"; sourceTree = "<group>"; };
 		EF9808961DDEC1FC0088FE4E /* ARInputHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARInputHandler.h; path = Classes/Features/ImageTargets/ARInputHandler.h; sourceTree = "<group>"; };
 		EF9808971DDEC1FC0088FE4E /* ARInputHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ARInputHandler.mm; path = Classes/Features/ImageTargets/ARInputHandler.mm; sourceTree = "<group>"; };
 		EF9808991DDEC6F80088FE4E /* Point3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point3D.h; path = Classes/Features/ImageTargets/Point3D.h; sourceTree = "<group>"; };
@@ -223,47 +182,9 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		B54D0ADB1DE0D411000C7014 /* ObjectClasses */ = {
-			isa = PBXGroup;
-			children = (
-				B54D0ADC1DE0D610000C7014 /* BaseObject.h */,
-				B54D0ADD1DE0D610000C7014 /* BaseObject.m */,
-				EF83B60C1DE168FE002C14AE /* ChessObject.h */,
-				EF83B60D1DE168FE002C14AE /* ChessObject.m */,
-			);
-			name = ObjectClasses;
-			sourceTree = "<group>";
-		};
-		B54D0ADF1DE0ED6B000C7014 /* ViewControllers */ = {
-			isa = PBXGroup;
-			children = (
-				B54D0AE01DE0EDD9000C7014 /* MainMenuViewController.h */,
-				B54D0AE11DE0EDD9000C7014 /* MainMenuViewController.m */,
-				B54D0AE31DE0F4CE000C7014 /* SampleCommunicationViewController.h */,
-				B54D0AE41DE0F4CE000C7014 /* SampleCommunicationViewController.m */,
-				B54D0B181DE13CDF000C7014 /* GameListTableViewCell.h */,
-				B54D0B191DE13CDF000C7014 /* GameListTableViewCell.m */,
-			);
-			name = ViewControllers;
-			sourceTree = "<group>";
-		};
-		B5E405321DE146A700007884 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				B5E405331DE146FF00007884 /* SessionObject.h */,
-				B5E405341DE146FF00007884 /* SessionObject.m */,
-				B5E405361DE1886E00007884 /* GameInfo.h */,
-				B5E405371DE1886E00007884 /* GameInfo.m */,
-			);
-			name = Model;
-			sourceTree = "<group>";
-		};
 		D21B07DD1A1B4AA10041ECF3 = {
 			isa = PBXGroup;
 			children = (
-				B5E405321DE146A700007884 /* Model */,
-				B54D0ADF1DE0ED6B000C7014 /* ViewControllers */,
-				B54D0ADB1DE0D411000C7014 /* ObjectClasses */,
 				D21B087B1A1B6C710041ECF3 /* Frameworks */,
 				D21B07E81A1B4AA20041ECF3 /* VuforiaSamples */,
 				D21B07E71A1B4AA20041ECF3 /* Products */,
@@ -332,8 +253,6 @@
 		D21B08161A1B4D320041ECF3 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				EF83B6011DE15708002C14AE /* ChessPieces */,
-				EF83B5D41DE0F013002C14AE /* chessboard.jpg */,
 				EF83B5C21DE0CC02002C14AE /* monkey.obj */,
 				FB7A42E71A8E376B0068CF5E /* building_texture.jpeg */,
 				FB7A42E81A8E376B0068CF5E /* buildings.txt */,
@@ -376,19 +295,6 @@
 				EF83B5C61DE0CC70002C14AE /* modelUtil.h */,
 			);
 			name = Utilities;
-			sourceTree = "<group>";
-		};
-		EF83B6011DE15708002C14AE /* ChessPieces */ = {
-			isa = PBXGroup;
-			children = (
-				EF83B60F1DE172CF002C14AE /* rook-t.obj */,
-				EF83B6021DE1571D002C14AE /* bishop-t.obj */,
-				EF83B6031DE1571D002C14AE /* king-t.obj */,
-				EF83B6041DE1571D002C14AE /* knight-t.obj */,
-				EF83B6051DE1571D002C14AE /* pawn-t.obj */,
-				EF83B5CA1DE0D74F002C14AE /* queen-t.obj */,
-			);
-			name = ChessPieces;
 			sourceTree = "<group>";
 		};
 		EF9808AA1DE09DBD0088FE4E /* SampleApplication */ = {
@@ -447,10 +353,6 @@
 				EF9808971DDEC1FC0088FE4E /* ARInputHandler.mm */,
 				EF9808991DDEC6F80088FE4E /* Point3D.h */,
 				EF98089A1DDEC6F80088FE4E /* Point3D.m */,
-				EF83B5FB1DE13DEC002C14AE /* CollisionChecker.h */,
-				EF83B5FC1DE13DEC002C14AE /* CollisionChecker.m */,
-				EF83B5FE1DE152F4002C14AE /* ChessPiecesFactory.h */,
-				EF83B5FF1DE152F4002C14AE /* ChessPiecesFactory.m */,
 			);
 			name = ImageTargets;
 			sourceTree = "<group>";
@@ -532,36 +434,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB7A43391A8E376B0068CF5E /* TextureTeapotBlue.png in Resources */,
-				EF83B5D51DE0F013002C14AE /* chessboard.jpg in Resources */,
 				FBEFAEC81A8283F8002B4D62 /* Main.storyboard in Resources */,
 				EF83B5C31DE0CC02002C14AE /* monkey.obj in Resources */,
 				FB7A432B1A8E376B0068CF5E /* IT_about.html in Resources */,
 				18EB634C1ACC70F200EF1C28 /* Localizable.strings in Resources */,
 				FB7A433C1A8E376B0068CF5E /* TextureTeapotRed.png in Resources */,
 				EF9808CF1DE09DE30088FE4E /* Background.vertsh in Resources */,
-				EF83B6061DE1571D002C14AE /* bishop-t.obj in Resources */,
 				FB7A43531A8E41840068CF5E /* IT.png in Resources */,
 				EF9808CE1DE09DE30088FE4E /* Background.fragsh in Resources */,
 				EF9808D21DE09DE30088FE4E /* Simple.fragsh in Resources */,
 				EF9808D01DE09DE30088FE4E /* Line.fragsh in Resources */,
 				FB7A433B1A8E376B0068CF5E /* TextureTeapotGreen.png in Resources */,
-				EF83B6081DE1571D002C14AE /* knight-t.obj in Resources */,
 				FB7A432D1A8E376B0068CF5E /* StonesAndChips.xml in Resources */,
 				FB7A432E1A8E376B0068CF5E /* Tarmac.dat in Resources */,
 				FB7A431E1A8E376B0068CF5E /* building_texture.jpeg in Resources */,
-				EF83B6101DE172CF002C14AE /* rook-t.obj in Resources */,
 				FB7A433A1A8E376B0068CF5E /* TextureTeapotBrass.png in Resources */,
 				FB7A433D1A8E376B0068CF5E /* TextureTeapotYellow.png in Resources */,
 				FB7A431F1A8E376B0068CF5E /* buildings.txt in Resources */,
 				EF9808D31DE09DE30088FE4E /* Simple.vertsh in Resources */,
 				D21B07F71A1B4AA20041ECF3 /* Images.xcassets in Resources */,
 				EF9808D41DE09DE30088FE4E /* SimpleWithColor.fragsh in Resources */,
-				EF83B6091DE1571D002C14AE /* pawn-t.obj in Resources */,
 				FB7A432C1A8E376B0068CF5E /* StonesAndChips.dat in Resources */,
 				EF9808D11DE09DE30088FE4E /* Line.vertsh in Resources */,
-				EF83B6071DE1571D002C14AE /* king-t.obj in Resources */,
 				FB7A432F1A8E376B0068CF5E /* Tarmac.xml in Resources */,
-				EF83B5CB1DE0D74F002C14AE /* queen-t.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -621,30 +516,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				8F467BCD1D18AC3F00682E4C /* SampleAppRenderer.mm in Sources */,
-				B54D0AE51DE0F4CE000C7014 /* SampleCommunicationViewController.m in Sources */,
 				EF9808C01DE09DD80088FE4E /* SampleApplication3DModel.m in Sources */,
 				EF6862D11DCFE336003F5488 /* ARTouchableView.m in Sources */,
 				EF9808C11DE09DD80088FE4E /* SampleApplicationSession.mm in Sources */,
 				D21B07EF1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m in Sources */,
-				B54D0AE21DE0EDD9000C7014 /* MainMenuViewController.m in Sources */,
 				EF98089B1DDEC6F80088FE4E /* Point3D.m in Sources */,
-				B5E405381DE1886E00007884 /* GameInfo.m in Sources */,
 				FB7A43501A8E38AB0068CF5E /* ImageTargetsEAGLView.mm in Sources */,
-				B54D0ADE1DE0D610000C7014 /* BaseObject.m in Sources */,
 				EF9808C21DE09DD80088FE4E /* SampleApplicationShaderUtils.m in Sources */,
-				B5E405351DE146FF00007884 /* SessionObject.m in Sources */,
 				EF9808981DDEC1FC0088FE4E /* ARInputHandler.mm in Sources */,
 				D21B07EC1A1B4AA20041ECF3 /* main.m in Sources */,
 				EF9808C31DE09DD80088FE4E /* SampleApplicationUtils.cpp in Sources */,
 				EF9808C51DE09DD80088FE4E /* Texture.mm in Sources */,
 				EF9808C41DE09DD80088FE4E /* SampleAppMenuViewController.mm in Sources */,
 				FB7A43511A8E38AB0068CF5E /* ImageTargetsViewController.mm in Sources */,
-				EF83B60E1DE168FE002C14AE /* ChessObject.m in Sources */,
-				B54D0B1A1DE13CDF000C7014 /* GameListTableViewCell.m in Sources */,
 				EF9808BF1DE09DD80088FE4E /* PresentMenuSegue.m in Sources */,
-				EF83B5FD1DE13DEC002C14AE /* CollisionChecker.m in Sources */,
 				EF9808C61DE09DD80088FE4E /* UnwindMenuSegue.m in Sources */,
-				EF83B6001DE152F4002C14AE /* ChessPiecesFactory.m in Sources */,
 				EF83B5C71DE0CC70002C14AE /* modelUtil.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -771,7 +657,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = ../../build/lib/arm;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sfotm.mrboardgames;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sfotm.mrwhiteboard;
 				PRODUCT_NAME = Vuforia;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MRBoardGames-Bridging-Header.h";
@@ -803,7 +689,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = ../../build/lib/arm;
 				"LIBRARY_SEARCH_PATHS[arch=*]" = ../../build/lib/arm;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sfotm.mrboardgames;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sfotm.mrwhiteboard;
 				PRODUCT_NAME = Vuforia;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MRBoardGames-Bridging-Header.h";
