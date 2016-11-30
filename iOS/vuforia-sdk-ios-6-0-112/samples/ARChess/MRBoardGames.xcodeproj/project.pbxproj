@@ -657,7 +657,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = ../../build/lib/arm;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sfotm.mrwhiteboard;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ixlab.roomvision;
 				PRODUCT_NAME = Vuforia;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MRBoardGames-Bridging-Header.h";
@@ -689,7 +689,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = ../../build/lib/arm;
 				"LIBRARY_SEARCH_PATHS[arch=*]" = ../../build/lib/arm;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sfotm.mrwhiteboard;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ixlab.roomvision;
 				PRODUCT_NAME = Vuforia;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MRBoardGames-Bridging-Header.h";
