@@ -22,6 +22,8 @@
 #import "SampleApplicationUtils.h"
 #import "ARTouchableView.h"
 
+static const int kCameraFocusFrames = 20;
+
 @implementation ARInputHandler
 {
   Point3D *_currentPos;
@@ -31,6 +33,7 @@
   bool _waitingForZero;
   Vuforia::Matrix44F _cursorModelView;
   Vuforia::Matrix44F _bgModelView;
+  int _cameraFocusCount;
 }
 
 const float kObjectScaleNormal = 3.0f;
@@ -39,6 +42,7 @@ const float kObjectScaleNormal = 3.0f;
   if (self = [super init]) {
     _grabbingMode = NO;
     _waitingForZero = NO;
+    _cameraFocusCount = 0;
   }
   return self;
 }
@@ -242,6 +246,18 @@ const float kObjectScaleNormal = 3.0f;
     _currentPos.y = multipliedResult[1];
     _currentPos.z = multipliedResult[2];
   }
+  
+  //Count frames for camera focus, cap it at the max
+  if (_backgroundInSight) {
+    _cameraFocusCount = MIN(_cameraFocusCount + 1, kCameraFocusFrames);
+  } else {
+    _cameraFocusCount = 0;
+  }
+}
+
+- (bool)backgroundInFocus
+{
+  return _cameraFocusCount == kCameraFocusFrames;
 }
   
 - (bool)backgroundInSight

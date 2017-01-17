@@ -28,5 +28,6 @@
 - (void) renderVideoBackground;
 - (void)renderVideoBackgroundWithScreenSize:(CGSize)screenSize;
 - (void)setImageViewToBackground:(UIImageView *)imageView withCroppingPath:(NSArray *)croppingPath;
+- (UIImage *)grabCameraBufferForTextDetection;
 
 @end

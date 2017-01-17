@@ -32,6 +32,7 @@
 - (void)computeInputFromState:(const Vuforia::State&)state projectMatrix:(Vuforia::Matrix44F&) projectionMatrix;
 
 - (bool)backgroundInSight;
+- (bool)backgroundInFocus;
 - (bool)cursorInSight;
 - (bool)grabbingMode;
 

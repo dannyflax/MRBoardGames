@@ -6,5 +6,7 @@ target 'MRBoardGames' do
   use_frameworks!
 
   # Pods for MRBoardGames
-  pod 'Socket.IO-Client-Swift', '~> 8.1.2' # Or latest
+  pod 'GTMAppAuth'
+  pod 'GoogleAPIClient/Calendar', '~> 1.0.2'
+  pod 'GoogleAPIClient/Core', '~> 1.0.2'
 end

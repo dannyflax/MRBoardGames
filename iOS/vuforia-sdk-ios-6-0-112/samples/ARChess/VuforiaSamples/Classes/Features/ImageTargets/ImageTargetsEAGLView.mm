@@ -25,7 +25,7 @@
 #import "SampleApplicationShaderUtils.h"
 #import "Teapot.h"
 #import "Quad.h"
-
+#import "NumberRecognizer.h"
 
 //******************************************************************************
 // *** OpenGL ES thread safety ***
@@ -61,6 +61,8 @@ namespace {
 static const float kBoardSize = 200;
 static const float kBoardPadding = 50.0;
 
+static const float kViewTo3DScale = .25;
+
 static float kRedColor[3] =   {1.0, 0.0, 0.0};
 static float kGreenColor[3] = {0.0, 1.0, 0.0};
 static float kBlueColor[3] = {0.0, 1.0, 1.0};
@@ -79,7 +81,9 @@ static float kARViewPadding = 50.0f;
 @end
 
 @implementation ImageTargetsEAGLView
-
+{
+  bool _requestingFromAPI;
+}
 @synthesize vapp = vapp;
 
 // You must implement this method, which ensures the view's underlying layer is
@@ -99,6 +103,10 @@ static float kARViewPadding = 50.0f;
   
   if (self) {
       [self configureView:app];
+      _requestingFromAPI = NO;
+      // We have to actually render this view somewhere on the screen
+      // to get the animations to appear in the projection
+      [self addSubview:projectedView];
   }
   
   return self;
@@ -123,8 +131,9 @@ static float kARViewPadding = 50.0f;
     inputHandler.delegate = self;
     
     currentViewTexture = -1;
-    
-    projectedView = [[ARTouchableView alloc] initWithFrame:CGRectMake(0.0, 0.0, 200, 200)];
+  
+    // Render this view off-screen
+    projectedView = [[ARTouchableView alloc] initWithFrame:CGRectMake(0.0, 1000.0, 500, 500)];
     
     stylusHeld = NO;
     
@@ -211,12 +220,11 @@ static float kARViewPadding = 50.0f;
   CGColorSpaceRelease(colourSpace);
   
   // draw the view to the buffer
-  [view.layer renderInContext:textureContext];
+  [view.layer.presentationLayer renderInContext:textureContext];
   
   
   
   GLuint textureID;
-  //  glGenTextures(<#GLsizei n#>, <#GLuint *textures#>)
   
   glGenTextures(1, &textureID);
   glBindTexture(GL_TEXTURE_2D, textureID);
@@ -350,6 +358,21 @@ static float kARViewPadding = 50.0f;
   [self drawViewToBackgroundIfNecessary:projectedView projectionMatrix:projectionMatrix];
   [self drawCursorIfNecessary:projectionMatrix];
   
+  if ([inputHandler backgroundInSight] && [inputHandler backgroundInFocus] && !_requestingFromAPI && ![projectedView hasLoadedSchedule]) {
+    [projectedView toLoading];
+    _requestingFromAPI = YES;
+    UIImage *detectionBuffer = [sampleAppRenderer grabCameraBufferForTextDetection];
+    [NumberRecognizer createRequest:detectionBuffer onSuccess:^(NSArray *strings){
+      NSLog(@"%@", [strings description]);
+      _requestingFromAPI = NO;
+      [self _parseRoomNumberFromStrings:strings];
+    } onFailure:^(NSString *errorMessage){
+      NSLog(@"%@",errorMessage);
+      _requestingFromAPI = NO;
+      [projectedView failedToDetermineProfessorName];
+    }];
+  }
+  
   if ([inputHandler cursorInSight]) {
     currentPos = [inputHandler currentPos];
     [self handleCursorInputForPoint:currentPos receiver:projectedView];
@@ -361,13 +384,28 @@ static float kARViewPadding = 50.0f;
   [self presentFramebuffer];
 }
 
+- (void)_parseRoomNumberFromStrings:(NSArray *)strings
+{
+  for (NSString *roomNumber in strings) {
+    int number = [roomNumber intValue];
+    if (number != 0) {
+      [projectedView professorNameDetermined:roomNumber];
+      return;
+    }
+  }
+  [projectedView failedToDetermineProfessorName];
+}
+
 - (void)handleCursorInputForPoint:(Point3D *)inputPoint receiver:(UIView<ARTouchReceiver> *)receiver
 {
   bool touching = inputPoint.z <= 6.0;
   
-  float labelWidth = receiver.bounds.size.width;
-  float labelHeight = receiver.bounds.size.height;
-  CGPoint pointInView = CGPointMake(inputPoint.y + (labelWidth + kARViewPadding), inputPoint.x + labelHeight/2.0);
+  float labelWidth = receiver.bounds.size.width * kViewTo3DScale;
+  float labelHeight = receiver.bounds.size.height * kViewTo3DScale;
+  CGPoint pointInView = CGPointMake(
+                                    (inputPoint.y + (labelWidth + kARViewPadding)) / kViewTo3DScale,
+                                    (inputPoint.x + labelHeight/2.0) / kViewTo3DScale
+                                    );
   
   if (touching) {
     if ([receiver pointInside:pointInView withEvent:nil]) {
@@ -452,8 +490,8 @@ static float kARViewPadding = 50.0f;
     
     GLuint viewTexture = [self makeViewOpenGLTexture:viewToDraw];
     
-    float labelWidth = viewToDraw.bounds.size.width;
-    float labelHeight = viewToDraw.bounds.size.height;
+    float labelWidth = viewToDraw.bounds.size.width * kViewTo3DScale;
+    float labelHeight = viewToDraw.bounds.size.height * kViewTo3DScale;
     
     float objModelViewProjection[16];
     

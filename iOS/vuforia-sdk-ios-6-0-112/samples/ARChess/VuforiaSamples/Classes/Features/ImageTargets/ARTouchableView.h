@@ -24,4 +24,9 @@
   UIView *subView;
 }
 
+-(void)professorNameDetermined:(NSString *)professorName;
+-(void)failedToDetermineProfessorName;
+-(bool)hasLoadedSchedule;
+-(void)toLoading;
+
 @end

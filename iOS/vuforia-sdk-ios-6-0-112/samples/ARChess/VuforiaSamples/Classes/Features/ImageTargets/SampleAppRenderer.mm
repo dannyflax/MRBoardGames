@@ -282,6 +282,12 @@
   return img;
 }
 
+- (UIImage *)grabCameraBufferForTextDetection
+{
+  int vuforiaLogoHeight = 100;
+  return [self cropImage:_cameraBuffer toRect:CGRectMake(0, 0,  _cameraBuffer.size.width,  _cameraBuffer.size.height - vuforiaLogoHeight)];
+}
+
 - (UIImage *)cropImage:(UIImage *)imageToCrop toRect:(CGRect)rect
 {
   CGImageRef imageRef = CGImageCreateWithImageInRect([imageToCrop CGImage], rect);

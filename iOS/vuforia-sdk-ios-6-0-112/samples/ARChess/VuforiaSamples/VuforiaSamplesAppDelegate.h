@@ -8,10 +8,13 @@
 #import <UIKit/UIKit.h>
 #import "SampleGLResourceHandler.h"
 
+@protocol OIDAuthorizationFlowSession;
+
 @interface VuforiaSamplesAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, weak) id<SampleGLResourceHandler> glResourceHandler;
+@property(nonatomic, strong, nullable) id<OIDAuthorizationFlowSession> currentAuthorizationFlow;
 
 @end
 
