@@ -51,7 +51,7 @@
       
       
       NSString *urlString = @"https://vision.googleapis.com/v1/images:annotate?key=";
-      NSString *API_KEY = @"AIzaSyBHXVHIuhWF4V6pq_AWK9d7LpcgFm-y1yM";
+      NSString *API_KEY = @"AIzaSyC75pElYcTO6tZd5M4Go7dtm89YXi87Tbc";
       
       NSString *requestString = [NSString stringWithFormat:@"%@%@", urlString, API_KEY];
       

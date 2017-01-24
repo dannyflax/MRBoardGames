@@ -360,6 +360,11 @@ static float kARViewPadding = 50.0f;
   
   if ([inputHandler backgroundInSight] && [inputHandler backgroundInFocus] && !_requestingFromAPI && ![projectedView hasLoadedSchedule]) {
     [projectedView toLoading];
+    
+//    [projectedView professorNameDetermined:@"657"];
+    
+    
+    
     _requestingFromAPI = YES;
     UIImage *detectionBuffer = [sampleAppRenderer grabCameraBufferForTextDetection];
     [NumberRecognizer createRequest:detectionBuffer onSuccess:^(NSArray *strings){
@@ -387,10 +392,12 @@ static float kARViewPadding = 50.0f;
 - (void)_parseRoomNumberFromStrings:(NSArray *)strings
 {
   for (NSString *roomNumber in strings) {
-    int number = [roomNumber intValue];
-    if (number != 0) {
-      [projectedView professorNameDetermined:roomNumber];
-      return;
+    if (roomNumber.length == 3) {
+      int number = [roomNumber intValue];
+      if (number != 0) {
+        [projectedView professorNameDetermined:roomNumber];
+        return;
+      }
     }
   }
   [projectedView failedToDetermineProfessorName];
@@ -398,7 +405,7 @@ static float kARViewPadding = 50.0f;
 
 - (void)handleCursorInputForPoint:(Point3D *)inputPoint receiver:(UIView<ARTouchReceiver> *)receiver
 {
-  bool touching = inputPoint.z <= 6.0;
+  bool touching = inputPoint.z <= 0.0;
   
   float labelWidth = receiver.bounds.size.width * kViewTo3DScale;
   float labelHeight = receiver.bounds.size.height * kViewTo3DScale;

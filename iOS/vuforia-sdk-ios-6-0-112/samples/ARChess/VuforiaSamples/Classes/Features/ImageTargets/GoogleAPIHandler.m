@@ -31,17 +31,11 @@
  */
 static NSString *const kIssuer = @"https://accounts.google.com";
 
-
-
 static NSString *const kCalendarClientID = @"1096669041108-c790vq2jk2jj6ao0i2rckkdria7cedic.apps.googleusercontent.com";
-
-//static NSString *const kCalendarClientID = @"28772676077-idrfqvms8s1l3hr48q4r09t71na1g484.apps.googleusercontent.com";
 
 static NSString *const kScriptID = @"1IHhhVuAxljWt3RNW6CriVnAHFKZ1N0eAwwxryTEQ8-FhD6oKa7tYiSne";
 
 static NSString *const kRedirectURI = @"com.googleusercontent.apps.1096669041108-c790vq2jk2jj6ao0i2rckkdria7cedic:/oauthredirect";
-
-//static NSString *const kRedirectURI = @"com.googleusercontent.apps.28772676077-idrfqvms8s1l3hr48q4r09t71na1g484:/oauthredirect";
 
 static NSString *const kExampleAuthorizerKey = @"Google Calendar API";
 
@@ -51,8 +45,24 @@ OIDAuthStateErrorDelegate>
 
 @implementation GoogleAPIHandler
 
-- (void)viewDidLoad {
-  [super viewDidLoad];
++ (GoogleAPIHandler *)sharedAPIHandler
+{
+  static GoogleAPIHandler *apiHandler = nil;
+  if (apiHandler == nil) {
+    apiHandler = [GoogleAPIHandler new];
+  }
+  return apiHandler;
+}
+
+- (id)init
+{
+  if (self = [super init]) {
+    [self setup];
+  }
+  return self;
+}
+
+- (void)setup {
   
 #if !defined(NS_BLOCK_ASSERTIONS)
   
@@ -78,14 +88,7 @@ OIDAuthStateErrorDelegate>
   
 #endif // !defined(NS_BLOCK_ASSERTIONS)
   
-  _logTextView.layer.borderColor = [UIColor colorWithWhite:0.8 alpha:1.0].CGColor;
-  _logTextView.layer.borderWidth = 1.0f;
-  _logTextView.alwaysBounceVertical = YES;
-  _logTextView.textContainer.lineBreakMode = NSLineBreakByCharWrapping;
-  _logTextView.text = @"";
-  
   [self loadState];
-  [self updateUI];
 }
 
 /*! @brief Saves the @c GTMAppAuthFetcherAuthorization to @c NSUSerDefaults.
@@ -122,24 +125,8 @@ OIDAuthStateErrorDelegate>
   [self stateChanged];
 }
 
-/*! @brief Refreshes UI, typically called after the auth state changed.
- */
-- (void)updateUI {
-  _userinfoButton.enabled = _authorization.canAuthorize;
-  _clearAuthStateButton.enabled = _authorization.canAuthorize;
-  // dynamically changes authorize button text depending on authorized state
-  if (!_authorization.canAuthorize) {
-    [_authAutoButton setTitle:@"Authorize" forState:UIControlStateNormal];
-    [_authAutoButton setTitle:@"Authorize" forState:UIControlStateHighlighted];
-  } else {
-    [_authAutoButton setTitle:@"Re-authorize" forState:UIControlStateNormal];
-    [_authAutoButton setTitle:@"Re-authorize" forState:UIControlStateHighlighted];
-  }
-}
-
 - (void)stateChanged {
   [self saveState];
-  [self updateUI];
 }
 
 - (void)didChangeState:(OIDAuthState *)state {
@@ -147,26 +134,27 @@ OIDAuthStateErrorDelegate>
 }
 
 - (void)authState:(OIDAuthState *)state didEncounterAuthorizationError:(NSError *)error {
-  [self logMessage:@"Received authorization error: %@", error];
+  NSLog(@"Received authorization error: %@", error);
 }
 
-- (IBAction)authWithAutoCodeExchange:(nullable id)sender {
+- (void)authWithAutoCodeExchange:(UIViewController *)presentingViewController
+{
   NSURL *issuer = [NSURL URLWithString:kIssuer];
   NSURL *redirectURI = [NSURL URLWithString:kRedirectURI];
   
-  [self logMessage:@"Fetching configuration for issuer: %@", issuer];
+  NSLog(@"Fetching configuration for issuer: %@", issuer);
   
   // discovers endpoints
   [OIDAuthorizationService discoverServiceConfigurationForIssuer:issuer
                                                       completion:^(OIDServiceConfiguration *_Nullable configuration, NSError *_Nullable error) {
                                                         
                                                         if (!configuration) {
-                                                          [self logMessage:@"Error retrieving discovery document: %@", [error localizedDescription]];
+                                                          NSLog(@"Error retrieving discovery document: %@", [error localizedDescription]);
                                                           [self setGtmAuthorization:nil];
                                                           return;
                                                         }
                                                         
-                                                        [self logMessage:@"Got configuration: %@", configuration];
+                                                        NSLog(@"Got configuration: %@", configuration);
                                                         
                                                         // builds authentication request
                                                         OIDAuthorizationRequest *request =
@@ -180,11 +168,11 @@ OIDAuthStateErrorDelegate>
                                                                                           additionalParameters:nil];
                                                         // performs authentication request
                                                         VuforiaSamplesAppDelegate *appDelegate = (VuforiaSamplesAppDelegate *)[UIApplication sharedApplication].delegate;
-                                                        [self logMessage:@"Initiating authorization request with scope: %@", request.scope];
+                                                        NSLog(@"Initiating authorization request with scope: %@", request.scope);
                                                         
                                                         appDelegate.currentAuthorizationFlow =
                                                         [OIDAuthState authStateByPresentingAuthorizationRequest:request
-                                                                                       presentingViewController:self
+                                                                                       presentingViewController:presentingViewController
                                                                                                        callback:^(OIDAuthState *_Nullable authState,
                                                                                                                   NSError *_Nullable error) {
                                                                                                          if (authState) {
@@ -192,28 +180,24 @@ OIDAuthStateErrorDelegate>
                                                                                                            [[GTMAppAuthFetcherAuthorization alloc] initWithAuthState:authState];
                                                                                                            
                                                                                                            [self setGtmAuthorization:authorization];
-                                                                                                           [self logMessage:@"Got authorization tokens. Access token: %@",
-                                                                                                            authState.lastTokenResponse.accessToken];
+                                                                                                           NSLog(@"Got authorization tokens. Access token: %@",
+                                                                                                            authState.lastTokenResponse.accessToken);
                                                                                                          } else {
                                                                                                            [self setGtmAuthorization:nil];
-                                                                                                           [self logMessage:@"Authorization error: %@", [error localizedDescription]];
+                                                                                                           NSLog(@"Authorization error: %@", [error localizedDescription]);
                                                                                                          }
                                                                                                        }];
                                                       }];
 }
 
-- (IBAction)clearAuthState:(nullable id)sender {
+- (void)clearAuthState {
   [self setGtmAuthorization:nil];
 }
 
-- (IBAction)clearLog:(nullable id)sender {
-  _logTextView.text = @"";
-}
-
-
 // Construct a query and get a list of upcoming events from the user calendar. Display the
 // start dates and event summaries in the UITextView.
-- (void)fetchEventsForRoomNumber:(int)roomNumber {
+- (void)fetchEventsForRoomNumber:(int)roomNumber onSuccess:(CalendarLookupSuccessBlock)successBlock onFailure:(CalendarLookupFailureBlock)failureBlock
+{
   NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://script.googleapis.com/v1/scripts/%@:run",
                                      kScriptID]];
   // Create an execution request object.
@@ -225,8 +209,10 @@ OIDAuthStateErrorDelegate>
   // Make the API request.
   [self.coreService fetchObjectByInsertingObject:request
                                           forURL:url
-                                        delegate:self
-                               didFinishSelector:@selector(displayFoldersWithServiceTicket:finishedWithObject:error:)];
+                               completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
+                                 [self displayFoldersWithServiceTicket:ticket finishedWithObject:object error:error onSuccess:successBlock onFailure:failureBlock];
+  }];
+  
 }
 
 
@@ -234,10 +220,14 @@ OIDAuthStateErrorDelegate>
 
 - (void)displayFoldersWithServiceTicket:(GTLServiceTicket *)ticket
                      finishedWithObject:(GTLObject *)object
-                                  error:(NSError *)error {
+                                  error:(NSError *)error
+                              onSuccess:(CalendarLookupSuccessBlock)successBlock
+                              onFailure:(CalendarLookupFailureBlock)failureBlock
+{
   if (error == nil) {
-    NSMutableString *output = [[NSMutableString alloc] init];
     if ([object.JSON objectForKey:@"error"] != nil) {
+      NSMutableString *output = [[NSMutableString alloc] init];
+      
       // The API executed, but the script returned an error.
       
       // Extract the first (and only) set of error details and cast as a
@@ -260,35 +250,55 @@ OIDAuthStateErrorDelegate>
         }
       }
       
+      failureBlock(output);
+      
     } else {
+      //Success!
       
       NSMutableArray *result = [[[object.JSON objectForKey:@"response"] objectForKey:@"result"] objectAtIndex:0];
       
-      if (result && [result count] == 3) {
+      if (result && [result count] == 4) {
         NSString *calendarID = [result objectAtIndex:1];
-        //        NSString *professorName = [result objectAtIndex:2];
-        
-        [self computeFreeBusyWithCalendarID:calendarID];
+        NSString *professorName = [result objectAtIndex:2];
+        NSString *professorEmail = [result objectAtIndex:3];
+        [self computeFreeBusyWithCalendarID:calendarID onSuccess:successBlock onFailure:failureBlock professorName:professorName professorEmail:professorEmail];
       }
     }
-    [self logMessage:@"%@",output];
   } else {
     // The API encountered a problem before the script started executing.
-    [self logMessage:@"%@",[error localizedDescription]];
+    failureBlock([error localizedDescription]);
   }
 }
 
 
 - (void)computeFreeBusyWithCalendarID:(NSString *)calendarID
+                            onSuccess:(CalendarLookupSuccessBlock)successBlock
+                            onFailure:(CalendarLookupFailureBlock)failureBlock
+                        professorName:(NSString *)professorName
+                       professorEmail:(NSString *)professorEmail
 {
   _professorCalendarID = calendarID;
   
   GTLQueryCalendar *query = [GTLQueryCalendar queryForFreebusyQuery];
   
-  query.timeMin = [GTLDateTime dateTimeWithDate:[NSDate date]
+  NSDate *today = [NSDate date];
+  NSCalendar *gregorian = [[NSCalendar alloc]
+                           initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+  
+  [gregorian setTimeZone:[NSTimeZone localTimeZone]];
+  
+  NSDateComponents *weekdayComponents =
+  [gregorian components:(NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitYear) fromDate:today];
+  [weekdayComponents setHour:0];
+  [weekdayComponents setMinute:0];
+  [weekdayComponents setSecond:0];
+  
+  NSDate *start = [gregorian dateFromComponents:weekdayComponents];
+  
+  query.timeMin = [GTLDateTime dateTimeWithDate:start
                                        timeZone:[NSTimeZone localTimeZone]];
   
-  query.timeMax = [GTLDateTime dateTimeWithDate:[NSDate dateWithTimeIntervalSinceNow:60*60*24]
+  query.timeMax = [GTLDateTime dateTimeWithDate:[start dateByAddingTimeInterval:60*60*24]
                                        timeZone:[NSTimeZone localTimeZone]];
   
   query.singleEvents = YES;
@@ -303,19 +313,23 @@ OIDAuthStateErrorDelegate>
   
   query.items = [NSArray arrayWithObjects:first,second, nil];
   
-  [self.service executeQuery:query
-                    delegate:self
-           didFinishSelector:@selector(displayResultWithTicket:finishedWithObject:error:)];
+  query.singleEvents = NO;
   
   [self.service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error){
-    [self displayResultWithTicket:ticket finishedWithObject:object error:error];
+    [self displayResultWithTicket:ticket finishedWithObject:object error:error onSuccess:successBlock onFailure:failureBlock professorName:professorName professorEmail:professorEmail calendarID:calendarID];
   }];
 }
 
 
 - (void)displayResultWithTicket:(GTLServiceTicket *)ticket
              finishedWithObject:(GTLCalendarFreeBusyResponse *)result
-                          error:(NSError *)error {
+                          error:(NSError *)error
+                      onSuccess:(CalendarLookupSuccessBlock)successBlock
+                      onFailure:(CalendarLookupFailureBlock)failureBlock
+                  professorName:(NSString *)professorName
+                 professorEmail:(NSString *)professorEmail
+                     calendarID:(NSString *)calendarID
+{
   if (error == nil) {
     GTLCalendarFreeBusyResponseCalendars *calendars = result.calendars;
     
@@ -332,27 +346,49 @@ OIDAuthStateErrorDelegate>
       [busyEvents addObjectsFromArray:[self getEventsFromCalendar:professorBusy]];
     }
     
-    NSLog(@"%@", busyEvents);
-    
-    NSDate *today = [NSDate date];
-    NSCalendar *gregorian = [[NSCalendar alloc]
-                             initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    
-    [gregorian setTimeZone:[NSTimeZone localTimeZone]];
-    
-    NSDateComponents *weekdayComponents =
-    [gregorian components:(NSCalendarUnitDay | NSCalendarUnitWeekday) fromDate:today];
-    [weekdayComponents setHour:9];
-    [weekdayComponents setMinute:30];
-    
-    NSDate *date = [gregorian dateFromComponents:weekdayComponents];
-    
-    NSLog(@"%@", date);
-    
+    successBlock(busyEvents, professorName, professorEmail, calendarID);
   } else {
-    [self logMessage:@"%@",error.localizedDescription];
+    failureBlock([error localizedDescription]);
   }
 }
+
+- (void)scheduleCalendarEventWithStudentEmail:(NSString *)studentEmail startTime:(NSDate *)startTime endTime:(NSDate *)endTime professorEmail:(NSString *)professorEmail onCompletion:(void(^)())completion
+{
+  GTLCalendarEvent *event = [GTLCalendarEvent new];
+  
+  event.summary = @"Meeting with student";
+  
+  GTLCalendarEventAttendee *attendee1 = [GTLCalendarEventAttendee new];
+  attendee1.email = studentEmail;
+  
+  GTLCalendarEventAttendee *attendee2 = [GTLCalendarEventAttendee new];
+  attendee2.email = professorEmail;
+  
+  event.attendees = [[NSArray alloc] initWithObjects:attendee1, attendee2, nil];
+  
+  GTLCalendarEventDateTime *start = [GTLCalendarEventDateTime new];
+  GTLCalendarEventDateTime *end = [GTLCalendarEventDateTime new];
+  
+  start.dateTime = [GTLDateTime dateTimeWithDate:startTime
+                                       timeZone:[NSTimeZone localTimeZone]];
+  end.dateTime = [GTLDateTime dateTimeWithDate:endTime
+                                       timeZone:[NSTimeZone localTimeZone]];
+  
+  event.start = start;
+  event.end = end;
+  
+  GTLQueryCalendar *query = [GTLQueryCalendar queryForEventsInsertWithObject:event calendarId:@"primary"];
+  
+  [self.service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error){
+    if (!error) {
+      UIAlertView *aView = [[UIAlertView alloc] initWithTitle:@"Successfully scheduled event" message:@"Successfully scheduled event with professor" delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+      [aView show];
+    }
+    completion();
+  }];
+
+}
+
 
 - (NSArray<CalendarEventDataModel *> *)getEventsFromCalendar:(NSDictionary *)calendar
 {
@@ -369,35 +405,6 @@ OIDAuthStateErrorDelegate>
   }
   
   return events;
-}
-
-
-- (IBAction)userinfo:(nullable id)sender {
-  [self fetchEventsForRoomNumber:657];
-}
-
-/*! @brief Logs a message to stdout and the textfield.
- @param format The format string and arguments.
- */
-- (void)logMessage:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2) {
-  // gets message as string
-  va_list argp;
-  va_start(argp, format);
-  NSString *log = [[NSString alloc] initWithFormat:format arguments:argp];
-  va_end(argp);
-  
-  // outputs to stdout
-  NSLog(@"%@", log);
-  
-  // appends to output log
-  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-  dateFormatter.dateFormat = @"hh:mm:ss";
-  NSString *dateString = [dateFormatter stringFromDate:[NSDate date]];
-  _logTextView.text = [NSString stringWithFormat:@"%@%@%@: %@",
-                       _logTextView.text,
-                       ([_logTextView.text length] > 0) ? @"\n" : @"",
-                       dateString,
-                       log];
 }
 
 @end

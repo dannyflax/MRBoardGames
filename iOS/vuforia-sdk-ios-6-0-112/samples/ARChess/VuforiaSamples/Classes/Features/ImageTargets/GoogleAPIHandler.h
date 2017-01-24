@@ -23,41 +23,36 @@
 @class OIDAuthState;
 @class GTMAppAuthFetcherAuthorization;
 @class OIDServiceConfiguration;
+@class CalendarEventDataModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void(^CalendarLookupSuccessBlock)(NSArray<CalendarEventDataModel *> *, NSString *professorNAme, NSString *professorEmail, NSString *calendarID);
+typedef void(^CalendarLookupFailureBlock)(NSString *error);
+
 /*! @brief The example application's view controller.
  */
-@interface GoogleAPIHandler : UIViewController
-
-@property(nullable) IBOutlet UIButton *authAutoButton;
-@property(nullable) IBOutlet UIButton *userinfoButton;
-@property(nullable) IBOutlet UIButton *clearAuthStateButton;
-@property(nullable) IBOutlet UITextView *logTextView;
+@interface GoogleAPIHandler : NSObject
 
 /*! @brief The authorization state.
  */
 @property(nonatomic, nullable) GTMAppAuthFetcherAuthorization *authorization;
 
-/*! @brief Authorization code flow using @c OIDAuthState automatic code exchanges.
- @param sender IBAction sender.
- */
-- (IBAction)authWithAutoCodeExchange:(nullable id)sender;
+- (void)authWithAutoCodeExchange:(UIViewController *)presentingViewController;
 
-/*! @brief Performs a Userinfo API call using @c GTMAppAuthFetcherAuthorization.
- @param sender IBAction sender.
- */
-- (IBAction)userinfo:(nullable id)sender;
+- (void)fetchEventsForRoomNumber:(int)roomNumber onSuccess:(CalendarLookupSuccessBlock)successBlock onFailure:(CalendarLookupFailureBlock)failureBlock;
 
-/*! @brief Nils the @c OIDAuthState object.
- @param sender IBAction sender.
- */
-- (IBAction)clearAuthState:(nullable id)sender;
+- (void)scheduleCalendarEventWithStudentEmail:(NSString *)studentEmail startTime:(NSDate *)startTime endTime:(NSDate *)endTime professorEmail:(NSString *)professorEmail onCompletion:(void(^)())completion;
 
-/*! @brief Clears the UI log.
- @param sender IBAction sender.
- */
-- (IBAction)clearLog:(nullable id)sender;
+- (void)computeFreeBusyWithCalendarID:(NSString *)calendarID
+                            onSuccess:(CalendarLookupSuccessBlock)successBlock
+                            onFailure:(CalendarLookupFailureBlock)failureBlock
+                        professorName:(NSString *)professorName
+                       professorEmail:(NSString *)professorEmail;
+
+- (void)clearAuthState;
+
++ (GoogleAPIHandler *)sharedAPIHandler;
 
 @property (nonatomic, strong) GTLServiceCalendar *service;
 @property (nonatomic, strong) GTLService *coreService;

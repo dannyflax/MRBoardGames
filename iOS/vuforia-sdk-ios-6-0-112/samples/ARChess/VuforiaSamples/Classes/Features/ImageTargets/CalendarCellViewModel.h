@@ -11,6 +11,7 @@
 @interface CalendarCellViewModel : NSObject
 @property NSString *eventTitle;
 @property NSString *eventTime;
+@property NSDate *actualTime;
 @property bool available;
 @property bool editable;
 @end

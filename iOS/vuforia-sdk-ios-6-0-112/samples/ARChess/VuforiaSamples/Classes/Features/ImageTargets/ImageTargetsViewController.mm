@@ -25,6 +25,7 @@ countries.
 #import "PresentMenuSegue.h"
 #import "SampleAppMenuViewController.h"
 
+
 @interface ImageTargetsViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *ARViewPlaceholder;
@@ -109,7 +110,7 @@ countries.
      object:nil];
     
     // initialize AR
-    [vapp initAR:Vuforia::GL_20 orientation:self.interfaceOrientation];
+    [vapp initAR:Vuforia::GL_20 orientation:self.preferredInterfaceOrientationForPresentation];
 
     // show loading animation while AR is being initialized
     [self showLoadingAnimation];
@@ -138,10 +139,21 @@ countries.
     [super viewDidLoad];
     
     self.showingMenu = NO;
-    
-    // Do any additional setup after loading the view.
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
+  
     [self.view addGestureRecognizer:tapGestureRecognizer];
+  
+    GoogleAPIHandler *apiHandler = [GoogleAPIHandler sharedAPIHandler];
+    [apiHandler authWithAutoCodeExchange:self];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+  [super viewWillAppear:animated];
+  
+  // Do any additional setup after loading the view.
+  [self.navigationController setNavigationBarHidden:YES animated:animated];
+  
+  
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -632,7 +644,6 @@ countries.
 {
     self.showingMenu = NO;
 }
-
 
 #pragma mark - Navigation
 

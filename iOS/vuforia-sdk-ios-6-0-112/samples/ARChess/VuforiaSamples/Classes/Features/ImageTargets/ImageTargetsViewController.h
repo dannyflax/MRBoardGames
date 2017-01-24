@@ -13,6 +13,8 @@ countries.
 #import "SampleAppMenuViewController.h"
 #import <Vuforia/DataSet.h>
 
+#import "GoogleAPIHandler.h"
+
 @interface ImageTargetsViewController : UIViewController <SampleApplicationControl, SampleAppMenuDelegate, SampleGLResourceHandler> {
     
     Vuforia::DataSet*  dataSetCurrent;

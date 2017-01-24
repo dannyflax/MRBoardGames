@@ -8,6 +8,7 @@
 
 #import "ARTouchableView.h"
 #import "CalendarCellView.h"
+#import "GoogleAPIHandler.h"
 
 static NSString *kLoadingString = @"Loading professor schedule...";
 static NSString *kSaveString = @"Schedule";
@@ -23,6 +24,8 @@ static const float kFooterSize = 50.0f;
   NSArray<CalendarCellViewModel *> *_viewModels;
   UIView *_cellContainer;
   UIButton *_saveButton;
+  NSString *_professorEmail;
+  NSString *_calendarID;
 }
 
 -(id)initWithFrame:(CGRect)frame
@@ -63,13 +66,15 @@ int startTime = 9;
     CalendarCellViewModel *viewModel = [CalendarCellViewModel new];
     
     int hour = (startTime + i/2) % 12;
-    if(hour == 0)
-      hour = 12;
+    
+    bool pm = ((startTime + i/2) / 12) == 1;
     
     int min = (i%2 == 0) ? 0 : 30;
     
     viewModel.eventTime = [NSString stringWithFormat:@"%02i:%02i", hour, min];
     viewModel.eventTitle = [NSString stringWithFormat:@"Event %i", i];
+    viewModel.actualTime = [self _dateTodayWithHours:hour minutes:min isPm:pm];
+    
     viewModel.available = YES;
     viewModel.editable = YES;
     
@@ -80,12 +85,28 @@ int startTime = 9;
   [self _updateViews];
 }
 
+- (NSDate *)_dateTodayWithHours:(int)hours minutes:(int)min isPm:(bool)isPm
+{
+    NSDate *today = [NSDate date];
+    NSCalendar *gregorian = [[NSCalendar alloc]
+                             initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+
+    [gregorian setTimeZone:[NSTimeZone localTimeZone]];
+
+    NSDateComponents *weekdayComponents =
+    [gregorian components:(NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitYear) fromDate:today];
+    [weekdayComponents setHour:isPm ? 12 + hours :  hours];
+    [weekdayComponents setMinute:min];
+    [weekdayComponents setSecond:0];
+
+    return [gregorian dateFromComponents:weekdayComponents];
+}
+
 - (void)_updateViews
 {
   for (CalendarCellView *cellView in _calendarCells) {
     [cellView removeFromSuperview];
   }
-  
   
   bool enabledSave = false;
   NSMutableArray *newViews = [[NSMutableArray alloc] initWithCapacity:_viewModels.count];
@@ -106,6 +127,8 @@ int startTime = 9;
   _saveButton.enabled = enabledSave;
   
   _calendarCells = [NSArray arrayWithArray:newViews];
+  
+  [self setNeedsLayout];
 }
 
 - (void)layoutSubviews
@@ -170,13 +193,70 @@ int startTime = 9;
   }
 }
 
+bool fetching = false;
+
 -(void)professorNameDetermined:(NSString *)professorName
 {
-  [_loadingView setHidden:YES];
-  [_descriptionLabel setText:professorName];
-  _loadedSchedule = true;
-  [self displayCalendar];
-  [self setNeedsLayout];
+  if (![professorName isEqualToString:@""]) {
+    
+    if (!fetching) {
+      
+      fetching = true;
+      GoogleAPIHandler *apiHandler = [GoogleAPIHandler sharedAPIHandler];
+      
+      [apiHandler fetchEventsForRoomNumber:[professorName intValue] onSuccess:^(NSArray<CalendarEventDataModel *> *events, NSString *actualProfessorName, NSString *professorEmail, NSString *calendarID){
+        fetching = false;
+        [self displayCalendar];
+        [self updateViewsWithBusyTimes:events];
+        [_loadingView setHidden:YES];
+        [_descriptionLabel setText:actualProfessorName];
+        _loadedSchedule = true;
+        _professorEmail = professorEmail;
+        _calendarID = calendarID;
+        [self setNeedsLayout];
+      } onFailure:^(NSString *error){
+        fetching = false;
+        NSLog(@"%@",error);
+      }];
+    }
+  }
+}
+
+-(void)updateViewsWithBusyTimes:(NSArray<CalendarEventDataModel *> *)busyTimes
+{
+  for (CalendarCellViewModel * viewModel in _viewModels) {
+    NSDate *vmStart = viewModel.actualTime;
+    NSDate *vmEnd = [viewModel.actualTime dateByAddingTimeInterval:60*30];
+    
+    viewModel.available = true;
+    
+    for (CalendarEventDataModel *busyTime in busyTimes) {
+      bool startInside = ([busyTime.startDate compare:vmStart] > 0 && [busyTime.startDate compare:vmEnd] < 0);
+      bool endInside = ([busyTime.endDate compare:vmStart] > 0 && [busyTime.endDate compare:vmEnd] < 0);
+      
+      bool intersects = startInside || endInside;
+      
+      if (intersects) {
+        viewModel.available = false;
+        viewModel.editable = false;
+        break;
+      }
+      
+      bool startInside2 = ([vmStart compare:busyTime.startDate] > 0 && [vmStart compare:busyTime.endDate] < 0);
+      bool endInside2 = ([vmEnd compare:busyTime.startDate] > 0 && [vmEnd compare:busyTime.endDate] < 0);
+      
+      bool intersects2 = startInside2 || endInside2;
+      
+      if (intersects2) {
+        viewModel.available = false;
+        viewModel.editable = false;
+        break;
+      }
+      
+    }
+  }
+  
+  [self _updateViews];
 }
 
 -(void)displayCalendar
@@ -187,24 +267,76 @@ int startTime = 9;
 
 -(void)failedToDetermineProfessorName
 {
-  [self professorNameDetermined:@""];
+//  [self professorNameDetermined:@""];
   
-//  [_loadingView setHidden:YES];
-//  [_descriptionLabel setText:@"Unable to determine professor."];
-//  [self setNeedsLayout];
-//  _loadedSchedule = false;
+  [_loadingView setHidden:YES];
+  [_descriptionLabel setText:@"Unable to determine professor."];
+  [self setNeedsLayout];
+  _loadedSchedule = false;
 }
 
 -(void)tapBegan:(CGPoint)tap
 {
+  
   if (_viewModels.count > 0) {
-    int viewNumber = tap.y / (self.frame.size.height / _viewModels.count);
-    CalendarCellViewModel *viewModel = [_viewModels objectAtIndex:viewNumber];
-    if (viewModel.editable) {
-      viewModel.available = !viewModel.available;
+    CGPoint tapInCells = [self convertPoint:tap toView:_cellContainer];
+    
+    int viewNumber = (tapInCells.y) / ((_cellContainer.frame.size.height) / _viewModels.count);
+    
+    if (viewNumber >= 0 && viewNumber < _viewModels.count) {
+      CalendarCellViewModel *viewModel = [_viewModels objectAtIndex:viewNumber];
+      if (viewModel.editable) {
+        viewModel.available = !viewModel.available;
+      }
+      [self _updateViews];
     }
-    [self _updateViews];
+    
   }
+  
+  CGPoint tapInButton = [self convertPoint:tap toView:_saveButton];
+  
+  if(tapInButton.y > 0 && tapInButton.y < _saveButton.frame.size.height) {
+    [self submit];
+    
+    
+  }
+  
+}
+
+-(void)submit
+{
+  
+  int startVmNum = 0;
+  
+  int i = 0;
+  for (CalendarCellViewModel *viewModel in _viewModels) {
+    if (viewModel.editable && !viewModel.available) {
+      startVmNum = i;
+      break;
+    }
+    i++;
+  }
+  
+  int endVmNum = startVmNum;
+  
+  for (int i = startVmNum + 1; i < [_viewModels count]; i++) {
+    CalendarCellViewModel *viewModel = [_viewModels objectAtIndex:i];
+    if (viewModel.editable && !viewModel.available) {
+      endVmNum = i;
+    } else {
+      break;
+    }
+  }
+  
+  NSDate *start = [_viewModels objectAtIndex:startVmNum].actualTime;
+  NSDate *end = [[_viewModels objectAtIndex:endVmNum].actualTime dateByAddingTimeInterval:60*30];
+  
+  [[GoogleAPIHandler sharedAPIHandler] scheduleCalendarEventWithStudentEmail:@"MyWork1229@gmail.com" startTime:start endTime:end professorEmail:_professorEmail onCompletion:^{
+    [[GoogleAPIHandler sharedAPIHandler] computeFreeBusyWithCalendarID:_calendarID onSuccess:^(NSArray *events, NSString *profName, NSString *profEmail, NSString *calendarID){
+      [self updateViewsWithBusyTimes:events];
+    } onFailure:^(NSString *error){
+    } professorName:@"" professorEmail:@""];
+  }];
 }
 
 -(void)tapMoved:(CGPoint)tap
