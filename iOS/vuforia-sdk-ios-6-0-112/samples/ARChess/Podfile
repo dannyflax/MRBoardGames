@@ -6,5 +6,5 @@ target 'MRBoardGames' do
   use_frameworks!
 
   # Pods for MRBoardGames
-  pod 'Socket.IO-Client-Swift', '~> 8.1.2' # Or latest
+  pod 'Socket.IO-Client-Swift', '~> 8.3.3' # Or latest
 end
