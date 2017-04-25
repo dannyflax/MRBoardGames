@@ -9,4 +9,5 @@ target 'MRBoardGames' do
   pod 'GTMAppAuth'
   pod 'GoogleAPIClient/Calendar', '~> 1.0.2'
   pod 'GoogleAPIClient/Core', '~> 1.0.2'
+  pod 'DreamStoreFrontend', :path => '/Users/dannyflax/Documents/Research/dream/dreamstore/src/frontend'
 end
