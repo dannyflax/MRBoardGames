@@ -22,6 +22,7 @@ static const float kFooterSize = 50.0f;
   bool _loadedSchedule;
   NSArray<CalendarCellView *> *_calendarCells;
   NSArray<CalendarCellViewModel *> *_viewModels;
+  CalendarDataModel *_calendar;
   UIView *_cellContainer;
   UIButton *_saveButton;
   NSString *_professorEmail;
@@ -206,25 +207,27 @@ bool fetching = false;
 }
 
 
+bool readDB = false;
+
 -(void)readLoop
 {
   //TODO: Perform DreamStore Read
   
-  GoogleAPIHandler *apiHandler = [GoogleAPIHandler sharedAPIHandler];
-  
-  [apiHandler fetchEventsForRoomNumber:[_calendarID intValue] onSuccess:^(NSArray<CalendarEventDataModel *> *events, NSString *actualProfessorName, NSString *professorEmail, NSString *calendarID){
-    fetching = false;
-    [self displayCalendar];
-    [self updateViewsWithBusyTimes:events];
-    [_loadingView setHidden:YES];
-    [_descriptionLabel setText:actualProfessorName];
-    _loadedSchedule = true;
-    _professorEmail = professorEmail;
-    [self setNeedsLayout];
-  } onFailure:^(NSString *error){
-    fetching = false;
-    NSLog(@"%@",error);
-  }];
+  if (!readDB) {
+      NSString *actualProfessorName = @"Arnab Nandi";
+      NSString *professorEmail = @"arnab@cse.org";
+      NSArray *events = @[];
+      
+      _calendar = [[CalendarDataModel alloc] initWithEvents:events professorName:actualProfessorName professorEmail:professorEmail];
+      [self displayCalendar];
+      [self updateViewsWithBusyTimes:_calendar.events];
+      [_descriptionLabel setText:_calendar.professorName];
+      [_loadingView setHidden:YES];
+      _loadedSchedule = true;
+      [self setNeedsLayout];
+    
+      readDB = true;
+  }
 }
 
 
@@ -232,34 +235,13 @@ bool fetching = false;
 -(void)updateViewsWithBusyTimes:(NSArray<CalendarEventDataModel *> *)busyTimes
 {
   for (CalendarCellViewModel * viewModel in _viewModels) {
-    NSDate *vmStart = viewModel.actualTime;
-    NSDate *vmEnd = [viewModel.actualTime dateByAddingTimeInterval:60*30];
-    
     viewModel.available = true;
+    viewModel.editable = true;
     
     for (CalendarEventDataModel *busyTime in busyTimes) {
-      bool startInside = ([busyTime.startDate compare:vmStart] > 0 && [busyTime.startDate compare:vmEnd] < 0);
-      bool endInside = ([busyTime.endDate compare:vmStart] > 0 && [busyTime.endDate compare:vmEnd] < 0);
-      
-      bool intersects = startInside || endInside;
-      
-      if (intersects) {
+      if ([viewModel.actualTime isEqualToDate:busyTime.startDate]) {
         viewModel.available = false;
-        viewModel.editable = false;
-        break;
       }
-      
-      bool startInside2 = ([vmStart compare:busyTime.startDate] > 0 && [vmStart compare:busyTime.endDate] < 0);
-      bool endInside2 = ([vmEnd compare:busyTime.startDate] > 0 && [vmEnd compare:busyTime.endDate] < 0);
-      
-      bool intersects2 = startInside2 || endInside2;
-      
-      if (intersects2) {
-        viewModel.available = false;
-        viewModel.editable = false;
-        break;
-      }
-      
     }
   }
   
@@ -282,8 +264,6 @@ bool fetching = false;
 
 -(void)tapBegan:(CGPoint)tap
 {
-  //TODO: Perform an update
-  
   if (_viewModels.count > 0) {
     CGPoint tapInCells = [self convertPoint:tap toView:_cellContainer];
     
@@ -291,10 +271,23 @@ bool fetching = false;
     
     if (viewNumber >= 0 && viewNumber < _viewModels.count) {
       CalendarCellViewModel *viewModel = [_viewModels objectAtIndex:viewNumber];
-      if (viewModel.editable) {
-        viewModel.available = !viewModel.available;
+      NSMutableArray *mutatedEvents = [NSMutableArray arrayWithArray:_calendar.events];
+      if (viewModel.available) {
+        CalendarEventDataModel *newEvent = [[CalendarEventDataModel alloc] initWithStartDate:viewModel.actualTime endDate:[viewModel.actualTime dateByAddingTimeInterval:30*60]];
+        [mutatedEvents addObject:newEvent];
+      } else {
+        for (CalendarEventDataModel *event in _calendar.events) {
+          if ([event.startDate isEqualToDate:viewModel.actualTime]) {
+            [mutatedEvents removeObject:event];
+            break;
+          }
+        }
       }
-      [self _updateViews];
+      _calendar.events = mutatedEvents;
+      //TODO: Perform DreamStore Update
+      
+      [self _setupInitialViewModels];
+      [self updateViewsWithBusyTimes:_calendar.events];
     }
     
   }
@@ -303,8 +296,6 @@ bool fetching = false;
   
   if(tapInButton.y > 0 && tapInButton.y < _saveButton.frame.size.height) {
     [self submit];
-    
-    
   }
   
 }
@@ -313,30 +304,6 @@ bool fetching = false;
 {
   //TODO: Perform a commit...
   
-  int startVmNum = 0;
-  
-  int i = 0;
-  for (CalendarCellViewModel *viewModel in _viewModels) {
-    if (viewModel.editable && !viewModel.available) {
-      startVmNum = i;
-      break;
-    }
-    i++;
-  }
-  
-  int endVmNum = startVmNum;
-  
-  for (int i = startVmNum + 1; i < [_viewModels count]; i++) {
-    CalendarCellViewModel *viewModel = [_viewModels objectAtIndex:i];
-    if (viewModel.editable && !viewModel.available) {
-      endVmNum = i;
-    } else {
-      break;
-    }
-  }
-  
-  NSDate *start = [_viewModels objectAtIndex:startVmNum].actualTime;
-  NSDate *end = [[_viewModels objectAtIndex:endVmNum].actualTime dateByAddingTimeInterval:60*30];
 }
 
 -(void)tapMoved:(CGPoint)tap
