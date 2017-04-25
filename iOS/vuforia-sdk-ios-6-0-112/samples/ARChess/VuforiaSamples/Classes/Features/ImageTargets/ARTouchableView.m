@@ -197,30 +197,37 @@ bool fetching = false;
 
 -(void)professorNameDetermined:(NSString *)professorName
 {
-  if (![professorName isEqualToString:@""]) {
-    
-    if (!fetching) {
-      
+  if (!fetching && ![professorName isEqualToString:@""]) {
+      _calendarID = professorName;
+      NSTimer *timer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(readLoop) userInfo:nil repeats:YES];
+      [timer fire];
       fetching = true;
-      GoogleAPIHandler *apiHandler = [GoogleAPIHandler sharedAPIHandler];
-      
-      [apiHandler fetchEventsForRoomNumber:[professorName intValue] onSuccess:^(NSArray<CalendarEventDataModel *> *events, NSString *actualProfessorName, NSString *professorEmail, NSString *calendarID){
-        fetching = false;
-        [self displayCalendar];
-        [self updateViewsWithBusyTimes:events];
-        [_loadingView setHidden:YES];
-        [_descriptionLabel setText:actualProfessorName];
-        _loadedSchedule = true;
-        _professorEmail = professorEmail;
-        _calendarID = calendarID;
-        [self setNeedsLayout];
-      } onFailure:^(NSString *error){
-        fetching = false;
-        NSLog(@"%@",error);
-      }];
-    }
   }
 }
+
+
+-(void)readLoop
+{
+  //TODO: Perform DreamStore Read
+  
+  GoogleAPIHandler *apiHandler = [GoogleAPIHandler sharedAPIHandler];
+  
+  [apiHandler fetchEventsForRoomNumber:[_calendarID intValue] onSuccess:^(NSArray<CalendarEventDataModel *> *events, NSString *actualProfessorName, NSString *professorEmail, NSString *calendarID){
+    fetching = false;
+    [self displayCalendar];
+    [self updateViewsWithBusyTimes:events];
+    [_loadingView setHidden:YES];
+    [_descriptionLabel setText:actualProfessorName];
+    _loadedSchedule = true;
+    _professorEmail = professorEmail;
+    [self setNeedsLayout];
+  } onFailure:^(NSString *error){
+    fetching = false;
+    NSLog(@"%@",error);
+  }];
+}
+
+
 
 -(void)updateViewsWithBusyTimes:(NSArray<CalendarEventDataModel *> *)busyTimes
 {
@@ -267,8 +274,6 @@ bool fetching = false;
 
 -(void)failedToDetermineProfessorName
 {
-//  [self professorNameDetermined:@""];
-  
   [_loadingView setHidden:YES];
   [_descriptionLabel setText:@"Unable to determine professor."];
   [self setNeedsLayout];
@@ -277,6 +282,7 @@ bool fetching = false;
 
 -(void)tapBegan:(CGPoint)tap
 {
+  //TODO: Perform an update
   
   if (_viewModels.count > 0) {
     CGPoint tapInCells = [self convertPoint:tap toView:_cellContainer];
@@ -305,6 +311,8 @@ bool fetching = false;
 
 -(void)submit
 {
+  //TODO: Perform a commit...
+  
   int startVmNum = 0;
   
   int i = 0;
@@ -329,10 +337,6 @@ bool fetching = false;
   
   NSDate *start = [_viewModels objectAtIndex:startVmNum].actualTime;
   NSDate *end = [[_viewModels objectAtIndex:endVmNum].actualTime dateByAddingTimeInterval:60*30];
-  
-  [[GoogleAPIHandler sharedAPIHandler] scheduleCalendarEventWithStudentEmail:@"MyWork1229@gmail.com" startTime:start endTime:end professorEmail:_professorEmail onCompletion:^{
-    
-  }];
 }
 
 -(void)tapMoved:(CGPoint)tap
