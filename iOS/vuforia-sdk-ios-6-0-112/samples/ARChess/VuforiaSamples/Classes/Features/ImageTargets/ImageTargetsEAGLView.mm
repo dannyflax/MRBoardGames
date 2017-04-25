@@ -108,12 +108,6 @@ static float kARViewPadding = 50.0f;
       // We have to actually render this view somewhere on the screen
       // to get the animations to appear in the projection
       [self addSubview:projectedView];
-    
-    
-      CalendarEventDataModel *event = [[CalendarEventDataModel alloc] initWithStartDate:[NSDate date] endDate:[NSDate dateWithTimeIntervalSinceNow:2000]];
-      NSString *serializedEvent = [event toJSONString];
-      CalendarEventDataModel *deserializedEvent = [CalendarEventDataModel fromJSONString:serializedEvent];
-      NSLog(@"%@", deserializedEvent);
   }
   
   return self;

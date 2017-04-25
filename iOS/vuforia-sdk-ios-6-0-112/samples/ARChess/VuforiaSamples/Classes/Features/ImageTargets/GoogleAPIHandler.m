@@ -312,6 +312,29 @@ OIDAuthStateErrorDelegate>
            @"professorEmail": _professorEmail};
 }
 
+-(NSString *)toJSONString
+{
+  NSError *error;
+  NSData *data = [NSJSONSerialization dataWithJSONObject:[self toDict] options:0 error:&error];
+  if (error) {
+    return nil;
+  } else {
+    return [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
+  }
+}
+
++(CalendarDataModel *)fromJSONString:(NSString *)jsonString
+{
+  NSError *error;
+  NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
+  if (error) {
+    return nil;
+  } else {
+    return [CalendarDataModel fromDict:dict];
+  }
+}
+
+
 +(CalendarDataModel *)fromDict:(NSDictionary *)dict
 {
   NSArray *eventDicts = (NSArray *)[dict objectForKey:@"events"];

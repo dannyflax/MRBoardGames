@@ -58,6 +58,12 @@ typedef void(^CalendarLookupFailureBlock)(NSString *error);
 @property (nonatomic) NSString *professorName;
 @property (nonatomic) NSString *professorEmail;
 @property (nonatomic) NSArray <CalendarEventDataModel *> *events;
+
++(CalendarDataModel *)fromJSONString:(NSString *)jsonString;
+-(NSString *)toJSONString;
+-(id)initWithEvents:(NSArray <CalendarEventDataModel *>*)events professorName:(NSString *)profName professorEmail:(NSString *)profEmail;
+-(NSDictionary *)toDict;
++(CalendarDataModel *)fromDict:(NSDictionary *)dict;
 @end
 
 @interface CalendarEventDataModel : NSObject
