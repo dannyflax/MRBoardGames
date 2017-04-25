@@ -305,7 +305,6 @@ bool fetching = false;
 
 -(void)submit
 {
-  
   int startVmNum = 0;
   
   int i = 0;
@@ -332,10 +331,7 @@ bool fetching = false;
   NSDate *end = [[_viewModels objectAtIndex:endVmNum].actualTime dateByAddingTimeInterval:60*30];
   
   [[GoogleAPIHandler sharedAPIHandler] scheduleCalendarEventWithStudentEmail:@"MyWork1229@gmail.com" startTime:start endTime:end professorEmail:_professorEmail onCompletion:^{
-    [[GoogleAPIHandler sharedAPIHandler] computeFreeBusyWithCalendarID:_calendarID onSuccess:^(NSArray *events, NSString *profName, NSString *profEmail, NSString *calendarID){
-      [self updateViewsWithBusyTimes:events];
-    } onFailure:^(NSString *error){
-    } professorName:@"" professorEmail:@""];
+    
   }];
 }
 

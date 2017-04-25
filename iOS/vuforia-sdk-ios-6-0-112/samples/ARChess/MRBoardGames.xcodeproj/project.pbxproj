@@ -676,6 +676,10 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = QE4Q39QVNE;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = ../../build/include;
 				INFOPLIST_FILE = "VuforiaSamples/ARChess-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -707,6 +711,10 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = QE4Q39QVNE;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = ../../build/include;
 				INFOPLIST_FILE = "VuforiaSamples/ARChess-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

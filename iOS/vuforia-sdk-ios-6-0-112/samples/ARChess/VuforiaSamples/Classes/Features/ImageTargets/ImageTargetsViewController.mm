@@ -141,9 +141,6 @@ countries.
     self.showingMenu = NO;
   
     [self.view addGestureRecognizer:tapGestureRecognizer];
-  
-    GoogleAPIHandler *apiHandler = [GoogleAPIHandler sharedAPIHandler];
-    [apiHandler authWithAutoCodeExchange:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated

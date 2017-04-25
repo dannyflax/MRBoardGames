@@ -198,128 +198,11 @@ OIDAuthStateErrorDelegate>
 // start dates and event summaries in the UITextView.
 - (void)fetchEventsForRoomNumber:(int)roomNumber onSuccess:(CalendarLookupSuccessBlock)successBlock onFailure:(CalendarLookupFailureBlock)failureBlock
 {
-  NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://script.googleapis.com/v1/scripts/%@:run",
-                                     kScriptID]];
-  // Create an execution request object.
-  GTLObject *request = [[GTLObject alloc] init];
-  [request setJSONValue:@"getRoomInfo" forKey:@"function"];
+  NSArray<CalendarEventDataModel *> *cEvent = [NSArray new];
   
-  [request setJSONValue:@[@(roomNumber)] forKey:@"parameters"];
-  
-  // Make the API request.
-  [self.coreService fetchObjectByInsertingObject:request
-                                          forURL:url
-                               completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
-                                 [self displayFoldersWithServiceTicket:ticket finishedWithObject:object error:error onSuccess:successBlock onFailure:failureBlock];
-  }];
+  successBlock(cEvent, @"Arnab", @"arnab@cse.org", [NSString stringWithFormat:@"%i", roomNumber]);
   
 }
-
-
-
-
-- (void)displayFoldersWithServiceTicket:(GTLServiceTicket *)ticket
-                     finishedWithObject:(GTLObject *)object
-                                  error:(NSError *)error
-                              onSuccess:(CalendarLookupSuccessBlock)successBlock
-                              onFailure:(CalendarLookupFailureBlock)failureBlock
-{
-  if (error == nil) {
-    if ([object.JSON objectForKey:@"error"] != nil) {
-      NSMutableString *output = [[NSMutableString alloc] init];
-      
-      // The API executed, but the script returned an error.
-      
-      // Extract the first (and only) set of error details and cast as a
-      // NSDictionary. The values of this dictionary are the script's
-      // 'errorMessage' and 'errorType', and an array of stack trace
-      // elements (which also need to be cast as NSDictionaries).
-      NSDictionary *err =
-      [[object.JSON objectForKey:@"error"] objectForKey:@"details"][0];
-      [output appendFormat:@"Script error message: %@\n",
-       [err objectForKey:@"errorMessage"]];
-      
-      if ([err objectForKey:@"scriptStackTraceElements"]) {
-        // There may not be a stacktrace if the script didn't start
-        // executing.
-        [output appendString:@"Script error stacktrace:\n"];
-        for (NSDictionary *trace in [err objectForKey:@"scriptStackTraceElements"]) {
-          [output appendFormat:@"\t%@: %@\n",
-           [trace objectForKey:@"function"],
-           [trace objectForKey:@"lineNumber"]];
-        }
-      }
-      
-      failureBlock(output);
-      
-    } else {
-      //Success!
-      
-      NSMutableArray *result = [[[object.JSON objectForKey:@"response"] objectForKey:@"result"] objectAtIndex:0];
-      
-      if (result && [result count] == 4) {
-        NSString *calendarID = [result objectAtIndex:1];
-        NSString *professorName = [result objectAtIndex:2];
-        NSString *professorEmail = [result objectAtIndex:3];
-        [self computeFreeBusyWithCalendarID:calendarID onSuccess:successBlock onFailure:failureBlock professorName:professorName professorEmail:professorEmail];
-      }
-    }
-  } else {
-    // The API encountered a problem before the script started executing.
-    failureBlock([error localizedDescription]);
-  }
-}
-
-
-- (void)computeFreeBusyWithCalendarID:(NSString *)calendarID
-                            onSuccess:(CalendarLookupSuccessBlock)successBlock
-                            onFailure:(CalendarLookupFailureBlock)failureBlock
-                        professorName:(NSString *)professorName
-                       professorEmail:(NSString *)professorEmail
-{
-  _professorCalendarID = calendarID;
-  
-  GTLQueryCalendar *query = [GTLQueryCalendar queryForFreebusyQuery];
-  
-  NSDate *today = [NSDate date];
-  NSCalendar *gregorian = [[NSCalendar alloc]
-                           initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-  
-  [gregorian setTimeZone:[NSTimeZone localTimeZone]];
-  
-  NSDateComponents *weekdayComponents =
-  [gregorian components:(NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitYear) fromDate:today];
-  [weekdayComponents setHour:0];
-  [weekdayComponents setMinute:0];
-  [weekdayComponents setSecond:0];
-  
-  NSDate *start = [gregorian dateFromComponents:weekdayComponents];
-  
-  query.timeMin = [GTLDateTime dateTimeWithDate:start
-                                       timeZone:[NSTimeZone localTimeZone]];
-  
-  query.timeMax = [GTLDateTime dateTimeWithDate:[start dateByAddingTimeInterval:60*60*24]
-                                       timeZone:[NSTimeZone localTimeZone]];
-  
-  query.singleEvents = YES;
-  query.orderBy = kGTLCalendarOrderByStartTime;
-  
-  GTLCalendarFreeBusyRequestItem *first = [GTLCalendarFreeBusyRequestItem new];
-  GTLCalendarFreeBusyRequestItem *second = [GTLCalendarFreeBusyRequestItem new];
-  
-  first.identifier = @"primary";
-  second.identifier = calendarID;
-  
-  
-  query.items = [NSArray arrayWithObjects:first,second, nil];
-  
-  query.singleEvents = NO;
-  
-  [self.service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error){
-    [self displayResultWithTicket:ticket finishedWithObject:object error:error onSuccess:successBlock onFailure:failureBlock professorName:professorName professorEmail:professorEmail calendarID:calendarID];
-  }];
-}
-
 
 - (void)displayResultWithTicket:(GTLServiceTicket *)ticket
              finishedWithObject:(GTLCalendarFreeBusyResponse *)result
@@ -377,16 +260,10 @@ OIDAuthStateErrorDelegate>
   event.start = start;
   event.end = end;
   
-  GTLQueryCalendar *query = [GTLQueryCalendar queryForEventsInsertWithObject:event calendarId:@"primary"];
+  UIAlertView *aView = [[UIAlertView alloc] initWithTitle:@"Successfully scheduled event" message:@"Successfully scheduled event with professor" delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+  [aView show];
   
-  [self.service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error){
-    if (!error) {
-      UIAlertView *aView = [[UIAlertView alloc] initWithTitle:@"Successfully scheduled event" message:@"Successfully scheduled event with professor" delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-      [aView show];
-    }
-    completion();
-  }];
-
+  completion();
 }
 
 
@@ -409,7 +286,52 @@ OIDAuthStateErrorDelegate>
 
 @end
 
+@implementation CalendarDataModel
+
+-(id)initWithEvents:(NSArray <CalendarEventDataModel *>*)events professorName:(NSString *)profName professorEmail:(NSString *)profEmail
+{
+  if (self = [super init]) {
+    _events = events;
+    _professorName = profName;
+    _professorEmail = profEmail;
+  }
+  
+  return self;
+}
+
+-(NSDictionary *)toDict
+{
+  NSMutableArray *eventDicts = [NSMutableArray new];
+  
+  for (CalendarEventDataModel *event in _events) {
+    [eventDicts addObject:[event toDict]];
+  }
+  
+  return @{@"events":eventDicts,
+           @"professorName": _professorName,
+           @"professorEmail": _professorEmail};
+}
+
++(CalendarDataModel *)fromDict:(NSDictionary *)dict
+{
+  NSArray *eventDicts = (NSArray *)[dict objectForKey:@"events"];
+  
+  NSMutableArray <CalendarEventDataModel *> *events = [NSMutableArray new];
+  
+  for (NSDictionary *eventDict in eventDicts) {
+    [events addObject:[CalendarEventDataModel fromDict:eventDict]];
+  }
+  
+  return [[CalendarDataModel alloc] initWithEvents:events
+                                     professorName:[dict objectForKey:@"professorName"]
+                                    professorEmail:[dict objectForKey:@"professorEmail"]];
+}
+
+@end
+
 @implementation CalendarEventDataModel
+
+static NSString *kDateFormat = @"yyyy-MM-dd HH:mm:ss";
 
 -(id)initWithStartDate:(NSDate *)startDate endDate:(NSDate *)endDate
 {
@@ -419,6 +341,43 @@ OIDAuthStateErrorDelegate>
   }
   
   return self;
+}
+
+-(NSDictionary *)toDict
+{
+  NSDateFormatter *frm = [NSDateFormatter new];
+  [frm setDateFormat:kDateFormat];
+  return @{@"start":[frm stringFromDate:_startDate],
+           @"end": [frm stringFromDate:_endDate]};
+}
+
+-(NSString *)toJSONString
+{
+  NSError *error;
+  NSData *data = [NSJSONSerialization dataWithJSONObject:[self toDict] options:0 error:&error];
+  if (error) {
+    return nil;
+  } else {
+    return [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
+  }
+}
+
++(CalendarEventDataModel *)fromJSONString:(NSString *)jsonString
+{
+  NSError *error;
+  NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
+  if (error) {
+    return nil;
+  } else {
+    return [CalendarEventDataModel fromDict:dict];
+  }
+}
+
++(CalendarEventDataModel *)fromDict:(NSDictionary *)dict
+{
+  NSDateFormatter *frm = [NSDateFormatter new];
+  [frm setDateFormat:kDateFormat];
+  return [[CalendarEventDataModel alloc] initWithStartDate:[frm dateFromString:[dict objectForKey:@"start"]] endDate:[frm dateFromString:[dict objectForKey:@"end"]]];
 }
 
 @end

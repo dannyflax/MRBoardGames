@@ -44,12 +44,6 @@ typedef void(^CalendarLookupFailureBlock)(NSString *error);
 
 - (void)scheduleCalendarEventWithStudentEmail:(NSString *)studentEmail startTime:(NSDate *)startTime endTime:(NSDate *)endTime professorEmail:(NSString *)professorEmail onCompletion:(void(^)())completion;
 
-- (void)computeFreeBusyWithCalendarID:(NSString *)calendarID
-                            onSuccess:(CalendarLookupSuccessBlock)successBlock
-                            onFailure:(CalendarLookupFailureBlock)failureBlock
-                        professorName:(NSString *)professorName
-                       professorEmail:(NSString *)professorEmail;
-
 - (void)clearAuthState;
 
 + (GoogleAPIHandler *)sharedAPIHandler;
@@ -60,10 +54,19 @@ typedef void(^CalendarLookupFailureBlock)(NSString *error);
 
 @end
 
+@interface CalendarDataModel : NSObject
+@property (nonatomic) NSString *professorName;
+@property (nonatomic) NSString *professorEmail;
+@property (nonatomic) NSArray <CalendarEventDataModel *> *events;
+@end
+
 @interface CalendarEventDataModel : NSObject
 
 -(id)initWithStartDate:(NSDate *)startDate endDate:(NSDate *)endDate;
-
+-(NSDictionary *)toDict;
+-(NSString *)toJSONString;
++(CalendarEventDataModel *)fromDict:(NSDictionary *)dict;
++(CalendarEventDataModel *)fromJSONString:(NSString *)jsonString;
 @property (nonatomic) NSDate *startDate;
 @property (nonatomic) NSDate *endDate;
 

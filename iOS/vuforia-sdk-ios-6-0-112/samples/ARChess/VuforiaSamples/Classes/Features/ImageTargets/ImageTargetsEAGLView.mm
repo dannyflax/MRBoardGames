@@ -26,6 +26,7 @@
 #import "Teapot.h"
 #import "Quad.h"
 #import "NumberRecognizer.h"
+#import "GoogleAPIHandler.h"
 
 //******************************************************************************
 // *** OpenGL ES thread safety ***
@@ -107,6 +108,12 @@ static float kARViewPadding = 50.0f;
       // We have to actually render this view somewhere on the screen
       // to get the animations to appear in the projection
       [self addSubview:projectedView];
+    
+    
+      CalendarEventDataModel *event = [[CalendarEventDataModel alloc] initWithStartDate:[NSDate date] endDate:[NSDate dateWithTimeIntervalSinceNow:2000]];
+      NSString *serializedEvent = [event toJSONString];
+      CalendarEventDataModel *deserializedEvent = [CalendarEventDataModel fromJSONString:serializedEvent];
+      NSLog(@"%@", deserializedEvent);
   }
   
   return self;
@@ -391,16 +398,18 @@ static float kARViewPadding = 50.0f;
 
 - (void)_parseRoomNumberFromStrings:(NSArray *)strings
 {
-  for (NSString *roomNumber in strings) {
-    if (roomNumber.length == 3) {
-      int number = [roomNumber intValue];
-      if (number != 0) {
-        [projectedView professorNameDetermined:roomNumber];
-        return;
-      }
-    }
-  }
-  [projectedView failedToDetermineProfessorName];
+//  for (NSString *roomNumber in strings) {
+//    if (roomNumber.length == 3) {
+//      int number = [roomNumber intValue];
+//      if (number != 0) {
+//        [projectedView professorNameDetermined:roomNumber];
+//        return;
+//      }
+//    }
+//  }
+//  [projectedView failedToDetermineProfessorName];
+  
+  [projectedView professorNameDetermined:@"657"];
 }
 
 - (void)handleCursorInputForPoint:(Point3D *)inputPoint receiver:(UIView<ARTouchReceiver> *)receiver
