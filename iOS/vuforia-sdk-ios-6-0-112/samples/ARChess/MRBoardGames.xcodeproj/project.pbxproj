@@ -32,7 +32,6 @@
 		EF6862D11DCFE336003F5488 /* ARTouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6862D01DCFE335003F5488 /* ARTouchableView.m */; };
 		EF83B5C31DE0CC02002C14AE /* monkey.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF83B5C21DE0CC02002C14AE /* monkey.obj */; };
 		EF83B5C71DE0CC70002C14AE /* modelUtil.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF83B5C51DE0CC70002C14AE /* modelUtil.mm */; };
-		EF8FEC401E2E63A700C266C3 /* GoogleAPIHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = EF8FEC3F1E2E63A700C266C3 /* GoogleAPIHandler.m */; };
 		EF9808951DDE0B680088FE4E /* libVuforia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D21B08791A1B6AEA0041ECF3 /* libVuforia.a */; };
 		EF9808981DDEC1FC0088FE4E /* ARInputHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF9808971DDEC1FC0088FE4E /* ARInputHandler.mm */; };
 		EF98089B1DDEC6F80088FE4E /* Point3D.m in Sources */ = {isa = PBXBuildFile; fileRef = EF98089A1DDEC6F80088FE4E /* Point3D.m */; };
@@ -107,8 +106,6 @@
 		EF83B5C21DE0CC02002C14AE /* monkey.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = monkey.obj; sourceTree = "<group>"; };
 		EF83B5C51DE0CC70002C14AE /* modelUtil.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = modelUtil.mm; sourceTree = "<group>"; };
 		EF83B5C61DE0CC70002C14AE /* modelUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modelUtil.h; sourceTree = "<group>"; };
-		EF8FEC3E1E2E63A700C266C3 /* GoogleAPIHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GoogleAPIHandler.h; path = Classes/Features/ImageTargets/GoogleAPIHandler.h; sourceTree = "<group>"; };
-		EF8FEC3F1E2E63A700C266C3 /* GoogleAPIHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GoogleAPIHandler.m; path = Classes/Features/ImageTargets/GoogleAPIHandler.m; sourceTree = "<group>"; };
 		EF9808961DDEC1FC0088FE4E /* ARInputHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARInputHandler.h; path = Classes/Features/ImageTargets/ARInputHandler.h; sourceTree = "<group>"; };
 		EF9808971DDEC1FC0088FE4E /* ARInputHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ARInputHandler.mm; path = Classes/Features/ImageTargets/ARInputHandler.mm; sourceTree = "<group>"; };
 		EF9808991DDEC6F80088FE4E /* Point3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point3D.h; path = Classes/Features/ImageTargets/Point3D.h; sourceTree = "<group>"; };
@@ -353,8 +350,6 @@
 		FB7A42E61A8E32BE0068CF5E /* ImageTargets */ = {
 			isa = PBXGroup;
 			children = (
-				EF8FEC3E1E2E63A700C266C3 /* GoogleAPIHandler.h */,
-				EF8FEC3F1E2E63A700C266C3 /* GoogleAPIHandler.m */,
 				EF5EE7331DEF92E00072998F /* NumberRecognizer.h */,
 				EF5EE7341DEF92E00072998F /* NumberRecognizer.m */,
 				FB7A434C1A8E38AB0068CF5E /* ImageTargetsEAGLView.h */,
@@ -538,7 +533,6 @@
 				8F467BCD1D18AC3F00682E4C /* SampleAppRenderer.mm in Sources */,
 				EF9808C01DE09DD80088FE4E /* SampleApplication3DModel.m in Sources */,
 				EF6862D11DCFE336003F5488 /* ARTouchableView.m in Sources */,
-				EF8FEC401E2E63A700C266C3 /* GoogleAPIHandler.m in Sources */,
 				EF9808C11DE09DD80088FE4E /* SampleApplicationSession.mm in Sources */,
 				EF57661A1DF6848F0000D9C0 /* CalendarCellViewModel.m in Sources */,
 				D21B07EF1A1B4AA20041ECF3 /* VuforiaSamplesAppDelegate.m in Sources */,
