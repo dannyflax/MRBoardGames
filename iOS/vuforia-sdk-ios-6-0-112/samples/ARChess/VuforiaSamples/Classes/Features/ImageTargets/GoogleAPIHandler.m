@@ -299,6 +299,11 @@ OIDAuthStateErrorDelegate>
   return self;
 }
 
++(CalendarDataModel *)empty
+{
+  return [[CalendarDataModel alloc] initWithEvents:[NSArray new] professorName:@"Unknown Calendar" professorEmail:@"Unknown Email"];
+}
+
 -(NSDictionary *)toDict
 {
   NSMutableArray *eventDicts = [NSMutableArray new];

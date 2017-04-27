@@ -9,6 +9,7 @@
 #import "ARTouchableView.h"
 #import "CalendarCellView.h"
 #import "GoogleAPIHandler.h"
+#import <DreamStoreFrontend/DreamStoreFrontend.h>
 
 static NSString *kLoadingString = @"Loading professor schedule...";
 static NSString *kSaveString = @"Schedule";
@@ -27,6 +28,7 @@ static const float kFooterSize = 50.0f;
   UIButton *_saveButton;
   NSString *_professorEmail;
   NSString *_calendarID;
+  id<DreamStore> _dreamStore;
 }
 
 -(id)initWithFrame:(CGRect)frame
@@ -199,6 +201,7 @@ bool fetching = false;
 -(void)professorNameDetermined:(NSString *)professorName
 {
   if (!fetching && ![professorName isEqualToString:@""]) {
+      _dreamStore = [DreamStoreAVM new];
       _calendarID = professorName;
       NSTimer *timer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(readLoop) userInfo:nil repeats:YES];
       [timer fire];
@@ -211,25 +214,36 @@ bool readDB = false;
 
 -(void)readLoop
 {
-  //TODO: Perform DreamStore Read
-  
   if (!readDB) {
-      NSString *actualProfessorName = @"Arnab Nandi";
-      NSString *professorEmail = @"arnab@cse.org";
-      NSArray *events = @[];
-      
-      _calendar = [[CalendarDataModel alloc] initWithEvents:events professorName:actualProfessorName professorEmail:professorEmail];
-      [self displayCalendar];
-      [self updateViewsWithBusyTimes:_calendar.events];
-      [_descriptionLabel setText:_calendar.professorName];
-      [_loadingView setHidden:YES];
-      _loadedSchedule = true;
-      [self setNeedsLayout];
     
       readDB = true;
+    
+      [_dreamStore select:_calendarID onSuccess:^(NSString *object){
+        if (object == (id)[NSNull null]) {
+          _calendar = [CalendarDataModel empty];
+        } else {
+          _calendar = [CalendarDataModel fromJSONString:object];
+        }
+        readDB = false;
+        
+        [self performSelectorOnMainThread:@selector(_updateViewsAfterServerRead) withObject:nil waitUntilDone:NO];
+        
+      } onFailure:^(NSString *error){
+        readDB = false;
+      }];
   }
 }
 
+
+-(void)_updateViewsAfterServerRead
+{
+  [self displayCalendar];
+  [self updateViewsWithBusyTimes:_calendar.events];
+  [_descriptionLabel setText:_calendar.professorName];
+  [_loadingView setHidden:YES];
+  _loadedSchedule = true;
+  [self setNeedsLayout];
+}
 
 
 -(void)updateViewsWithBusyTimes:(NSArray<CalendarEventDataModel *> *)busyTimes

@@ -1,5 +1,7 @@
 PODS:
   - AppAuth (0.4.2)
+  - DreamStoreFrontend (0.0.1):
+    - Unirest (~> 1.1.4)
   - GoogleAPIClient/Calendar (1.0.5):
     - GoogleAPIClient/Core
     - GTMSessionFetcher (~> 1.1)
@@ -13,18 +15,26 @@ PODS:
   - GTMSessionFetcher/Core (1.1.7)
   - GTMSessionFetcher/Full (1.1.7):
     - GTMSessionFetcher/Core (= 1.1.7)
+  - Unirest (1.1.4)
 
 DEPENDENCIES:
+  - DreamStoreFrontend (from `/Users/dannyflax/Documents/Research/dream/dreamstore/src/frontend`)
   - GoogleAPIClient/Calendar (~> 1.0.2)
   - GoogleAPIClient/Core (~> 1.0.2)
   - GTMAppAuth
 
+EXTERNAL SOURCES:
+  DreamStoreFrontend:
+    :path: /Users/dannyflax/Documents/Research/dream/dreamstore/src/frontend
+
 SPEC CHECKSUMS:
   AppAuth: 292151ac22065106b0bee6b80e3be29c95bda0fc
+  DreamStoreFrontend: 104b181f9a7ca3b860c7b6ed0095a0a07b9d4126
   GoogleAPIClient: 4a6b0b807de8b1115a2835180b25dd93dc60f1ea
   GTMAppAuth: 3f57495c702c78d68fa5cf1bced8519eec496963
   GTMSessionFetcher: a1f8ed39e4fe21c68957daed472c7afbcdf29166
+  Unirest: 5e4d93eaf32463bf619a4ecd3bbc8c32acf21eac
 
-PODFILE CHECKSUM: 8fca225a67b9d86c73d6affdaf0fa0e587f6745a
+PODFILE CHECKSUM: f5a9db71dabd6a5fba9d5ec02671811cc46724be
 
 COCOAPODS: 1.1.1
