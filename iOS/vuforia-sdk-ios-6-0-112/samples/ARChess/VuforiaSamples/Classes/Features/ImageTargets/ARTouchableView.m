@@ -12,7 +12,7 @@
 #import <DreamStoreFrontend/DreamStoreFrontend.h>
 
 static NSString *kLoadingString = @"Loading professor schedule...";
-static NSString *kSaveString = @"Schedule";
+static NSString *kSaveString = @"Save Changes";
 static const float kHeaderSize = 50.0f;
 static const float kFooterSize = 50.0f;
 
@@ -54,6 +54,10 @@ static const float kFooterSize = 50.0f;
     
     [self addSubview:_saveButton];
     
+    CalendarDataModel *dm = [CalendarDataModel empty];
+    NSString *serialized = [dm toJSONString];
+    CalendarDataModel *unserialized = [CalendarDataModel fromJSONString:serialized];
+    NSLog(@"%@", unserialized);
   }
   return self;
 }
@@ -61,7 +65,7 @@ static const float kFooterSize = 50.0f;
 int lengthInHours = 8;
 int startTime = 9;
 
-- (void)_setupInitialViewModels
+- (void)_setupAndPopulateInitialViewModels
 {
   NSMutableArray *initialViewModels = [NSMutableArray new];
   
@@ -85,7 +89,8 @@ int startTime = 9;
   }
   
   _viewModels = [NSArray arrayWithArray:initialViewModels];
-  [self _updateViews];
+  
+  [self updateViewsWithBusyTimes:_calendar.events];
 }
 
 - (NSDate *)_dateTodayWithHours:(int)hours minutes:(int)min isPm:(bool)isPm
@@ -234,17 +239,15 @@ bool readDB = false;
   }
 }
 
-
 -(void)_updateViewsAfterServerRead
 {
-  [self displayCalendar];
-  [self updateViewsWithBusyTimes:_calendar.events];
+  [_saveButton setHidden:NO];
+  [self _setupAndPopulateInitialViewModels];
   [_descriptionLabel setText:_calendar.professorName];
   [_loadingView setHidden:YES];
   _loadedSchedule = true;
   [self setNeedsLayout];
 }
-
 
 -(void)updateViewsWithBusyTimes:(NSArray<CalendarEventDataModel *> *)busyTimes
 {
@@ -260,12 +263,6 @@ bool readDB = false;
   }
   
   [self _updateViews];
-}
-
--(void)displayCalendar
-{
-  [_saveButton setHidden:NO];
-  [self _setupInitialViewModels];
 }
 
 -(void)failedToDetermineProfessorName
@@ -298,10 +295,11 @@ bool readDB = false;
         }
       }
       _calendar.events = mutatedEvents;
-      //TODO: Perform DreamStore Update
       
-      [self _setupInitialViewModels];
-      [self updateViewsWithBusyTimes:_calendar.events];
+      [_dreamStore update:[_calendar toJSONString] toKey:_calendarID onSuccess:^(id obj){
+      } onFailure:^(id failure){}];
+      
+      [self _setupAndPopulateInitialViewModels];
     }
     
   }
@@ -316,8 +314,15 @@ bool readDB = false;
 
 -(void)submit
 {
-  //TODO: Perform a commit...
-  
+  [_dreamStore commitWithOnSuccess:^(id obj){
+    [self performSelectorOnMainThread:@selector(_displaySuccessAlert) withObject:nil waitUntilDone:NO];
+  } onFailure:^(id failure){}];
+}
+
+-(void)_displaySuccessAlert
+{
+  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Successfully modified calendar." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+  [alert show];
 }
 
 -(void)tapMoved:(CGPoint)tap

@@ -324,14 +324,14 @@ OIDAuthStateErrorDelegate>
   if (error) {
     return nil;
   } else {
-    return [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
+    return [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
   }
 }
 
 +(CalendarDataModel *)fromJSONString:(NSString *)jsonString
 {
   NSError *error;
-  NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
+  NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSASCIIStringEncoding] options:0 error:&error];
   if (error) {
     return nil;
   } else {
@@ -386,14 +386,14 @@ static NSString *kDateFormat = @"yyyy-MM-dd HH:mm:ss";
   if (error) {
     return nil;
   } else {
-    return [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
+    return [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
   }
 }
 
 +(CalendarEventDataModel *)fromJSONString:(NSString *)jsonString
 {
   NSError *error;
-  NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
+  NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSASCIIStringEncoding] options:0 error:&error];
   if (error) {
     return nil;
   } else {
