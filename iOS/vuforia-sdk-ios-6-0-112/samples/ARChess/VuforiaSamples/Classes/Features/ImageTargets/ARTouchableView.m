@@ -8,7 +8,6 @@
 
 #import "ARTouchableView.h"
 #import "CalendarCellView.h"
-#import "GoogleAPIHandler.h"
 #import <DreamStoreFrontend/DreamStoreFrontend.h>
 
 static NSString *kLoadingString = @"Loading professor schedule...";
@@ -350,3 +349,128 @@ bool readDB = false;
 }
 
 @end
+
+@implementation CalendarDataModel
+
+-(id)initWithEvents:(NSArray <CalendarEventDataModel *>*)events professorName:(NSString *)profName professorEmail:(NSString *)profEmail
+{
+  if (self = [super init]) {
+    _events = events;
+    _professorName = profName;
+    _professorEmail = profEmail;
+  }
+  
+  return self;
+}
+
++(CalendarDataModel *)empty
+{
+  return [[CalendarDataModel alloc] initWithEvents:[NSArray new] professorName:@"Unknown Calendar" professorEmail:@"Unknown Email"];
+}
+
+-(NSDictionary *)toDict
+{
+  NSMutableArray *eventDicts = [NSMutableArray new];
+  
+  for (CalendarEventDataModel *event in _events) {
+    [eventDicts addObject:[event toDict]];
+  }
+  
+  return @{@"events":eventDicts,
+           @"professorName": _professorName,
+           @"professorEmail": _professorEmail};
+}
+
+-(NSString *)toJSONString
+{
+  NSError *error;
+  NSData *data = [NSJSONSerialization dataWithJSONObject:[self toDict] options:0 error:&error];
+  if (error) {
+    return nil;
+  } else {
+    return [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+  }
+}
+
++(CalendarDataModel *)fromJSONString:(NSString *)jsonString
+{
+  NSError *error;
+  NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSASCIIStringEncoding] options:0 error:&error];
+  if (error) {
+    return nil;
+  } else {
+    return [CalendarDataModel fromDict:dict];
+  }
+}
+
+
++(CalendarDataModel *)fromDict:(NSDictionary *)dict
+{
+  NSArray *eventDicts = (NSArray *)[dict objectForKey:@"events"];
+  
+  NSMutableArray <CalendarEventDataModel *> *events = [NSMutableArray new];
+  
+  for (NSDictionary *eventDict in eventDicts) {
+    [events addObject:[CalendarEventDataModel fromDict:eventDict]];
+  }
+  
+  return [[CalendarDataModel alloc] initWithEvents:events
+                                     professorName:[dict objectForKey:@"professorName"]
+                                    professorEmail:[dict objectForKey:@"professorEmail"]];
+}
+
+@end
+
+@implementation CalendarEventDataModel
+
+static NSString *kDateFormat = @"yyyy-MM-dd HH:mm:ss";
+
+-(id)initWithStartDate:(NSDate *)startDate endDate:(NSDate *)endDate
+{
+  if (self = [super init]) {
+    _startDate = startDate;
+    _endDate = endDate;
+  }
+  
+  return self;
+}
+
+-(NSDictionary *)toDict
+{
+  NSDateFormatter *frm = [NSDateFormatter new];
+  [frm setDateFormat:kDateFormat];
+  return @{@"start":[frm stringFromDate:_startDate],
+           @"end": [frm stringFromDate:_endDate]};
+}
+
+-(NSString *)toJSONString
+{
+  NSError *error;
+  NSData *data = [NSJSONSerialization dataWithJSONObject:[self toDict] options:0 error:&error];
+  if (error) {
+    return nil;
+  } else {
+    return [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+  }
+}
+
++(CalendarEventDataModel *)fromJSONString:(NSString *)jsonString
+{
+  NSError *error;
+  NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSASCIIStringEncoding] options:0 error:&error];
+  if (error) {
+    return nil;
+  } else {
+    return [CalendarEventDataModel fromDict:dict];
+  }
+}
+
++(CalendarEventDataModel *)fromDict:(NSDictionary *)dict
+{
+  NSDateFormatter *frm = [NSDateFormatter new];
+  [frm setDateFormat:kDateFormat];
+  return [[CalendarEventDataModel alloc] initWithStartDate:[frm dateFromString:[dict objectForKey:@"start"]] endDate:[frm dateFromString:[dict objectForKey:@"end"]]];
+}
+
+@end
+

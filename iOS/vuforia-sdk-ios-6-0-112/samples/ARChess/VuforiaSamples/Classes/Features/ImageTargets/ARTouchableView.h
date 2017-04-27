@@ -24,9 +24,37 @@
   UIView *subView;
 }
 
+
 -(void)professorNameDetermined:(NSString *)professorName;
 -(void)failedToDetermineProfessorName;
 -(bool)hasLoadedSchedule;
 -(void)toLoading;
+
+@end
+
+@class CalendarEventDataModel;
+
+@interface CalendarDataModel : NSObject
+@property (nonatomic) NSString *professorName;
+@property (nonatomic) NSString *professorEmail;
+@property (nonatomic) NSArray <CalendarEventDataModel *> *events;
+
++(CalendarDataModel *)fromJSONString:(NSString *)jsonString;
++(CalendarDataModel *)empty;
+-(NSString *)toJSONString;
+-(id)initWithEvents:(NSArray <CalendarEventDataModel *>*)events professorName:(NSString *)profName professorEmail:(NSString *)profEmail;
+-(NSDictionary *)toDict;
++(CalendarDataModel *)fromDict:(NSDictionary *)dict;
+@end
+
+@interface CalendarEventDataModel : NSObject
+
+-(id)initWithStartDate:(NSDate *)startDate endDate:(NSDate *)endDate;
+-(NSDictionary *)toDict;
+-(NSString *)toJSONString;
++(CalendarEventDataModel *)fromDict:(NSDictionary *)dict;
++(CalendarEventDataModel *)fromJSONString:(NSString *)jsonString;
+@property (nonatomic) NSDate *startDate;
+@property (nonatomic) NSDate *endDate;
 
 @end

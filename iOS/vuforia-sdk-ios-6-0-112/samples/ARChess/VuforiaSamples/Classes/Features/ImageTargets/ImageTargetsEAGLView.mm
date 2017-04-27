@@ -26,7 +26,6 @@
 #import "Teapot.h"
 #import "Quad.h"
 #import "NumberRecognizer.h"
-#import "GoogleAPIHandler.h"
 
 //******************************************************************************
 // *** OpenGL ES thread safety ***
