@@ -58,16 +58,9 @@ namespace {
   };
 }
 
-static const float kBoardSize = 200;
-static const float kBoardPadding = 50.0;
-
 static const float kViewTo3DScale = .25;
 
-static float kRedColor[3] =   {1.0, 0.0, 0.0};
 static float kGreenColor[3] = {0.0, 1.0, 0.0};
-static float kBlueColor[3] = {0.0, 1.0, 1.0};
-static float kWhiteColor[3] = {1.0, 1.0, 1.0};
-static float kBlackColor[3] = {.3, 0.3, 0.3};
 static float kARViewPadding = 50.0f;
 
 @interface ImageTargetsEAGLView (PrivateMethods)
@@ -133,8 +126,8 @@ static float kARViewPadding = 50.0f;
     currentViewTexture = -1;
   
     // Render this view off-screen
-    projectedView = [[ARTouchableView alloc] initWithFrame:CGRectMake(0.0, 1000.0, 500, 500)];
-    
+    [self resetView];
+  
     stylusHeld = NO;
     
     vapp = app;
@@ -360,11 +353,6 @@ static float kARViewPadding = 50.0f;
   
   if ([inputHandler backgroundInSight] && [inputHandler backgroundInFocus] && !_requestingFromAPI && ![projectedView hasLoadedSchedule]) {
     [projectedView toLoading];
-    
-//    [projectedView professorNameDetermined:@"657"];
-    
-    
-    
     _requestingFromAPI = YES;
     UIImage *detectionBuffer = [sampleAppRenderer grabCameraBufferForTextDetection];
     [NumberRecognizer createRequest:detectionBuffer onSuccess:^(NSArray *strings){
@@ -376,6 +364,12 @@ static float kARViewPadding = 50.0f;
       _requestingFromAPI = NO;
       [projectedView failedToDetermineProfessorName];
     }];
+  }
+  
+  if ([inputHandler backgroundInSight]) {
+    [projectedView frameWithFocus];
+  } else {
+    [projectedView frameWithoutFocus];
   }
   
   if ([inputHandler cursorInSight]) {
@@ -391,18 +385,18 @@ static float kARViewPadding = 50.0f;
 
 - (void)_parseRoomNumberFromStrings:(NSArray *)strings
 {
-//  for (NSString *roomNumber in strings) {
-//    if (roomNumber.length == 3) {
-//      int number = [roomNumber intValue];
-//      if (number != 0) {
-//        [projectedView professorNameDetermined:roomNumber];
-//        return;
-//      }
-//    }
-//  }
-//  [projectedView failedToDetermineProfessorName];
+  for (NSString *roomNumber in strings) {
+    if (roomNumber.length == 3) {
+      int number = [roomNumber intValue];
+      if (number != 0) {
+        [projectedView professorNameDetermined:roomNumber];
+        return;
+      }
+    }
+  }
+  [projectedView failedToDetermineProfessorName];
   
-  [projectedView professorNameDetermined:@"657"];
+//  [projectedView professorNameDetermined:@"657"];
 }
 
 - (void)handleCursorInputForPoint:(Point3D *)inputPoint receiver:(UIView<ARTouchReceiver> *)receiver
@@ -705,6 +699,18 @@ static float kARViewPadding = 50.0f;
 -(void)grabModeEnded
 {
   //No-op - no grabbing in this app
+}
+
+#pragma mark ARViewOwner
+
+-(void)resetView
+{
+  [NumberRecognizer cancelAllCurrentRequests];
+  _requestingFromAPI = NO;
+  [projectedView removeFromSuperview];
+  projectedView = [[ARTouchableView alloc] initWithFrame:CGRectMake(0.0, 1000.0, 500, 500)];
+  projectedView.owner = self;
+  [self addSubview:projectedView];
 }
 
 @end

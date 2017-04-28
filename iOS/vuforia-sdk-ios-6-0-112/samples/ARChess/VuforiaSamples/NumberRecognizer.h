@@ -19,5 +19,6 @@ typedef void (^NumberRecognizerSuccessBlock)(NSArray *strings);
 
 @interface NumberRecognizer : NSObject
 + (void) createRequest: (UIImage*)image onSuccess:(NumberRecognizerSuccessBlock)success onFailure:(NumberRecognizerErrorBlock)failure;
++ (void)cancelAllCurrentRequests;
 @end
 

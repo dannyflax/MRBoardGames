@@ -29,7 +29,7 @@ countries.
 
 // EAGLView is a subclass of UIView and conforms to the informal protocol
 // UIGLViewProtocol
-@interface ImageTargetsEAGLView : UIView <UIGLViewProtocol, SampleGLResourceHandler, SampleAppRendererControl, ARInputHandlerDelegate> {
+@interface ImageTargetsEAGLView : UIView <UIGLViewProtocol, SampleGLResourceHandler, SampleAppRendererControl, ARInputHandlerDelegate, ARTouchViewOwner> {
 @private
     ARInputHandler *inputHandler;
   

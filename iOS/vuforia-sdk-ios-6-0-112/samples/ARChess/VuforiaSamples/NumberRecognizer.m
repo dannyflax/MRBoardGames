@@ -20,6 +20,9 @@
 
 @implementation NumberRecognizer
 
+static int numberOfRequests = 0;
+static bool cancelingRequests = false;
+
 + (UIImage *) resizeImage: (UIImage*) image toSize: (CGSize)newSize {
     UIGraphicsBeginImageContext(newSize);
     [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
@@ -32,13 +35,13 @@
     NSData *imagedata = UIImagePNGRepresentation(image);
     
     // Resize the image if it exceeds the 2MB API limit
-    if ([imagedata length] > 2097152) {
+//    if ([imagedata length] > 2097152) {
         CGSize oldSize = [image size];
         CGSize newSize = CGSizeMake(800, oldSize.height / oldSize.width * 800);
         image = [NumberRecognizer resizeImage: image toSize: newSize];
         imagedata = UIImagePNGRepresentation(image);
-    }
-    
+//    }
+  
     NSString *base64String = [imagedata base64EncodedStringWithOptions:NSDataBase64EncodingEndLineWithCarriageReturn];
     return base64String;
 }
@@ -76,6 +79,8 @@
       NSData *requestData = [NSJSONSerialization dataWithJSONObject:paramsDictionary options:0 error:&error];
       [request setHTTPBody: requestData];
       
+      numberOfRequests++;
+      
       // Run the request on a background thread
       [NumberRecognizer runRequestOnBackgroundThread:request onSuccess:success onFailure:failure];
     });
@@ -85,9 +90,23 @@
 
 + (void)runRequestOnBackgroundThread: (NSMutableURLRequest*)request onSuccess:(NumberRecognizerSuccessBlock)success onFailure:(NumberRecognizerErrorBlock)failure{
     NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^ (NSData *data, NSURLResponse *response, NSError *error) {
+      numberOfRequests--;
+      if (cancelingRequests) {
+        if (numberOfRequests == 0) {
+          cancelingRequests = false;
+        }
+      } else {
         [NumberRecognizer analyzeResults:data onSuccess:success onFailure:failure];
+      }
     }];
     [task resume];
+}
+
++ (void)cancelAllCurrentRequests
+{
+  if (numberOfRequests > 0) {
+    cancelingRequests = true;
+  }
 }
 
 + (void)analyzeResults: (NSData*)dataToParse onSuccess:(NumberRecognizerSuccessBlock)success onFailure:(NumberRecognizerErrorBlock)failure{

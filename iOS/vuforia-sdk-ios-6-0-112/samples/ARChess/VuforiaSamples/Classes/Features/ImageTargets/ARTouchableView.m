@@ -28,11 +28,15 @@ static const float kFooterSize = 50.0f;
   NSString *_professorEmail;
   NSString *_calendarID;
   id<DreamStore> _dreamStore;
+  bool _fetching;
+  bool _readDB;
 }
 
 -(id)initWithFrame:(CGRect)frame
 {
   if (self = [super initWithFrame:frame]) {
+    _fetching = false;
+    _readDB = false;
     [self setBackgroundColor:[UIColor whiteColor]];
     _descriptionLabel = [UILabel new];
     [_descriptionLabel setText:kLoadingString];
@@ -166,7 +170,6 @@ int startTime = 9;
                                          _loadingView.frame.size.height + 15.0,
                                          _descriptionLabel.frame.size.width,
                                          _descriptionLabel.frame.size.height);
-  
   } else {
      [_descriptionLabel sizeToFit];
     
@@ -200,27 +203,24 @@ int startTime = 9;
   }
 }
 
-bool fetching = false;
 
 -(void)professorNameDetermined:(NSString *)professorName
 {
-  if (!fetching && ![professorName isEqualToString:@""]) {
+  if (!_fetching && ![professorName isEqualToString:@""]) {
       _dreamStore = [DreamStoreAVM new];
       _calendarID = professorName;
       NSTimer *timer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(readLoop) userInfo:nil repeats:YES];
       [timer fire];
-      fetching = true;
+      _fetching = true;
   }
 }
 
 
-bool readDB = false;
-
 -(void)readLoop
 {
-  if (!readDB) {
+  if (!_readDB) {
     
-      readDB = true;
+      _readDB = true;
     
       [_dreamStore select:_calendarID onSuccess:^(NSString *object){
         if (object == (id)[NSNull null]) {
@@ -228,12 +228,12 @@ bool readDB = false;
         } else {
           _calendar = [CalendarDataModel fromJSONString:object];
         }
-        readDB = false;
+        _readDB = false;
         
         [self performSelectorOnMainThread:@selector(_updateViewsAfterServerRead) withObject:nil waitUntilDone:NO];
         
       } onFailure:^(NSString *error){
-        readDB = false;
+        _readDB = false;
       }];
   }
 }
@@ -270,6 +270,16 @@ bool readDB = false;
   [_descriptionLabel setText:@"Unable to determine professor."];
   [self setNeedsLayout];
   _loadedSchedule = false;
+}
+
+-(void)frameWithFocus
+{
+  //No-op for now
+}
+
+-(void)frameWithoutFocus
+{
+  [_owner resetView];
 }
 
 -(void)tapBegan:(CGPoint)tap

@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol ARTouchViewOwner <NSObject>
+-(void)resetView;
+@end
+
 @protocol ARTouchReceiver <NSObject>
 -(void)tapBegan:(CGPoint)tap;
 
@@ -23,12 +27,14 @@
   CGPoint baseViewPoint;
   UIView *subView;
 }
-
+@property id<ARTouchViewOwner> owner;
 
 -(void)professorNameDetermined:(NSString *)professorName;
 -(void)failedToDetermineProfessorName;
 -(bool)hasLoadedSchedule;
 -(void)toLoading;
+-(void)frameWithFocus;
+-(void)frameWithoutFocus;
 
 @end
 
