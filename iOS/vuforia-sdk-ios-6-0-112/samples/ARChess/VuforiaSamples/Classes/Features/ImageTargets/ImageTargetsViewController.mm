@@ -25,6 +25,7 @@ countries.
 #import "PresentMenuSegue.h"
 #import "SampleAppMenuViewController.h"
 
+#import "DreamStoreInterface.h"
 
 @interface ImageTargetsViewController ()
 
@@ -674,6 +675,11 @@ countries.
             }
         }
     }
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+  [DreamStoreInterface printCallLog];
 }
 
 @end

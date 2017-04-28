@@ -26,6 +26,7 @@
 #import "Teapot.h"
 #import "Quad.h"
 #import "NumberRecognizer.h"
+#import "DreamStoreAVM.h"
 
 //******************************************************************************
 // *** OpenGL ES thread safety ***
@@ -356,11 +357,9 @@ static float kARViewPadding = 50.0f;
     _requestingFromAPI = YES;
     UIImage *detectionBuffer = [sampleAppRenderer grabCameraBufferForTextDetection];
     [NumberRecognizer createRequest:detectionBuffer onSuccess:^(NSArray *strings){
-      NSLog(@"%@", [strings description]);
       _requestingFromAPI = NO;
       [self _parseRoomNumberFromStrings:strings];
     } onFailure:^(NSString *errorMessage){
-      NSLog(@"%@",errorMessage);
       _requestingFromAPI = NO;
       [projectedView failedToDetermineProfessorName];
     }];

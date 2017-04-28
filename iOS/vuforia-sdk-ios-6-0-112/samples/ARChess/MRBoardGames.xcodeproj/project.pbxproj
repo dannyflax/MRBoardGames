@@ -50,6 +50,7 @@
 		EF9808D21DE09DE30088FE4E /* Simple.fragsh in Resources */ = {isa = PBXBuildFile; fileRef = EF9808CB1DE09DE30088FE4E /* Simple.fragsh */; };
 		EF9808D31DE09DE30088FE4E /* Simple.vertsh in Resources */ = {isa = PBXBuildFile; fileRef = EF9808CC1DE09DE30088FE4E /* Simple.vertsh */; };
 		EF9808D41DE09DE30088FE4E /* SimpleWithColor.fragsh in Resources */ = {isa = PBXBuildFile; fileRef = EF9808CD1DE09DE30088FE4E /* SimpleWithColor.fragsh */; };
+		EF9FA6171EB3E73000BCB6AF /* DreamStoreHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = EF9FA6161EB3E73000BCB6AF /* DreamStoreHolder.m */; };
 		FB7A431E1A8E376B0068CF5E /* building_texture.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FB7A42E71A8E376B0068CF5E /* building_texture.jpeg */; };
 		FB7A431F1A8E376B0068CF5E /* buildings.txt in Resources */ = {isa = PBXBuildFile; fileRef = FB7A42E81A8E376B0068CF5E /* buildings.txt */; };
 		FB7A432B1A8E376B0068CF5E /* IT_about.html in Resources */ = {isa = PBXBuildFile; fileRef = FB7A42F81A8E376B0068CF5E /* IT_about.html */; };
@@ -136,6 +137,8 @@
 		EF9808CB1DE09DE30088FE4E /* Simple.fragsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Simple.fragsh; path = Classes/SampleApplication/shaders/Simple.fragsh; sourceTree = "<group>"; };
 		EF9808CC1DE09DE30088FE4E /* Simple.vertsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Simple.vertsh; path = Classes/SampleApplication/shaders/Simple.vertsh; sourceTree = "<group>"; };
 		EF9808CD1DE09DE30088FE4E /* SimpleWithColor.fragsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleWithColor.fragsh; path = Classes/SampleApplication/shaders/SimpleWithColor.fragsh; sourceTree = "<group>"; };
+		EF9FA6151EB3E73000BCB6AF /* DreamStoreHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DreamStoreHolder.h; sourceTree = "<group>"; };
+		EF9FA6161EB3E73000BCB6AF /* DreamStoreHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DreamStoreHolder.m; sourceTree = "<group>"; };
 		FB7A42E71A8E376B0068CF5E /* building_texture.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = building_texture.jpeg; path = Resources/Assets/building_texture.jpeg; sourceTree = "<group>"; };
 		FB7A42E81A8E376B0068CF5E /* buildings.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = buildings.txt; path = Resources/Assets/buildings.txt; sourceTree = "<group>"; };
 		FB7A42F81A8E376B0068CF5E /* IT_about.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = IT_about.html; sourceTree = "<group>"; };
@@ -350,6 +353,8 @@
 		FB7A42E61A8E32BE0068CF5E /* ImageTargets */ = {
 			isa = PBXGroup;
 			children = (
+				EF9FA6151EB3E73000BCB6AF /* DreamStoreHolder.h */,
+				EF9FA6161EB3E73000BCB6AF /* DreamStoreHolder.m */,
 				EF5EE7331DEF92E00072998F /* NumberRecognizer.h */,
 				EF5EE7341DEF92E00072998F /* NumberRecognizer.m */,
 				FB7A434C1A8E38AB0068CF5E /* ImageTargetsEAGLView.h */,
@@ -544,6 +549,7 @@
 				D21B07EC1A1B4AA20041ECF3 /* main.m in Sources */,
 				EF9808C31DE09DD80088FE4E /* SampleApplicationUtils.cpp in Sources */,
 				EF9808C51DE09DD80088FE4E /* Texture.mm in Sources */,
+				EF9FA6171EB3E73000BCB6AF /* DreamStoreHolder.m in Sources */,
 				EF9808C41DE09DD80088FE4E /* SampleAppMenuViewController.mm in Sources */,
 				FB7A43511A8E38AB0068CF5E /* ImageTargetsViewController.mm in Sources */,
 				EF5766171DF6845F0000D9C0 /* CalendarCellView.m in Sources */,

@@ -118,7 +118,6 @@ static bool cancelingRequests = false;
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:dataToParse options:kNilOptions error:&e];
         
         NSArray *responses = [json objectForKey:@"responses"];
-        NSLog(@"%@", responses);
         NSDictionary *responseData = [responses objectAtIndex: 0];
         NSDictionary *errorObj = [json objectForKey:@"error"];
         

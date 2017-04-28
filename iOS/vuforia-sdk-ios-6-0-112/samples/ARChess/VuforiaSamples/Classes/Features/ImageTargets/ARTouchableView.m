@@ -9,6 +9,7 @@
 #import "ARTouchableView.h"
 #import "CalendarCellView.h"
 #import <DreamStoreFrontend/DreamStoreFrontend.h>
+#import "DreamStoreHolder.h"
 
 static NSString *kLoadingString = @"Loading professor schedule...";
 static NSString *kSaveString = @"Save Changes";
@@ -30,11 +31,13 @@ static const float kFooterSize = 50.0f;
   id<DreamStore> _dreamStore;
   bool _fetching;
   bool _readDB;
+  NSTimer *_readTimer;
 }
 
 -(id)initWithFrame:(CGRect)frame
 {
   if (self = [super initWithFrame:frame]) {
+    _dreamStore = [DreamStoreHolder sharedDreamStore];
     _fetching = false;
     _readDB = false;
     [self setBackgroundColor:[UIColor whiteColor]];
@@ -56,11 +59,6 @@ static const float kFooterSize = 50.0f;
     
     
     [self addSubview:_saveButton];
-    
-    CalendarDataModel *dm = [CalendarDataModel empty];
-    NSString *serialized = [dm toJSONString];
-    CalendarDataModel *unserialized = [CalendarDataModel fromJSONString:serialized];
-    NSLog(@"%@", unserialized);
   }
   return self;
 }
@@ -207,10 +205,8 @@ int startTime = 9;
 -(void)professorNameDetermined:(NSString *)professorName
 {
   if (!_fetching && ![professorName isEqualToString:@""]) {
-      _dreamStore = [DreamStoreAVM new];
       _calendarID = professorName;
-      NSTimer *timer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(readLoop) userInfo:nil repeats:YES];
-      [timer fire];
+      _readTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(readLoop) userInfo:nil repeats:YES];
       _fetching = true;
   }
 }

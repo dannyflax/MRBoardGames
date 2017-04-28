@@ -23,6 +23,7 @@ countries.
 #import "ARInputHandler.h"
 #import "Point3D.h"
 #import "modelUtil.h"
+#import "DreamStore.h"
 
 #define kNumAugmentationTextures 4
 
