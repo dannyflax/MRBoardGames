@@ -62,10 +62,8 @@ countries.
 
 namespace {
     // --- Data private to this unit ---
-    
-    
-    static const float kViewTo3DScale = .0025;
-    static float kARViewPadding = 50.0f;
+    static const float kViewTo3DScale = (.75) / 1000.0f;
+    static float kARViewPadding = (150.0f) / 1000.0f;
     const float skyColor[] = {0.4f, 0.5f, 0.6f, 1.0f};
 }
 
@@ -890,7 +888,7 @@ namespace {
         
         SampleApplicationUtils::rotatePoseMatrix(90.0f, 0.0, 0.0, 1.0, bgModelViewCopy);
 
-        SampleApplicationUtils::translatePoseMatrix(-kViewTo3DScale * (labelWidth + kARViewPadding), -kViewTo3DScale * (labelHeight/2.0), 0.0, bgModelViewCopy);
+        SampleApplicationUtils::translatePoseMatrix(-(labelWidth + kARViewPadding),  -(labelHeight/2.0), 0.0, bgModelViewCopy);
         
         SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], bgModelViewCopy, objModelViewProjection);
         

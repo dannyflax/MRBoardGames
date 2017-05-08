@@ -36,8 +36,6 @@ static const int kCameraFocusFrames = 20;
   int _cameraFocusCount;
 }
 
-const float kObjectScaleNormal = 3.0f;
-
 - (id)init{
   if (self = [super init]) {
     _grabbingMode = NO;
@@ -81,15 +79,6 @@ const float kObjectScaleNormal = 3.0f;
     
     //const Vuforia::Trackable& trackable = result->getTrackable();
     Vuforia::Matrix44F modelViewMatrix = Vuforia::Tool::convertPose2GLMatrix(result->getPose());
-    
-    // OpenGL 2
-    Vuforia::Matrix44F modelViewProjection;
-    
-
-//    SampleApplicationUtils::translatePoseMatrix(0.0f, 0.0f, kObjectScaleNormal, &modelViewMatrix.data[0]);
-//    SampleApplicationUtils::scalePoseMatrix(kObjectScaleNormal, kObjectScaleNormal, kObjectScaleNormal, &modelViewMatrix.data[0]);
-//    
-//    SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], &modelViewMatrix.data[0], &modelViewProjection.data[0]);
     
     
     if (targetIndex == 1) {
