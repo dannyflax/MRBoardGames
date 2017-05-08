@@ -64,6 +64,7 @@ namespace {
     // --- Data private to this unit ---
     static const float kViewTo3DScale = (.75) / 1000.0f;
     static float kARViewPadding = (150.0f) / 1000.0f;
+    static float kGreenColor[3] = {0.0, 1.0, 0.0};
     const float skyColor[] = {0.4f, 0.5f, 0.6f, 1.0f};
 }
 
@@ -99,6 +100,8 @@ namespace {
     ARInputHandler *_inputHandler;
     GLuint _currentViewTexture;
     ARTouchableView *_projectedView;
+    demoModel *_monkeySource;
+    bool stylusHeld;
 }
 
 @synthesize vapp = vapp;
@@ -139,11 +142,15 @@ namespace {
         vapp = app;
         mIsStereo = isStereo;
         mIsVR = isVR;
+        stylusHeld = NO;
         
         _inputHandler = [ARInputHandler new];
         _currentViewTexture = -1;
         
         _projectedView = [[ARTouchableView alloc] initWithFrame:CGRectMake(0.0, 1000.0, 500, 500)];
+        
+        NSString *filePathName = [[NSBundle mainBundle] pathForResource:@"monkey" ofType:@"obj"];
+        _monkeySource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
         
         // We have to actually render this view somewhere on the screen
         // to get the animations to appear in the projection
@@ -225,11 +232,6 @@ namespace {
     
     const Vuforia::State state = Vuforia::TrackerManager::getInstance().getStateUpdater().updateState();
     mRenderer.begin(state);
-    
-    
-//    [self deleteOpenGLViewTexture];
-    
-    
     
     if(_currentRenderingPrimitives == nullptr)
         [self updateRenderingPrimitives];
@@ -820,8 +822,14 @@ namespace {
 
     [self drawViewToBackgroundIfNecessary:_projectedView projectionMatrix:projectionMatrix];
     
-//    [self drawCursorIfNecessary:projectionMatrix];
-//    
+    [self drawCursorIfNecessary:projectionMatrix];
+    
+    if ([_inputHandler cursorInSight] && viewId != Vuforia::VIEW_RIGHTEYE) {
+        Point3D *currentPos = [_inputHandler currentPos];
+        [self handleCursorInputForPoint:currentPos receiver:_projectedView];
+    }
+    
+//
 //    if ([inputHandler backgroundInSight] && [inputHandler backgroundInFocus] && !_requestingFromAPI && ![projectedView hasLoadedSchedule]) {
 //        [projectedView toLoading];
 //        _requestingFromAPI = YES;
@@ -841,10 +849,7 @@ namespace {
 //        [projectedView frameWithoutFocus];
 //    }
 //    
-//    if ([inputHandler cursorInSight]) {
-//        currentPos = [inputHandler currentPos];
-//        [self handleCursorInputForPoint:currentPos receiver:projectedView];
-//    }
+    
     
     
     
@@ -866,6 +871,29 @@ namespace {
     if(Vuforia::Device::getInstance().isViewerActive())
     {
         glDisable(GL_SCISSOR_TEST);
+    }
+}
+
+- (void)drawCursorIfNecessary:(Vuforia::Matrix44F)projectionMatrix
+{
+    if ([_inputHandler cursorInSight]) {
+//        [self drawCursorOccludedLayerToImageView:occlusionView withProjectionMatrix:projectionMatrix];
+        
+        Vuforia::Matrix44F cursorModelView = [_inputHandler cursorModelView];
+        
+        float cursorOffset[3] = {-.247/2.0, .173/2.0, 0.0};
+        
+        float objModelViewProjection[16];
+        
+        SampleApplicationUtils::translatePoseMatrix(cursorOffset[0],cursorOffset[1],cursorOffset[2],&cursorModelView.data[0]);
+        
+        SampleApplicationUtils::multiplyMatrix(&projectionMatrix.data[0], &cursorModelView.data[0], objModelViewProjection);
+        
+        [self drawModelWithMvp:objModelViewProjection modelSource:_monkeySource modelScale:12.0/1000.0 textureID:-1 color:kGreenColor flipped:NO];
+        
+    } else {
+//        if(occlusionView.image)
+//            [occlusionView setImage:nil];
     }
 }
 
@@ -914,11 +942,36 @@ namespace {
     }
 }
 
-- (void)deleteOpenGLViewTexture
+- (void)handleCursorInputForPoint:(Point3D *)inputPoint receiver:(UIView<ARTouchReceiver> *)receiver
 {
-    if (_currentViewTexture != -1) {
-        glDeleteTextures(1, &_currentViewTexture);
-        _currentViewTexture = -1;
+    bool touching = inputPoint.z <= 0.0;
+    
+    float labelWidth = receiver.bounds.size.width;
+    float labelHeight = receiver.bounds.size.height;
+    CGPoint pointInView = CGPointMake(
+                                      (inputPoint.y / kViewTo3DScale) + (labelWidth + kARViewPadding / kViewTo3DScale),
+                                      (inputPoint.x / kViewTo3DScale) + (labelHeight/2.0)
+                                      );
+    
+    if (touching) {
+        if ([receiver pointInside:pointInView withEvent:nil]) {
+            if (stylusHeld) {
+                [receiver tapMoved:pointInView];
+            } else {
+                [receiver tapBegan:pointInView];
+                stylusHeld = YES;
+            }
+        } else {
+            if (stylusHeld) {
+                [receiver tapEnded:pointInView];
+                stylusHeld = NO;
+            }
+        }
+    } else {
+        if (stylusHeld) {
+            [receiver tapEnded:pointInView];
+            stylusHeld = NO;
+        }
     }
 }
 

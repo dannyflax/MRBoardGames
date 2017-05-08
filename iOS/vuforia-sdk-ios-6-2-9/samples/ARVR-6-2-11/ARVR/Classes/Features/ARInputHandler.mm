@@ -198,10 +198,10 @@ static const int kCameraFocusFrames = 20;
     float invertedBackgroundRotation[9];
     float multipliedResult[3];
     
-    float cursorOffset[3] = {-247.0/6.0, 173.0/6.0, 0.0};
+    float cursorOffset[3] = {-.247/2.0, .173/2.0, 0.0};
     float rotatedCursorOffset[3];
     
-    float w_scale = .333;
+    float w_scale = 1.0;
     
     //rotation is orthonormal
     SampleApplicationUtils::mtx3x3Transpose(invertedBackgroundRotation, backgroundRotation);

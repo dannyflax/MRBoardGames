@@ -74,6 +74,7 @@
 		EF0129001EC0F95600F2D75A /* StonesAndChips.dat in Resources */ = {isa = PBXBuildFile; fileRef = EF0128FE1EC0F95600F2D75A /* StonesAndChips.dat */; };
 		EF0129011EC0F95600F2D75A /* StonesAndChips.xml in Resources */ = {isa = PBXBuildFile; fileRef = EF0128FF1EC0F95600F2D75A /* StonesAndChips.xml */; };
 		EF0129041EC0FD9B00F2D75A /* modelUtil.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF0129021EC0FD9B00F2D75A /* modelUtil.mm */; };
+		EF349FE91EC11C5800DF50BF /* monkey.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF349FE81EC11C5800DF50BF /* monkey.obj */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -169,6 +170,7 @@
 		EF0129021EC0FD9B00F2D75A /* modelUtil.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = modelUtil.mm; sourceTree = "<group>"; };
 		EF0129031EC0FD9B00F2D75A /* modelUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modelUtil.h; sourceTree = "<group>"; };
 		EF0129051EC0FFB300F2D75A /* Quad.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Quad.h; sourceTree = "<group>"; };
+		EF349FE81EC11C5800DF50BF /* monkey.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = monkey.obj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -324,6 +326,7 @@
 		8F05432A1C4F0B8C00B6F754 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				EF349FE81EC11C5800DF50BF /* monkey.obj */,
 				8F6F25681C505084003B44D9 /* logo.png */,
 				8F6F25661C50507D003B44D9 /* background.png */,
 				8FE7A4A71C4F14CA00E540EE /* ARVR */,
@@ -479,6 +482,7 @@
 				8F94F63A1C52DEA2003D6E05 /* Lighting.vertsh in Resources */,
 				8F05439A1C4F0B8C00B6F754 /* Localizable.strings in Resources */,
 				8F42FD3E1C5187FC00AB9225 /* Mountain_VR.v3d in Resources */,
+				EF349FE91EC11C5800DF50BF /* monkey.obj in Resources */,
 				8F05438F1C4F0B8C00B6F754 /* Simple.fragsh in Resources */,
 				8FFCF0631C597A4500B19E53 /* DistoMesh.fragsh in Resources */,
 				EF0129011EC0F95600F2D75A /* StonesAndChips.xml in Resources */,

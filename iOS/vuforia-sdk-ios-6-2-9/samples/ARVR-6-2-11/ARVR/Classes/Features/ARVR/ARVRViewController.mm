@@ -307,6 +307,8 @@ countries.
     [loadingIndicator removeFromSuperview];
     
     if (initError == nil) {
+        Vuforia::setHint(Vuforia::HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 2);
+
         NSError * error = nil;
 
         // The camera must be initialized before initApplicationAR as Device::setMode()

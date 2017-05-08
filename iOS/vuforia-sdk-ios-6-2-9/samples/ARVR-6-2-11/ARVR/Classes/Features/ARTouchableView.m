@@ -23,9 +23,12 @@
 
 #pragma mark ARTouchReceiver
 
+bool toggle = false;
+
 -(void)tapBegan:(CGPoint)tap
 {
-    
+    toggle = !toggle;
+    self.backgroundColor = toggle ? [UIColor whiteColor] : [UIColor greenColor];
 }
 
 -(void)tapMoved:(CGPoint)tap
