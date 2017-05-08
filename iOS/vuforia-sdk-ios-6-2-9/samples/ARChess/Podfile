@@ -1,0 +1,13 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'MRBoardGames' do
+  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for MRBoardGames
+  pod 'GTMAppAuth'
+  pod 'GoogleAPIClient/Calendar', '~> 1.0.2'
+  pod 'GoogleAPIClient/Core', '~> 1.0.2'
+  pod 'DreamStoreFrontend', :path => '/Users/dannyflax/Documents/Research/dream/dreamstore/src/frontend'
+end
