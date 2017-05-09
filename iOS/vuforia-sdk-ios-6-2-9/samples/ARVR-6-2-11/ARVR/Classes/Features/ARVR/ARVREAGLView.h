@@ -92,7 +92,7 @@
 
 - (id)initWithFrame:(CGRect)frame appSession:(SampleApplicationSession *) app isStereo:(bool) isStereo isVR:(bool) isVR;
 - (void)updateRenderingPrimitives;
-
+- (void)updateViewTexture;
 - (void)finishOpenGLESCommands;
 - (void)freeOpenGLESResources;
 - (void)loadModels;

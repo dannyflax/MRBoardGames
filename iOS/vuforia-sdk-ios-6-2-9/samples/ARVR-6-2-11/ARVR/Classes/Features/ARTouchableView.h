@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 
 @protocol ARTouchViewOwner <NSObject>
 -(void)resetView;
@@ -24,4 +25,6 @@
 {
 }
 @property id<ARTouchViewOwner> owner;
+@property AVPlayer *avPlayer;
+@property AVPlayerItemVideoOutput *avOutput;
 @end

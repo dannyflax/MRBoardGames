@@ -105,6 +105,12 @@ namespace {
     demoModel *_monkeySource;
     UIView *_emptyView;
     bool stylusHeld;
+    
+    CVPixelBufferRef _storedBuffer;
+    CVOpenGLESTextureCacheRef _videoTextureCache;
+    
+    CVOpenGLESTextureRef _avTexture;
+    CVPixelBufferRef _avPbuffer;
 }
 
 @synthesize vapp = vapp;
@@ -147,6 +153,7 @@ namespace {
         mIsVR = isVR;
         stylusHeld = NO;
 
+        [self turnTorchOn:YES];
         
         _inputHandler = [ARInputHandler new];
         _currentViewTexture = -1;
@@ -178,6 +185,13 @@ namespace {
         // Set it the first time this method is called (on the main thread)
         if (context != [EAGLContext currentContext]) {
             [EAGLContext setCurrentContext:context];
+        }
+        
+        if (!_videoTextureCache) {
+            CVReturn err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, context, NULL, &_videoTextureCache);
+            if (err != noErr) {
+                NSLog(@"Error at CVOpenGLESTextureCacheCreate %d", err);
+            }
         }
         
         // Initialise the viewer distortion
@@ -235,6 +249,17 @@ namespace {
 // *** Vuforia will call this method periodically on a background thread ***
 - (void)renderFrameVuforia
 {
+    if (_avTexture) {
+        CFRelease(_avTexture);
+        _avTexture = NULL;
+    }
+    
+    if (_avPbuffer) {
+        CVBufferRelease(_avPbuffer);
+        _avPbuffer = nil;
+    }
+
+    
     if (! vapp.cameraIsStarted) {
         return;
     }
@@ -405,7 +430,6 @@ namespace {
     
     [self presentFramebuffer];
     mRenderer.end();
-    
 }
 
 //------------------------------------------------------------------------------
@@ -679,11 +703,6 @@ namespace {
     glUseProgram(vbShaderProgramID);
     glVertexAttribPointer(vbVertexHandle, 3, GL_FLOAT, false, 0, vbMesh.getPositionCoordinates());
     glVertexAttribPointer(vbTexCoordHandle, 2, GL_FLOAT, false, 0, vbMesh.getUVCoordinates());
-    
-    const Vuforia::Vec2F *uvs = vbMesh.getUVs();
-    for(int i = 0; i < vbMesh.getNumVertices(); i++) {
-        NSLog(@"%f, %f",uvs[i].data[0],uvs[i].data[1]);
-    }
     
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, vbMaskTextureID);
@@ -966,6 +985,13 @@ namespace {
         
         GLuint viewTexture = [self makeViewOpenGLTexture:viewToDraw usesMask:NO];
         
+        if (viewTexture == CVOpenGLESTextureGetName(_avTexture))
+        {
+            NSLog(@"EQ");
+        } else{
+            NSLog(@"NOT EQ");
+        }
+        
         float labelWidth = viewToDraw.bounds.size.width * kViewTo3DScale;
         float labelHeight = viewToDraw.bounds.size.height * kViewTo3DScale;
         
@@ -1036,6 +1062,9 @@ namespace {
     }
 }
 
+float first = YES;
+CMTime firstTime = kCMTimeZero;
+
 - (GLuint)makeViewOpenGLTexture:(UIView *)view usesMask:(bool)usesMask
 {
     if (_currentViewTexture != -1) {
@@ -1045,14 +1074,71 @@ namespace {
     int width = view.bounds.size.width;
     int height = view.bounds.size.height;
     
-    GLubyte *pixelBuffer = (GLubyte *)malloc(
-                                             4 *
-                                             width *
-                                             height);
+    glActiveTexture(GL_TEXTURE2);
+    
+    if ([view isKindOfClass:[ARTouchableView class]]) {
+        
+        
+        
+        ARTouchableView *tv = ((ARTouchableView *)view);
+        
+        CMTime testTime;
+        testTime.epoch = 0;
+        testTime.flags = 1;
+        testTime.value = 0;
+        testTime.timescale = 1000000000;
+        
+        
+        if ([tv.avOutput hasNewPixelBufferForItemTime:tv.avPlayer.currentTime]) {
+            _avPbuffer = [tv.avOutput copyPixelBufferForItemTime:tv.avPlayer.currentTime itemTimeForDisplay:NULL];
+            
+            CVOpenGLESTextureCacheFlush(_videoTextureCache, 0);
+            
+            int frameWidth = (int)CVPixelBufferGetWidth(_avPbuffer);
+            int frameHeight = (int)CVPixelBufferGetHeight(_avPbuffer);
+            
+            CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
+                                                         _videoTextureCache,
+                                                         _avPbuffer,
+                                                         NULL,
+                                                         GL_TEXTURE_2D,
+                                                         GL_RED_EXT,
+                                                         frameWidth,
+                                                         frameHeight,
+                                                         GL_RED_EXT,
+                                                         GL_UNSIGNED_BYTE,
+                                                         0,
+                                                         &_avTexture);
+            
+            GLuint tName = CVOpenGLESTextureGetName(_avTexture);
+
+            glBindTexture(CVOpenGLESTextureGetTarget(_avTexture), CVOpenGLESTextureGetName(_avTexture));
+            
+            // these must be defined for non mipmapped nPOT textures (double check)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            
+            _currentViewTexture = tName;
+            
+            return tName;
+        }
+    }
+    
+    
+    CVPixelBufferRef pixelBuffer;
+    CGContextRef textureContext = nullptr;
+    
+    pixelBuffer = (CVPixelBufferRef)malloc(
+                                           4 *
+                                           width *
+                                           height);
     
     // create a suitable CoreGraphics context
     CGColorSpaceRef colourSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef textureContext =
+    textureContext =
     CGBitmapContextCreate(pixelBuffer,
                           width, height,
                           8, 4*width,
@@ -1060,15 +1146,11 @@ namespace {
                           kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
     CGColorSpaceRelease(colourSpace);
     
-    // draw the view to the buffer
-    
     if(usesMask) {
         [view.layer renderInContext:textureContext];
     } else {
         [view.layer.presentationLayer renderInContext:textureContext];
     }
-    
-    glActiveTexture(GL_TEXTURE2);
     
     GLuint textureID;
     

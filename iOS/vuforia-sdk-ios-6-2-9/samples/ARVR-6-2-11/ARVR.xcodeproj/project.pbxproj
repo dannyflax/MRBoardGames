@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8F05436D1C4F0B8C00B6F754 /* ARVR-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8F0542B81C4F0B8C00B6F754 /* ARVR-Info.plist */; };
 		8F05436E1C4F0B8C00B6F754 /* ARVRAboutViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8F0542BD1C4F0B8C00B6F754 /* ARVRAboutViewController.mm */; };
 		8F0543891C4F0B8C00B6F754 /* SampleApplication3DModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F0543061C4F0B8C00B6F754 /* SampleApplication3DModel.m */; };
 		8F05438A1C4F0B8C00B6F754 /* SampleApplicationSession.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8F0543081C4F0B8C00B6F754 /* SampleApplicationSession.mm */; };
@@ -74,6 +73,8 @@
 		EF0129001EC0F95600F2D75A /* StonesAndChips.dat in Resources */ = {isa = PBXBuildFile; fileRef = EF0128FE1EC0F95600F2D75A /* StonesAndChips.dat */; };
 		EF0129011EC0F95600F2D75A /* StonesAndChips.xml in Resources */ = {isa = PBXBuildFile; fileRef = EF0128FF1EC0F95600F2D75A /* StonesAndChips.xml */; };
 		EF0129041EC0FD9B00F2D75A /* modelUtil.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF0129021EC0FD9B00F2D75A /* modelUtil.mm */; };
+		EF20AA1B1EC25BE800517207 /* IMG_3782.MOV in Resources */ = {isa = PBXBuildFile; fileRef = EF20AA1A1EC25BE800517207 /* IMG_3782.MOV */; };
+		EF20AA1F1EC2B45100517207 /* vietnam.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = EF20AA1E1EC2B3C200517207 /* vietnam.mp4 */; };
 		EF349FE91EC11C5800DF50BF /* monkey.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF349FE81EC11C5800DF50BF /* monkey.obj */; };
 /* End PBXBuildFile section */
 
@@ -170,6 +171,8 @@
 		EF0129021EC0FD9B00F2D75A /* modelUtil.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = modelUtil.mm; sourceTree = "<group>"; };
 		EF0129031EC0FD9B00F2D75A /* modelUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modelUtil.h; sourceTree = "<group>"; };
 		EF0129051EC0FFB300F2D75A /* Quad.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Quad.h; sourceTree = "<group>"; };
+		EF20AA1A1EC25BE800517207 /* IMG_3782.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = IMG_3782.MOV; sourceTree = "<group>"; };
+		EF20AA1E1EC2B3C200517207 /* vietnam.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = vietnam.mp4; sourceTree = "<group>"; };
 		EF349FE81EC11C5800DF50BF /* monkey.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = monkey.obj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -318,6 +321,8 @@
 		8F0543291C4F0B8C00B6F754 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EF20AA1E1EC2B3C200517207 /* vietnam.mp4 */,
+				EF20AA1A1EC25BE800517207 /* IMG_3782.MOV */,
 				8F05432A1C4F0B8C00B6F754 /* Assets */,
 			);
 			path = Resources;
@@ -444,7 +449,7 @@
 		D21B07DE1A1B4AA10041ECF3 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = PTC;
 				TargetAttributes = {
 					D21B07E51A1B4AA20041ECF3 = {
@@ -476,6 +481,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF20AA1F1EC2B45100517207 /* vietnam.mp4 in Resources */,
 				8F6F25691C505084003B44D9 /* logo.png in Resources */,
 				8F0543981C4F0B8C00B6F754 /* Main.storyboard in Resources */,
 				8F0543991C4F0B8C00B6F754 /* Images.xcassets in Resources */,
@@ -483,6 +489,7 @@
 				8F05439A1C4F0B8C00B6F754 /* Localizable.strings in Resources */,
 				8F42FD3E1C5187FC00AB9225 /* Mountain_VR.v3d in Resources */,
 				EF349FE91EC11C5800DF50BF /* monkey.obj in Resources */,
+				EF20AA1B1EC25BE800517207 /* IMG_3782.MOV in Resources */,
 				8F05438F1C4F0B8C00B6F754 /* Simple.fragsh in Resources */,
 				8FFCF0631C597A4500B19E53 /* DistoMesh.fragsh in Resources */,
 				EF0129011EC0F95600F2D75A /* StonesAndChips.xml in Resources */,
@@ -491,7 +498,6 @@
 				8F94F63C1C52DF3D003D6E05 /* Lighting.fragsh in Resources */,
 				8F6F25671C50507D003B44D9 /* background.png in Resources */,
 				8F0543C01C4F0B8C00B6F754 /* TextureTeapotGreen.png in Resources */,
-				8F05436D1C4F0B8C00B6F754 /* ARVR-Info.plist in Resources */,
 				8F0543971C4F0B8C00B6F754 /* InfoPlist.strings in Resources */,
 				8F6F25631C504B1D003B44D9 /* LaunchScreen.storyboard in Resources */,
 				8F05438E1C4F0B8C00B6F754 /* Line.vertsh in Resources */,
@@ -568,7 +574,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -578,16 +583,20 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -600,7 +609,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -612,7 +621,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -622,8 +630,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -632,13 +642,14 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -649,7 +660,6 @@
 		D21B080A1A1B4AA20041ECF3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
@@ -671,7 +681,6 @@
 		D21B080B1A1B4AA20041ECF3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
