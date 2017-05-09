@@ -10,8 +10,13 @@
 precision mediump float;
 varying vec2 texCoord;
 uniform sampler2D texSampler2D;
-
+uniform sampler2D maskSampler2D;
+uniform float texAlpha;
 void main ()
 {
- gl_FragColor = texture2D(texSampler2D, texCoord);
+  vec4 sampleColor = texture2D(texSampler2D, texCoord);
+  vec4 maskColor = texture2D(maskSampler2D, texCoord);
+  sampleColor.a = texAlpha;
+    sampleColor.r = maskColor.r;
+  gl_FragColor = sampleColor;
 }

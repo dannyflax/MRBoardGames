@@ -60,7 +60,9 @@
     GLint vbVertexHandle;
     GLint vbTexCoordHandle;
     GLint vbTexSampler2DHandle;
+    GLint vbMaskSampler2DCoordHandle;
     GLint vbProjectionMatrixHandle;
+    GLint vbTexAlphaHandle;
     
     // For distortion rendering when docked in a viewer
     unsigned int distoShaderProgramID;
@@ -71,6 +73,8 @@
     GLuint viewerDistortionTextureID;
     GLuint viewerDepthTextureID;
     GLuint viewerDistortionFboID;
+    
+    GLuint vbMaskTextureID;
     
     // Texture used when rendering augmentation
     Texture* augmentationTexture[kNumAugmentationTextures];

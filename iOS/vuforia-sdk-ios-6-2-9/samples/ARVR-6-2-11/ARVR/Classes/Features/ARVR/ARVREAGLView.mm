@@ -84,7 +84,8 @@ namespace {
 
 - (void) renderVideoBackgroundWithViewId:(Vuforia::VIEW)viewId
                              textureUnit:(int)vbVideoTextureUnit
-                                viewPort:(Vuforia::Vec4I) viewport;
+                                viewPort:(Vuforia::Vec4I)viewport
+                                   alpha:(float)alpha;
 
 - (void) renderVRWorldWithDeviceViewPose:(float *)deviceViewPose
                         projectionMatrix:(float *)projectionMatrix;
@@ -101,6 +102,7 @@ namespace {
     GLuint _currentViewTexture;
     ARTouchableView *_projectedView;
     demoModel *_monkeySource;
+    UIView *_emptyView;
     bool stylusHeld;
 }
 
@@ -149,12 +151,20 @@ namespace {
         
         _projectedView = [[ARTouchableView alloc] initWithFrame:CGRectMake(0.0, 1000.0, 500, 500)];
         
+        _emptyView = [[UIView alloc] initWithFrame:frame];
+        CGRect frm = _emptyView.frame;
+        frm.origin.y = 1000.0f;
+        _emptyView.frame = frm;
+        [_emptyView setBackgroundColor:[UIColor orangeColor]];
+        
         NSString *filePathName = [[NSBundle mainBundle] pathForResource:@"monkey" ofType:@"obj"];
         _monkeySource = loadFile([filePathName cStringUsingEncoding:NSASCIIStringEncoding]);
         
         // We have to actually render this view somewhere on the screen
         // to get the animations to appear in the projection
         [self addSubview:_projectedView];
+        
+        [self addSubview:_emptyView];
         
         // Enable retina mode if available on this device
         [self determineContentScaleFactor];
@@ -427,8 +437,10 @@ namespace {
     if (0 < vbShaderProgramID) {
         vbVertexHandle = glGetAttribLocation(vbShaderProgramID, "vertexPosition");
         vbTexCoordHandle = glGetAttribLocation(vbShaderProgramID, "vertexTexCoord");
+        vbMaskSampler2DCoordHandle = glGetUniformLocation(vbShaderProgramID, "maskSampler2D");
         vbProjectionMatrixHandle = glGetUniformLocation(vbShaderProgramID, "projectionMatrix");
         vbTexSampler2DHandle = glGetUniformLocation(vbShaderProgramID, "texSampler2D");
+        vbTexAlphaHandle = glGetUniformLocation(vbShaderProgramID, "texAlpha");
     }
     else {
         NSLog(@"Could not initialise video background shader");
@@ -630,7 +642,9 @@ namespace {
 - (void) renderVideoBackgroundWithViewId:(Vuforia::VIEW)viewId
                              textureUnit:(int)vbVideoTextureUnit
                                 viewPort:(Vuforia::Vec4I)viewport
+                                   alpha:(float)alpha
 {
+    
     Vuforia::Matrix44F vbProjectionMatrix = Vuforia::Tool::convert2GLMatrix(
                   _currentRenderingPrimitives->getVideoBackgroundProjectionMatrix(viewId, Vuforia::COORDINATE_SYSTEM_CAMERA));
     
@@ -656,13 +670,28 @@ namespace {
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     
+    glEnable(GL_BLEND);
+    
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
     const Vuforia::Mesh& vbMesh = _currentRenderingPrimitives->getVideoBackgroundMesh(viewId);
     // Load the shader and upload the vertex/texcoord/index data
     glUseProgram(vbShaderProgramID);
     glVertexAttribPointer(vbVertexHandle, 3, GL_FLOAT, false, 0, vbMesh.getPositionCoordinates());
     glVertexAttribPointer(vbTexCoordHandle, 2, GL_FLOAT, false, 0, vbMesh.getUVCoordinates());
     
-    glUniform1i(vbTexSampler2DHandle, vbVideoTextureUnit);
+    const Vuforia::Vec2F *uvs = vbMesh.getUVs();
+    for(int i = 0; i < vbMesh.getNumVertices(); i++) {
+        NSLog(@"%f, %f",uvs[i].data[0],uvs[i].data[1]);
+    }
+    
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, vbMaskTextureID);
+    
+    glUniform1i(vbTexSampler2DHandle, 0);
+    glUniform1i(vbMaskSampler2DCoordHandle, 1);
+    
+    glUniform1f(vbTexAlphaHandle, alpha);
     
     // Render the video background with the custom shader
     // First, we enable the vertex arrays
@@ -679,6 +708,8 @@ namespace {
     // Finally, we disable the vertex arrays
     glDisableVertexAttribArray(vbVertexHandle);
     glDisableVertexAttribArray(vbTexCoordHandle);
+    
+    glDisable(GL_BLEND);
     
     SampleApplicationUtils::checkGlError("Rendering of the video background failed");
 }
@@ -788,6 +819,14 @@ namespace {
                               viewId:(Vuforia::VIEW)viewId
                             viewport:(Vuforia::Vec4I)viewport
 {
+    
+    // Check if the viewer is active and adjust the projection matrix for the augmentation using the sceneScale
+    if(Vuforia::Device::getInstance().isViewerActive()) {
+        float sceneScaleFactor = [self getSceneScaleFactorWithViewId:viewId];
+        (&projectionMatrix.data[0])[0] *= sceneScaleFactor;
+        (&projectionMatrix.data[0])[5] *= sceneScaleFactor;
+    }
+    
     // Use texture unit 0 for the video background - this will hold the camera frame and we want to reuse for all views
     // So need to use a different texture unit for the augmentation
     int vbVideoTextureUnit = 0;
@@ -795,7 +834,6 @@ namespace {
     // Bind the video bg texture and get the Texture ID from Vuforia
     Vuforia::GLTextureUnit tex;
     tex.mTextureUnit = vbVideoTextureUnit;
-    
 
     if (! Vuforia::Renderer::getInstance().updateVideoBackgroundTexture(&tex))
     {
@@ -803,21 +841,24 @@ namespace {
         return;
     }
     
+    [self drawCursorOccludedLayerToImageView:nil withProjectionMatrix:projectionMatrix];
+    
+    
+    
+//    glBindTexture(<#GLenum target#>, <#GLuint texture#>)
+    
+    
     [self renderVideoBackgroundWithViewId:viewId
                               textureUnit:vbVideoTextureUnit
-                                 viewPort:viewport];
+                                 viewPort:viewport
+                                    alpha:1.0f];
  
     glClear(GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
    
-    // Check if the viewer is active and adjust the projection matrix for the augmentation using the sceneScale
-    if(Vuforia::Device::getInstance().isViewerActive()) {
-        float sceneScaleFactor = [self getSceneScaleFactorWithViewId:viewId];        
-        (&projectionMatrix.data[0])[0] *= sceneScaleFactor;
-        (&projectionMatrix.data[0])[5] *= sceneScaleFactor;
-    }
+    
     
 
     [self drawViewToBackgroundIfNecessary:_projectedView projectionMatrix:projectionMatrix];
@@ -828,6 +869,17 @@ namespace {
         Point3D *currentPos = [_inputHandler currentPos];
         [self handleCursorInputForPoint:currentPos receiver:_projectedView];
     }
+    
+//    if (! Vuforia::Renderer::getInstance().updateVideoBackgroundTexture(&tex))
+//    {
+//        NSLog(@"Unable to bind video background texture!!");
+//        return;
+//    }
+    
+    
+//    [self renderVideoBackgroundWithViewId:viewId
+//                              textureUnit:vbVideoTextureUnit
+//                                 viewPort:viewport alpha:0.5];
     
 //
 //    if ([inputHandler backgroundInSight] && [inputHandler backgroundInFocus] && !_requestingFromAPI && ![projectedView hasLoadedSchedule]) {
@@ -877,8 +929,6 @@ namespace {
 - (void)drawCursorIfNecessary:(Vuforia::Matrix44F)projectionMatrix
 {
     if ([_inputHandler cursorInSight]) {
-//        [self drawCursorOccludedLayerToImageView:occlusionView withProjectionMatrix:projectionMatrix];
-        
         Vuforia::Matrix44F cursorModelView = [_inputHandler cursorModelView];
         
         float cursorOffset[3] = {-.247/2.0, .173/2.0, 0.0};
@@ -903,7 +953,7 @@ namespace {
     if ([_inputHandler backgroundInSight]) {
         Vuforia::Matrix44F bgModelView = [_inputHandler backgroundModelView];
         
-        GLuint viewTexture = [self makeViewOpenGLTexture:viewToDraw];
+        GLuint viewTexture = [self makeViewOpenGLTexture:viewToDraw usesMask:NO];
         
         float labelWidth = viewToDraw.bounds.size.width * kViewTo3DScale;
         float labelHeight = viewToDraw.bounds.size.height * kViewTo3DScale;
@@ -975,16 +1025,14 @@ namespace {
     }
 }
 
-- (GLuint)makeViewOpenGLTexture:(UIView *)view
+- (GLuint)makeViewOpenGLTexture:(UIView *)view usesMask:(bool)usesMask
 {
     if (_currentViewTexture != -1) {
         glDeleteTextures(1, &_currentViewTexture);
     }
     
-    
     int width = view.bounds.size.width;
     int height = view.bounds.size.height;
-    
     
     GLubyte *pixelBuffer = (GLubyte *)malloc(
                                              4 *
@@ -1002,9 +1050,14 @@ namespace {
     CGColorSpaceRelease(colourSpace);
     
     // draw the view to the buffer
-    [view.layer.presentationLayer renderInContext:textureContext];
     
+    if(usesMask) {
+        [view.layer renderInContext:textureContext];
+    } else {
+        [view.layer.presentationLayer renderInContext:textureContext];
+    }
     
+    glActiveTexture(GL_TEXTURE2);
     
     GLuint textureID;
     
@@ -1031,6 +1084,71 @@ namespace {
     _currentViewTexture = textureID;
     
     return textureID;
+}
+
+- (void)drawCursorOccludedLayerToImageView:(UIImageView *)imageView withProjectionMatrix:(Vuforia::Matrix44F)projectionMatrix
+{
+    NSArray *croppingPath;
+    if ([_inputHandler cursorInSight]) {
+        float vpScaleX = .83;
+        float vpScaleY = 1.81;
+        
+        int vpWidth = static_cast<int>(vapp.viewport.sizeX * .8);
+        int vpHeight = static_cast<int>(vapp.viewport.sizeY * 1.48);
+        
+        int viewPort[4] = { vapp.viewport.posX, vapp.viewport.posY, static_cast<int>(vapp.viewport.sizeX * vpScaleX), static_cast<int>(vapp.viewport.sizeY * vpScaleY) };
+        
+        float point1[3], point2[3], point3[3], point4[3];
+        
+        float halfWidth = .247/2.0;
+        float halfHeight = .173/2.0;
+        
+        Vuforia::Matrix44F cursorModelView = [_inputHandler cursorModelView];
+        
+        SampleApplicationUtils::glhProjectf(-halfWidth, -halfHeight, 0.0f, cursorModelView.data, projectionMatrix.data, viewPort, point1);
+        
+        SampleApplicationUtils::glhProjectf(halfWidth, -halfHeight, 0.0f, cursorModelView.data, projectionMatrix.data, viewPort, point2);
+        
+        SampleApplicationUtils::glhProjectf(halfWidth, halfHeight, 0.0f, cursorModelView.data, projectionMatrix.data, viewPort, point3);
+        
+        SampleApplicationUtils::glhProjectf(-halfWidth, halfHeight, 0.0f, cursorModelView.data, projectionMatrix.data, viewPort, point4);
+        
+        croppingPath = [[NSArray alloc] initWithObjects:
+                         [NSValue valueWithCGPoint:CGPointMake(vpWidth - point1[0], vpHeight - point1[1])],
+                         [NSValue valueWithCGPoint:CGPointMake(vpWidth - point2[0], vpHeight - point2[1])],
+                         [NSValue valueWithCGPoint:CGPointMake(vpWidth - point3[0], vpHeight - point3[1])],
+                         [NSValue valueWithCGPoint:CGPointMake(vpWidth - point4[0], vpHeight - point4[1])],
+                         nil];
+        
+        
+    } else {
+        croppingPath = [[NSArray alloc] initWithObjects:
+                                 [NSValue valueWithCGPoint:CGPointMake(0, 0)],
+                                 [NSValue valueWithCGPoint:CGPointMake(0, 0)],
+                                 [NSValue valueWithCGPoint:CGPointMake(0, 0)],
+                                 [NSValue valueWithCGPoint:CGPointMake(0, 0)],
+                                 nil];
+    }
+    
+    UIBezierPath *aPath = [UIBezierPath bezierPath];
+    
+    bool first = true;
+    for (NSValue *pValue in croppingPath) {
+        CGPoint point = [pValue CGPointValue];
+        if (first) {
+            [aPath moveToPoint:point];
+            first = false;
+        } else {
+            [aPath addLineToPoint:point];
+        }
+    }
+    
+    [aPath closePath];
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+    shapeLayer.path = aPath.CGPath;
+    [_emptyView.layer setMask:shapeLayer];
+    
+    vbMaskTextureID = [self makeViewOpenGLTexture:_emptyView usesMask:YES];
 }
 
 
