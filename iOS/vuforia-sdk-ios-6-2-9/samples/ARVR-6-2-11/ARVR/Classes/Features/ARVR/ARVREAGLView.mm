@@ -11,6 +11,7 @@ countries.
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 #import <sys/time.h>
+#import <AVFoundation/AVFoundation.h>
 
 #import <Vuforia/Vuforia.h>
 #import <Vuforia/TrackerManager.h>
@@ -841,12 +842,7 @@ namespace {
         return;
     }
     
-    [self drawCursorOccludedLayerForView:viewId withProjectionMatrix:projectionMatrix];
-    
-    
-    
-//    glBindTexture(<#GLenum target#>, <#GLuint texture#>)
-    
+    [self drawCursorOccludedLayerForView:viewId withProjectionMatrix:projectionMatrix clipsToCursor:NO];
     
     [self renderVideoBackgroundWithViewId:viewId
                               textureUnit:vbVideoTextureUnit
@@ -857,13 +853,17 @@ namespace {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-   
-    
-    
 
     [self drawViewToBackgroundIfNecessary:_projectedView projectionMatrix:projectionMatrix];
     
     [self drawCursorIfNecessary:projectionMatrix];
+    
+    [self drawCursorOccludedLayerForView:viewId withProjectionMatrix:projectionMatrix clipsToCursor:YES];
+    
+    [self renderVideoBackgroundWithViewId:viewId
+                              textureUnit:vbVideoTextureUnit
+                                 viewPort:viewport
+                                    alpha:.3f];
     
     if ([_inputHandler cursorInSight] && viewId != Vuforia::VIEW_RIGHTEYE) {
         Point3D *currentPos = [_inputHandler currentPos];
@@ -1086,84 +1086,89 @@ namespace {
     return textureID;
 }
 
-- (void)drawCursorOccludedLayerForView:(Vuforia::VIEW)view withProjectionMatrix:(Vuforia::Matrix44F)projectionMatrix
+- (void)drawCursorOccludedLayerForView:(Vuforia::VIEW)view withProjectionMatrix:(Vuforia::Matrix44F)projectionMatrix clipsToCursor:(bool)clipsToCursor
 {
-    NSArray *croppingPath;
-    if ([_inputHandler cursorInSight]) {
-        float vpScaleX = .625;
-        float vpScaleY = .703;
-        
-        float wScale = .625;
-        float hScale = 1;
-        
-        if (view == Vuforia::VIEW_LEFTEYE) {
-            vpScaleX = .83;
-            vpScaleY = 1.81;
-            
-            wScale = .8;
-            hScale = 1.48;
-        } else if (view == Vuforia::VIEW_RIGHTEYE) {
-            vpScaleX = .83;
-            vpScaleY = 1.81;
-            
-            wScale = .66;
-            hScale = 1.48;
-        }
-        
-        int vpWidth = static_cast<int>(vapp.viewport.sizeX * wScale);
-        int vpHeight = static_cast<int>(vapp.viewport.sizeY * hScale);
-        
-        int viewPort[4] = { vapp.viewport.posX, vapp.viewport.posY, static_cast<int>(vapp.viewport.sizeX * vpScaleX), static_cast<int>(vapp.viewport.sizeY * vpScaleY) };
-        
-        float point1[3], point2[3], point3[3], point4[3];
-        
-        float halfWidth = .247/2.0;
-        float halfHeight = .173/2.0;
-        
-        Vuforia::Matrix44F cursorModelView = [_inputHandler cursorModelView];
-        
-        SampleApplicationUtils::glhProjectf(-halfWidth, -halfHeight, 0.0f, cursorModelView.data, projectionMatrix.data, viewPort, point1);
-        
-        SampleApplicationUtils::glhProjectf(halfWidth, -halfHeight, 0.0f, cursorModelView.data, projectionMatrix.data, viewPort, point2);
-        
-        SampleApplicationUtils::glhProjectf(halfWidth, halfHeight, 0.0f, cursorModelView.data, projectionMatrix.data, viewPort, point3);
-        
-        SampleApplicationUtils::glhProjectf(-halfWidth, halfHeight, 0.0f, cursorModelView.data, projectionMatrix.data, viewPort, point4);
-        
-        croppingPath = [[NSArray alloc] initWithObjects:
-                         [NSValue valueWithCGPoint:CGPointMake(vpWidth - point1[0], vpHeight - point1[1])],
-                         [NSValue valueWithCGPoint:CGPointMake(vpWidth - point2[0], vpHeight - point2[1])],
-                         [NSValue valueWithCGPoint:CGPointMake(vpWidth - point3[0], vpHeight - point3[1])],
-                         [NSValue valueWithCGPoint:CGPointMake(vpWidth - point4[0], vpHeight - point4[1])],
-                         nil];
-        
-        
+    if (!clipsToCursor) {
+        _emptyView.layer.mask = nil;
     } else {
-        croppingPath = [[NSArray alloc] initWithObjects:
-                                 [NSValue valueWithCGPoint:CGPointMake(0, 0)],
-                                 [NSValue valueWithCGPoint:CGPointMake(0, 0)],
-                                 [NSValue valueWithCGPoint:CGPointMake(0, 0)],
-                                 [NSValue valueWithCGPoint:CGPointMake(0, 0)],
-                                 nil];
-    }
-    
-    UIBezierPath *aPath = [UIBezierPath bezierPath];
-    
-    bool first = true;
-    for (NSValue *pValue in croppingPath) {
-        CGPoint point = [pValue CGPointValue];
-        if (first) {
-            [aPath moveToPoint:point];
-            first = false;
+        NSArray *croppingPath;
+        
+        if ([_inputHandler cursorInSight]) {
+            float vpScaleX = .625;
+            float vpScaleY = .703;
+            
+            float wScale = .625;
+            float hScale = 1;
+            
+            if (view == Vuforia::VIEW_LEFTEYE) {
+                vpScaleX = .83;
+                vpScaleY = 1.81;
+                
+                wScale = .8;
+                hScale = 1.48;
+            } else if (view == Vuforia::VIEW_RIGHTEYE) {
+                vpScaleX = .83;
+                vpScaleY = 1.81;
+                
+                wScale = .66;
+                hScale = 1.48;
+            }
+            
+            int vpWidth = static_cast<int>(vapp.viewport.sizeX * wScale);
+            int vpHeight = static_cast<int>(vapp.viewport.sizeY * hScale);
+            
+            int viewPort[4] = { vapp.viewport.posX, vapp.viewport.posY, static_cast<int>(vapp.viewport.sizeX * vpScaleX), static_cast<int>(vapp.viewport.sizeY * vpScaleY) };
+            
+            float point1[3], point2[3], point3[3], point4[3];
+            
+            float halfWidth = .247/2.0;
+            float halfHeight = .173/2.0;
+            
+            Vuforia::Matrix44F cursorModelView = [_inputHandler cursorModelView];
+            
+            SampleApplicationUtils::glhProjectf(-halfWidth, -halfHeight, 0.0f, cursorModelView.data, projectionMatrix.data, viewPort, point1);
+            
+            SampleApplicationUtils::glhProjectf(halfWidth, -halfHeight, 0.0f, cursorModelView.data, projectionMatrix.data, viewPort, point2);
+            
+            SampleApplicationUtils::glhProjectf(halfWidth, halfHeight, 0.0f, cursorModelView.data, projectionMatrix.data, viewPort, point3);
+            
+            SampleApplicationUtils::glhProjectf(-halfWidth, halfHeight, 0.0f, cursorModelView.data, projectionMatrix.data, viewPort, point4);
+            
+            croppingPath = [[NSArray alloc] initWithObjects:
+                             [NSValue valueWithCGPoint:CGPointMake(vpWidth - point1[0], vpHeight - point1[1])],
+                             [NSValue valueWithCGPoint:CGPointMake(vpWidth - point2[0], vpHeight - point2[1])],
+                             [NSValue valueWithCGPoint:CGPointMake(vpWidth - point3[0], vpHeight - point3[1])],
+                             [NSValue valueWithCGPoint:CGPointMake(vpWidth - point4[0], vpHeight - point4[1])],
+                             nil];
+            
+            
         } else {
-            [aPath addLineToPoint:point];
+            croppingPath = [[NSArray alloc] initWithObjects:
+                                     [NSValue valueWithCGPoint:CGPointMake(0, 0)],
+                                     [NSValue valueWithCGPoint:CGPointMake(0, 0)],
+                                     [NSValue valueWithCGPoint:CGPointMake(0, 0)],
+                                     [NSValue valueWithCGPoint:CGPointMake(0, 0)],
+                                     nil];
         }
+        
+        UIBezierPath *aPath = [UIBezierPath bezierPath];
+        
+        bool first = true;
+        for (NSValue *pValue in croppingPath) {
+            CGPoint point = [pValue CGPointValue];
+            if (first) {
+                [aPath moveToPoint:point];
+                first = false;
+            } else {
+                [aPath addLineToPoint:point];
+            }
+        }
+        
+        [aPath closePath];
+        CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+        shapeLayer.path = aPath.CGPath;
+        [_emptyView.layer setMask:shapeLayer];
     }
-    
-    [aPath closePath];
-    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
-    shapeLayer.path = aPath.CGPath;
-    [_emptyView.layer setMask:shapeLayer];
     
     vbMaskTextureID = [self makeViewOpenGLTexture:_emptyView usesMask:YES];
 }
@@ -1219,6 +1224,29 @@ namespace {
     glBindTexture(GL_TEXTURE_2D, 0);
     
     glUseProgram(0);
+}
+
+- (void) turnTorchOn: (bool) on {
+    
+    // check if flashlight available
+    Class captureDeviceClass = NSClassFromString(@"AVCaptureDevice");
+    if (captureDeviceClass != nil) {
+        AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+        if ([device hasTorch] && [device hasFlash]){
+            
+            [device lockForConfiguration:nil];
+            if (on) {
+                [device setTorchMode:AVCaptureTorchModeOn];
+                [device setFlashMode:AVCaptureFlashModeOn];
+                //torchIsOn = YES; //define as a variable/property if you need to know status
+            } else {
+                [device setTorchMode:AVCaptureTorchModeOff];
+                [device setFlashMode:AVCaptureFlashModeOff];
+                //torchIsOn = NO;
+            }
+            [device unlockForConfiguration];
+        }
+    }
 }
 
 

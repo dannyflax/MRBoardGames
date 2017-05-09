@@ -17,6 +17,9 @@ void main ()
   vec4 sampleColor = texture2D(texSampler2D, texCoord);
   vec4 maskColor = texture2D(maskSampler2D, texCoord);
   sampleColor.a = texAlpha;
-    sampleColor.r = maskColor.r;
+  
+  if (maskColor.r < 0.3) {
+    discard;
+  }
   gl_FragColor = sampleColor;
 }
