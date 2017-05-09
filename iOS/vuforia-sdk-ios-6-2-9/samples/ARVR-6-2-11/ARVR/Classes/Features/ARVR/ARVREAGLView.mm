@@ -841,7 +841,7 @@ namespace {
         return;
     }
     
-    [self drawCursorOccludedLayerToImageView:nil withProjectionMatrix:projectionMatrix];
+    [self drawCursorOccludedLayerForView:viewId withProjectionMatrix:projectionMatrix];
     
     
     
@@ -1086,15 +1086,32 @@ namespace {
     return textureID;
 }
 
-- (void)drawCursorOccludedLayerToImageView:(UIImageView *)imageView withProjectionMatrix:(Vuforia::Matrix44F)projectionMatrix
+- (void)drawCursorOccludedLayerForView:(Vuforia::VIEW)view withProjectionMatrix:(Vuforia::Matrix44F)projectionMatrix
 {
     NSArray *croppingPath;
     if ([_inputHandler cursorInSight]) {
-        float vpScaleX = .83;
-        float vpScaleY = 1.81;
+        float vpScaleX = .625;
+        float vpScaleY = .703;
         
-        int vpWidth = static_cast<int>(vapp.viewport.sizeX * .8);
-        int vpHeight = static_cast<int>(vapp.viewport.sizeY * 1.48);
+        float wScale = .625;
+        float hScale = 1;
+        
+        if (view == Vuforia::VIEW_LEFTEYE) {
+            vpScaleX = .83;
+            vpScaleY = 1.81;
+            
+            wScale = .8;
+            hScale = 1.48;
+        } else if (view == Vuforia::VIEW_RIGHTEYE) {
+            vpScaleX = .83;
+            vpScaleY = 1.81;
+            
+            wScale = .66;
+            hScale = 1.48;
+        }
+        
+        int vpWidth = static_cast<int>(vapp.viewport.sizeX * wScale);
+        int vpHeight = static_cast<int>(vapp.viewport.sizeY * hScale);
         
         int viewPort[4] = { vapp.viewport.posX, vapp.viewport.posY, static_cast<int>(vapp.viewport.sizeX * vpScaleX), static_cast<int>(vapp.viewport.sizeY * vpScaleY) };
         
