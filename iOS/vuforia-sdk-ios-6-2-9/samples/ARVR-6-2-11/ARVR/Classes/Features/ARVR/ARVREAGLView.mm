@@ -146,6 +146,7 @@ namespace {
         mIsStereo = isStereo;
         mIsVR = isVR;
         stylusHeld = NO;
+
         
         _inputHandler = [ARInputHandler new];
         _currentViewTexture = -1;
@@ -671,9 +672,7 @@ namespace {
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     
-    glEnable(GL_BLEND);
     
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     const Vuforia::Mesh& vbMesh = _currentRenderingPrimitives->getVideoBackgroundMesh(viewId);
     // Load the shader and upload the vertex/texcoord/index data
@@ -844,6 +843,8 @@ namespace {
     
     [self drawCursorOccludedLayerForView:viewId withProjectionMatrix:projectionMatrix clipsToCursor:NO];
     
+    
+    
     [self renderVideoBackgroundWithViewId:viewId
                               textureUnit:vbVideoTextureUnit
                                  viewPort:viewport
@@ -860,10 +861,20 @@ namespace {
     
     [self drawCursorOccludedLayerForView:viewId withProjectionMatrix:projectionMatrix clipsToCursor:YES];
     
+    glEnable(GL_BLEND);
+    
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    if (! Vuforia::Renderer::getInstance().updateVideoBackgroundTexture(&tex))
+    {
+        NSLog(@"Unable to bind video background texture!!");
+        return;
+    }
+    
     [self renderVideoBackgroundWithViewId:viewId
                               textureUnit:vbVideoTextureUnit
                                  viewPort:viewport
-                                    alpha:.3f];
+                                    alpha:.7f];
     
     if ([_inputHandler cursorInSight] && viewId != Vuforia::VIEW_RIGHTEYE) {
         Point3D *currentPos = [_inputHandler currentPos];
